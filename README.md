@@ -6,7 +6,14 @@
 },
 
 #Coppy đoạn dưới đây vào SeedData để điền DataDeed:
-
+///
+///
+///
+///
+///
+///
+///
+///
 public class SeedData
     {
         public static void SeedingData(DataContext _context)
@@ -190,3 +197,6 @@ public class SeedData
         }
     }
 }
+
+
+CÁM ƠN CÁC BẠN ĐÃ ĐỌC !!!!
