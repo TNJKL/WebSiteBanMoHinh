@@ -1,0 +1,13 @@
+﻿@using WebSiteBanMoHinh.Models.Vnpay
+ @model PaymentResponseModel
+
+@{
+    ViewData["title"] = "Kết quả thông tin giao dịch thanh toán Vnpay thành công";
+}
+<h1>Thanh toán VNPAY thành công</h1>
+<h5>Thanh toán VnPay thành công với:</h5>
+<h6>OrderId : @Model.OrderId</h6>
+<h6>OrderInfo : @Model.OrderDescription</h6>
+<h6>Tổng tiền: @Model.PaymentMethod</h6>
+<h6>Mã giao dịch: @Model.TransactionId</h6>
+<h5>Xem <a asp-controller="Account" asp-action="History">lịch sử đơn hàng đã đặt</a></h5>

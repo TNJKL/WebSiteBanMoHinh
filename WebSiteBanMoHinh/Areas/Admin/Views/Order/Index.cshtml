@@ -1,0 +1,96 @@
+﻿@model IEnumerable<OrderModel>
+@{
+    ViewData["title"] = "Order List";
+}
+<h3>List Order</h3>
+
+<table class="table" id="myTable">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Order Code</th>
+            <th scope="col">Shipping Cost</th>
+            <th scope="col">UserName</th>
+            <th scope="col">Coupon Code</th>
+            <th scope="col">Payment Method</th>
+            <th scope="col">Order Date</th>
+            <th scope="col">Order Status</th>
+            <th scope="col">Action</th>
+
+            
+            
+
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr> 
+                <th>#</th>
+                <th scope="row">@item.OrderCode</th>
+                <th scope="row">@item.ShippingCost.ToString("#,##0 VND")</th>
+                <td>@item.UserName</td>
+                <td>@item.CouponCode</td>
+                
+                <td>
+                    @{
+                        @*string text = item.PaymentMethod; //["MOMO","45435435"]
+                        string number_split = text.Split(" ")[1];
+                        string text_split = text.Split(" ")[0];*@
+                        string text = item.PaymentMethod ?? ""; // Đảm bảo không bị null
+                        string[] parts = text.Split(" ");
+                        string text_split = parts.Length > 0 ? parts[0] : ""; // Lấy phần tử đầu tiên (nếu có)
+                        string number_split = parts.Length > 1 ? parts[1] : ""; // Lấy phần tử thứ hai (nếu có)
+                    }
+
+                    @if (item.PaymentMethod == null || item.PaymentMethod == "")
+                    {
+                        <span class="text text-primary">COD</span>
+                    }
+                    else
+                    {
+                        @if (text_split == "MOMO")
+                        {
+                            @text_split
+                            <a asp-action="PaymentMomoInfo" asp-route-orderId="@number_split" asp-controller="Order"><span class="text text-suceess">@number_split</span></a>
+                            
+                        }
+                        else if (text_split == "VnPay")
+                        {
+                            @text_split
+                            <a asp-action="PaymentVnpayInfo" asp-route-orderId="@number_split" asp-controller="Order"><span class="text text-suceess">@number_split</span></a>
+                        }
+                    }
+                      
+                </td> 
+                <td>@item.CreatedDate</td>
+                
+
+                <td>
+                    @if (item.Status == 1)
+                    {
+                        <span class="text text-success">Đơn hàng mới</span>
+                    }
+                    else if (item.Status == 2)
+                    {
+                        <span class="text text-primary">Đơn hàng đã xử lý </span>
+                    }
+                    else
+                    {
+                        <span class="text text-danger">Đã hủy đơn </span>
+                    }
+
+                </td>
+                <td>
+                    <a asp-action="ViewOrder" class="btn btn-warning btn-sm" asp-controller="Order" asp-route-ordercode="@item.OrderCode">View Order</a>
+                    <a asp-action="Delete" class="btn btn-danger btn-sm confirmDeletion" asp-controller="Order" asp-route-ordercode="@item.OrderCode">Delete</a>
+                </td>
+
+            </tr>
+
+        }
+
+
+    </tbody>
+</table>

@@ -1,0 +1,15 @@
+﻿@using WebSiteBanMoHinh.Resources;
+@inject LanguageService ShareLocallizer
+@if(TempData["success"]!=null){
+    <div class=" alert alert-success notification">
+    @* @TempData["success"] *@
+        @ShareLocallizer.GetLocalizedHTML(TempData["success"]?.ToString() ?? "")
+    </div>
+}
+@if(TempData["error"]!=null){
+<div class=" alert alert-danger notification">
+       @* @TempData["error"] *@
+        @ShareLocallizer.GetLocalizedHTML(TempData["error"]?.ToString() ?? "")
+</div>
+
+}

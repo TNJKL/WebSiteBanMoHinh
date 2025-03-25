@@ -1,0 +1,170 @@
+﻿@model StatisticalModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Dashboard</title>
+    </head>
+
+    <body>
+
+        <h3>Dashboard Statistic</h3>
+        <div class="row">
+            <div class="col-md-3">
+                <p>Thống kê sản phẩm</p>
+                 @ViewBag.CountProduct
+            </div>
+            <div class="col-md-3">
+                <p>Thống kê đơn hàng</p>
+            @ViewBag.CountOrder 
+            </div>
+        <div class="col-md-3">
+            <p>Thống kê danh mục</p>
+            @ViewBag.CountCategory
+        </div>
+        <div class="col-md-3">
+            <p>Thống kê user</p>
+            @ViewBag.CountUser
+        </div>
+        </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <h4>Lọc dữ liệu theo: </h4>
+                <select class="filter-select">
+                    <option value="30">----Lọc dữ liệu----</option>
+                    <option value="7">7 ngày trước</option>
+                    <option value="30">Tháng qua</option>
+                    <option value="90">3 tháng trước</option>
+                    <option value="365">1 năm</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <h4>Tùy chọn:</h4>
+                <label>Từ ngày</label>
+                <input type="date" class="form-control" id="date_from" asp-for="@Model.CreatedDate" />
+                <label>Đến ngày</label>
+                <input type="date" class="form-control" id="date_to" asp-for="@Model.CreatedDate" />
+                <button id="filterButton" class="btn btn-primary">Filter</button>
+            </div>
+        </div>
+    </div>
+        <div class="row">
+            <p>Biểu đồ thống kê</p>
+        <div id="myfirstchart" style="height: 250px;"></div>
+        </div>
+    </body>
+ @section Scripts{
+    <script>
+            $(document).ready(function () {
+                     var chartData = [];
+                    var ChartMorris = new Morris.Line({
+                                element: 'myfirstchart',
+                                data: chartData,
+                                xkey: 'date',
+                               
+                                ykeys: ['sold', 'quantity', 'revenue', 'profit'],
+                                    labels: ["Số lượng bán ra","Đơn hàng" , "Doanh thu", "Lợi nhuận"]
+                         });
+
+                $.ajax({
+                    url: "@Url.Action("GetChartData", "Dashboard")",
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        if(data){
+                                ChartMorris.setData(data.map(function (item) {
+                                return {
+                                    date: item.date,
+                                    sold: item.sold,
+                                    quantity: item.quantity,
+                                    revenue: item.revenue,
+                                    profit: item.profit
+                                };
+                                }));
+                        }else{
+                            console.warn("No data received for Morris chart update.");
+                            ChartMorris.setData([]);
+                        }                                       
+        },
+        error: function (error){
+            console.error("Error fetching data:" ,error);
+        }
+        });
+
+        $('.filter-select').on('change' , function(){
+            var days = $(this).val();
+            var endDate = new Date();
+            var startDate = new Date(endDate.getTime() - days * 24 * 60 * 60 * 1000);
+
+            // alert(startDate);
+            // alert(endDate);
+            $.ajax({
+                url: "@Url.Action("GetChartDataBySelect", "Dashboard")",
+                type: 'POST',
+                dateType: "json",
+                    data: {
+                        startDate: startDate.toISOString().split('T')[0],
+                        endDate: endDate.toISOString().split('T')[0]
+                    },
+                    success : function (data){
+
+                    if(data){
+                        ChartMorris.setData(data.map(function(item) {
+                            return {
+                                date: item.date,
+                                sold: item.sold,
+                                quantity: item.quantity,
+                                revenue: item.revenue,
+                                profit: item.profit
+                            };
+                        }));
+                    }else{
+                        console.warn("No data received for Morris chart update.");
+                        ChartMorris.setData([]);
+                    }
+                    },
+                    error: function (error){
+                        console.error("Error fetching data:", error);
+                    }
+                  });
+               });
+
+               //loc
+                   $("#filterButton").click(function () {
+        var fromDate = $("#date_from").val();
+        var toDate = $("#date_to").val();
+
+        $.ajax({
+            url: "@Url.Action("FilterData", "Dashboard")",
+            data: { fromDate: fromDate, toDate: toDate },
+            type: "POST",
+            success: function (data) {
+                if (data) {
+                    ChartMorris.setData(data.map(function (item) {
+                        return {
+                            date: item.date,
+                            sold: item.sold,
+                            quantity: item.quantity,
+                            revenue: item.revenue,
+                            profit: item.profit
+                        };
+                    }));
+                } else {
+                    console.warn("No data received for Morris chart update.");
+                    ChartMorris.setData([]);
+                }
+                },
+                error: function (error){
+                    console.error("Error fectching data:" , error);
+                }
+                });
+                });
+
+    });
+     </script>
+ }
+</html>

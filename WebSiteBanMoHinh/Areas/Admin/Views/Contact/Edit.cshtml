@@ -1,0 +1,68 @@
+﻿@model ContactModel
+@{
+    ViewData["title"] = "Edit contact";
+}
+<h4>Edit Contact</h4>
+<div>
+    <form asp-action="Edit" asp-controller="Contact" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label>Name</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger" />
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger" />
+        </div>
+        <div class="form-group">
+            <label>Phone</label>
+            <input asp-for="Phone" class="form-control" />
+            <span asp-validation-for="Phone" class="text-danger" />
+        </div>
+        <div class="form-group">
+            <label>Map</label>
+            <<textarea asp-for="Map" class="form-control"></textarea>
+            <span asp-validation-for="Map" class="text-danger" />
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger" />
+        </div>
+        
+
+        <div class="form-group">
+            <label>Image</label>
+            <input asp-for="ImageUpload" class="form-control" />
+            <span asp-validation-for="ImageUpload" class="text-danger" />
+            <img src="~/media/products/@Model.LogoImage" width="100" height="80" />
+            @* <img id="imgpreview" class="pt-2" /> *@
+        </div>
+
+        <div class="form-group">
+            <button class="btn btn-primary">Update</button>
+        </div>
+    </form>
+    <a asp-action="Index">Back to list contact</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    <script>
+        $("#ImageUpload").change(function(){
+            readURL(this);
+        })
+    </script>
+    @* làm cho khung mô tả trở nên to hơn *@
+    <script>
+        CKEDITOR.replace('Description');
+    </script>
+
+    
+ }
+

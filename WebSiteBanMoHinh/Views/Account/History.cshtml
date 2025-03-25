@@ -1,0 +1,76 @@
+﻿@model IEnumerable<OrderModel>
+@{
+    ViewData["title"] = "History Orders placed by" + "" + ViewBag.UserEmail;
+}
+<h3>History Orders placed by @ViewBag.UserEmail</h3>
+
+<table class="table" id="myTable">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Order Code</th>
+            <th scope="col">Shipping Cost</th>
+            <th scope="col">UserName</th>
+            <th scope="col">Coupon Code</th>
+            <th scope="col">Order Date</th>
+            <th scope="col">Order Status</th>
+            <th scope="col">Payment Method</th>
+            <th scope="col">Action</th>
+
+
+
+
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th>#</th>
+                <th scope="row">@item.OrderCode</th>
+                <th scope="row">@item.ShippingCost.ToString("#,##0 VND")</th>
+                <td>@item.UserName</td>
+                <td>@item.CouponCode</td>
+                <td>@item.CreatedDate</td>
+
+
+                <td>
+                    @if (item.Status == 1)
+                    {
+                        <span class="text text-success">Đơn hàng mới</span>
+                    }
+                    else if (item.Status == 2)
+                    {
+                        <span class="text text-primary">Đơn hàng đã xử lý </span>
+                    }
+                    else
+                    {
+                        <span class="text text-danger">Đã hủy đơn </span>
+                    }
+
+                </td>
+                <td>
+                    @if (item.PaymentMethod == "COD" )
+                    {
+                        <span class="text text-success"> @item.PaymentMethod</span>
+                    }
+                    else if (item.PaymentMethod != "COD" )
+                    {
+                        <span class="text text-success">@item.PaymentMethod</span>
+                    }
+                </td>
+                <td>
+                    @if (item.Status != 3)
+                    {
+                        <a asp-action="CancelOrder" class="btn btn-danger btn-sm" onclick="return confirm('Xác nhận hủy đơn hàng ?')" asp-controller="Account" asp-route-ordercode="@item.OrderCode">Cancel Order</a>
+                    }
+                </td>
+
+            </tr>
+
+        }
+
+
+    </tbody>
+</table>
