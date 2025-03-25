@@ -5,15 +5,10 @@
   "ShopMoHinh": "Data Source={Tên Server SQL của máy bạn};Initial Catalog={Tên Database bạn muốn tạo};Integrated Security=True;Trust Server Certificate=True"
 },
 
-#Coppy đoạn dưới đây vào SeedData để điền DataDeed:
-///
-///
-///
-///
-///
-///
-///
-///
+
+
+Coppy đoạn dưới đây vào SeedData để điền DataDeed:
+
 public class SeedData
     {
         public static void SeedingData(DataContext _context)
