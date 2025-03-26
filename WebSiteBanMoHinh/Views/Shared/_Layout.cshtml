@@ -170,16 +170,43 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                   @* <div class="col-sm-3">
                         <form asp-controller="Product" asp-action="Search" method="post">
                             <div class="search_box pull-right">
                                 <input type="text" placeholder="@ShareLocallizer.GetLocalizedHTML("Search")" name="searchTerm" />
-                                <button class="btn btn-warning" type="submit">@ShareLocallizer.GetLocalizedHTML("Search")</button>
-
+                                <button class="btn btn-warning" type="submit">@ShareLocallizer.GetLocalizedHTML("Search")</button>                               
                             </div>
                         </form>
                     </div>
-                    
+                    *@
+                    <div class="col-sm-3">
+                        <form asp-controller="Product" asp-action="Search" method="get">
+                            <div class="search_box pull-right">
+                                <input type="text" id="searchBox" name="searchTerm" class="form-control" placeholder="@ShareLocallizer.GetLocalizedHTML("Search")" />
+
+                                <div class="input-group">
+                                    <!-- Nút tìm kiếm thông thường -->
+                                    <button class="btn btn-warning" type="submit">@ShareLocallizer.GetLocalizedHTML("Search")</button>
+
+                                    <!-- Nút tìm kiếm bằng giọng nói -->
+                                    <button id="voiceSearchBtn" type="button" class="btn btn-primary">
+                                        <i class="fa fa-microphone"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    @*ti xoa phan nay*@
+
+                    @*<form asp-action="Search" asp-controller="Product" method="get" class="input-group">
+                        <input type="text" id="searchBox" name="searchTerm" class="form-control" placeholder="Tìm kiếm sản phẩm..." />
+                        <button id="voiceSearchBtn" type="button" class="btn btn-primary">
+                            <i class="fa fa-microphone"></i>
+                        </button>
+                    </form>
+                    *@
+                    </div>@*ti xoa phan nay*@
+
                 </div>
             </div>
         </div><!--/header-bottom-->
@@ -305,5 +332,108 @@
           fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
     </script>
+
+
+    @*<script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var voiceBtn = document.getElementById("voiceSearchBtn");
+            var searchBox = document.getElementById("searchBox");
+
+            if (voiceBtn && (window.SpeechRecognition || window.webkitSpeechRecognition)) {
+                var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.lang = 'vi-VN';
+
+                voiceBtn.addEventListener("click", function () {
+                    try {
+                        recognition.start();
+                        console.log("🎤 Đang lắng nghe...");
+                    } catch (err) {
+                        console.error("Lỗi khi bắt đầu nhận diện giọng nói:", err);
+                        alert("Không thể sử dụng tìm kiếm bằng giọng nói. Hãy kiểm tra quyền microphone!");
+                    }
+                });
+
+                recognition.onresult = function (event) {
+                    var searchTerm = event.results[0][0].transcript;
+                    searchBox.value = searchTerm;
+                    console.log("📢 Kết quả nhận diện:", searchTerm);
+
+                    // Điều hướng đến Product/Search với searchTerm
+                    var searchUrl = "/Product/Search?searchTerm=" + encodeURIComponent(searchTerm);
+                    window.location.href = searchUrl;
+                };
+
+                recognition.onerror = function (event) {
+                    console.error("Lỗi nhận diện:", event.error);
+                    alert("Không thể nhận diện giọng nói: " + event.error);
+                };
+            } else {
+                console.warn("Trình duyệt không hỗ trợ Speech Recognition.");
+            }
+        });
+    </script>*@
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var voiceBtn = document.getElementById("voiceSearchBtn");
+            var searchBox = document.getElementById("searchBox");
+            var searchForm = searchBox.closest("form"); // Lấy form chứa input
+
+            if (voiceBtn && (window.SpeechRecognition || window.webkitSpeechRecognition)) {
+                var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.lang = 'vi-VN';
+
+                voiceBtn.addEventListener("click", function () {
+                    try {
+                        recognition.start();
+                        console.log("🎤 Đang lắng nghe...");
+                    } catch (err) {
+                        console.error("Lỗi khi bắt đầu nhận diện giọng nói:", err);
+                        alert("Không thể sử dụng tìm kiếm bằng giọng nói. Hãy kiểm tra quyền microphone!");
+                    }
+                });
+
+                recognition.onresult = function (event) {
+                    var searchTerm = event.results[0][0].transcript;
+                    searchBox.value = searchTerm;
+                    console.log("📢 Kết quả nhận diện:", searchTerm);
+
+                    // Tự động submit form sau khi nhận diện xong
+                    searchForm.submit();
+                };
+
+                recognition.onerror = function (event) {
+                    console.error("Lỗi nhận diện:", event.error);
+                    alert("Không thể nhận diện giọng nói: " + event.error);
+                };
+            } else {
+                console.warn("Trình duyệt không hỗ trợ Speech Recognition.");
+            }
+        });
+    </script>
+
+
+
 </body>
 </html>
+
+ @section Scripts{
+    <partial name="_VoiceSearchScript" />
+    <script>
+        document.getElementById("voiceSearchBtn").addEventListener("click", function () {
+            var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'vi-VN';  // Cài đặt ngôn ngữ tiếng Việt
+            recognition.start();
+
+            recognition.onresult = function (event) {
+                var searchTerm = event.results[0][0].transcript;
+                document.getElementById("searchBox").value = searchTerm;
+                window.location.href = '/Search?searchTerm=' + encodeURIComponent(searchTerm);
+            };
+
+            recognition.onerror = function (event) {
+                alert("Không thể nhận diện giọng nói, vui lòng thử lại!");
+            };
+        });
+    </script>
+ }

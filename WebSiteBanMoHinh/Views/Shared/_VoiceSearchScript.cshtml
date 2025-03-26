@@ -1,0 +1,81 @@
+﻿<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Debug: Log all elements
+        console.log('Search Input:', document.getElementById('searchInput'));
+        console.log('Voice Search Button:', document.getElementById('voiceSearchBtn'));
+
+        // Kiểm tra hỗ trợ Web Speech API
+        if ('webkitSpeechRecognition' in window) {
+            console.log('Web Speech API supported');
+
+            const searchInput = document.getElementById('searchInput');
+            const voiceSearchBtn = document.getElementById('voiceSearchBtn');
+
+            if (!searchInput) {
+                console.error('Search input element not found!');
+                return;
+            }
+
+            if (!voiceSearchBtn) {
+                console.error('Voice search button not found!');
+                return;
+            }
+
+            const recognition = new webkitSpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'vi-VN'; // Ngôn ngữ Tiếng Việt
+
+            // Sự kiện bắt đầu
+            recognition.onstart = function() {
+                console.log('Voice recognition STARTED');
+                voiceSearchBtn.style.color = 'red'; // Đổi màu để biết đang hoạt động
+            };
+
+            // Kết quả nhận dạng
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                console.log('Recognized text:', transcript);
+
+                searchInput.value = transcript;
+
+                // Kiểm tra form submit
+                const searchForm = document.getElementById('searchForm');
+                if (searchForm) {
+                    searchForm.submit();
+                } else {
+                    console.error('Search form not found!');
+                    alert('Không tìm thấy form tìm kiếm');
+                }
+            };
+
+            // Xử lý lỗi
+            recognition.onerror = function(event) {
+                console.error('Speech recognition ERROR:', event.error);
+                alert('Lỗi nhận dạng giọng nói: ' + event.error);
+                voiceSearchBtn.style.color = ''; // Trả lại màu gốc
+            };
+
+            // Kết thúc nhận dạng
+            recognition.onend = function() {
+                console.log('Voice recognition ENDED');
+                voiceSearchBtn.style.color = ''; // Trả lại màu gốc
+            };
+
+            // Sự kiện click nút microphone
+            voiceSearchBtn.addEventListener('click', function() {
+                try {
+                    recognition.start();
+                } catch (error) {
+                    console.error('Error starting recognition:', error);
+                    alert('Không thể bắt đầu nhận dạng giọng nói. Kiểm tra microphone.');
+                }
+            });
+
+            console.log('Voice search setup complete');
+        } else {
+            console.error('Web Speech API NOT supported');
+            alert('Trình duyệt của bạn không hỗ trợ tìm kiếm bằng giọng nói');
+        }
+    });
+</script>
