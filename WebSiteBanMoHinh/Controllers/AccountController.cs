@@ -132,17 +132,45 @@ namespace WebSiteBanMoHinh.Controllers
 
 
         [HttpPost]
+        //public async Task<IActionResult> Create(UserModel user)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        AppUserModel newUser = new AppUserModel { UserName = user.UserName, Email = user.Email  };
+        //        IdentityResult result = await _userManager.CreateAsync(newUser, user.Password);
+        //        if (result.Succeeded)
+        //        {
+        //            TempData["success"] = "Đăng ký tài khoản thành công";
+        //            return Redirect("/account/login");
+        //        }
+        //        foreach (IdentityError error in result.Errors)
+        //        {
+        //            ModelState.AddModelError("", error.Description);
+        //        }
+        //    }
+        //    return View(user);
+        //}
+
         public async Task<IActionResult> Create(UserModel user)
         {
             if (ModelState.IsValid)
             {
-                AppUserModel newUser = new AppUserModel { UserName = user.UserName, Email = user.Email };
+                AppUserModel newUser = new AppUserModel
+                {
+                    UserName = user.UserName,
+                    Email = user.Email
+                };
+
                 IdentityResult result = await _userManager.CreateAsync(newUser, user.Password);
                 if (result.Succeeded)
                 {
+                    // Gán role mặc định là "CUSTOMER"
+                    await _userManager.AddToRoleAsync(newUser, "CUSTOMER");
+
                     TempData["success"] = "Đăng ký tài khoản thành công";
                     return Redirect("/account/login");
                 }
+
                 foreach (IdentityError error in result.Errors)
                 {
                     ModelState.AddModelError("", error.Description);
@@ -150,6 +178,7 @@ namespace WebSiteBanMoHinh.Controllers
             }
             return View(user);
         }
+
         public async Task<IActionResult> Logout(string returnUrl = "/")
         {
 
@@ -318,6 +347,10 @@ namespace WebSiteBanMoHinh.Controllers
                     TempData["error"] = "Đăng ký tài khoản thất bại. Vui lòng thử lại sau.";
                     return RedirectToAction("Login", "Account");
                 }
+                //Lỗi thì xóa ở đây:
+                await _userManager.AddToRoleAsync(newUser, "CUSTOMER");
+
+                //Lỗi thì xóa ở đây:
 
                 existingUser = newUser; // Gán user mới vào existingUser để dùng sau này
             }

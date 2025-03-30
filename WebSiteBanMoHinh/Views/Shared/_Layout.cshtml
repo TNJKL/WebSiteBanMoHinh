@@ -1,5 +1,10 @@
-﻿@using WebSiteBanMoHinh.Resources;
+﻿@using WebSiteBanMoHinh.Repository
+@using WebSiteBanMoHinh.Resources;
 @inject LanguageService ShareLocallizer
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUserModel> UserManager
+@inject DataContext _context
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -98,6 +103,15 @@
                                         <li>
                                             <a asp-area="Admin" asp-controller="Product" asp-action="Index">
                                                 <i class="fa fa-crosshairs"></i> Admin
+                                            </a>
+                                        </li>
+
+                                    }
+                                    @if (User.Identity.IsAuthenticated && User.IsInRole("CSKH"))
+                                    {
+                                        <li>
+                                            <a asp-controller="Messages" asp-action="Messages">
+                                                <i class="fa fa-crosshairs"></i> CSKH
                                             </a>
                                         </li>
 
@@ -301,11 +315,56 @@
                 </div>
             </div>
         </div>
-
+        
     </footer><!--/Footer-->
 
-    
-   
+
+
+    <!--lỗi thì xóa :))-->
+    @{
+        var currentUser = await UserManager.GetUserAsync(User);
+        var currentUserId = currentUser?.Id ?? "";
+        string receiverId = "";
+        string receiverUserName = "";
+
+        if (User.IsInRole("CUSTOMER"))
+        {
+            // Khách hàng: mặc định chat với CSKH
+            var cskhUser = await _context.Users.FirstOrDefaultAsync(u => u.UserName == "cskh");
+            receiverId = cskhUser?.Id ?? "f207e978-52df-4d21-844f-b615034f4caf"; // Fallback nếu không tìm thấy
+            receiverUserName = cskhUser?.UserName ?? "cskh";
+        }
+        else if (User.IsInRole("CSKH"))
+        {
+            // CSKH: lấy receiverId từ ViewData hoặc mặc định rỗng
+            receiverId = ViewData["SelectedUserId"]?.ToString() ?? "";
+            receiverUserName = ViewData["SelectedUserName"]?.ToString() ?? "Khách hàng";
+        }
+
+        var chatModel = new WebSiteBanMoHinh.ViewModels.CombinedMessagesViewModel
+            {
+                Chat = new WebSiteBanMoHinh.ViewModels.ChatViewModel
+                {
+                    CurrentUserId = currentUserId,
+                    ReceiverId = receiverId,
+                    ReceiverUserName = receiverUserName,
+                    Messages = new List<WebSiteBanMoHinh.ViewModels.UserMessagesListViewModel>()
+                }
+            };
+    }
+    @if (User.IsInRole("CUSTOMER"))
+       {
+    @await Html.PartialAsync("_ChatWidget", chatModel)
+
+    }
+    <!--lỗi thì xóa :))-->
+
+
+
+
+
+
+
 
     <script src="~/js/jquery.js"></script>
     
@@ -315,6 +374,10 @@
     <script src="~/js/jquery.prettyPhoto.js"></script>
     <script src="~/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <!---Start TaggoAI--->
+    <script async data-taggo-botid="67e56ff9e662d15a8e894693" src="https://widget.taggo.chat/v2.js"></script>
+    <!---End TaggoAI--->
     @await RenderSectionAsync("Scripts", required: false)
     <script>
         window.fbAsyncInit = function() {
@@ -411,9 +474,9 @@
             }
         });
     </script>
-
-
-
+    
+   
+    
 </body>
 </html>
 

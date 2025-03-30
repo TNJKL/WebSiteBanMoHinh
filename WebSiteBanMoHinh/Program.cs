@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Globalization;
 using WebSiteBanMoHinh.Areas.Admin.Repository;
+using WebSiteBanMoHinh.Helpers;
+using WebSiteBanMoHinh.Hubs;
 using WebSiteBanMoHinh.Models;
 using WebSiteBanMoHinh.Models.Momo;
 using WebSiteBanMoHinh.Repository;
@@ -35,7 +37,12 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+//chat
 
+builder.Services.AddSignalR();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
+//chat
 builder.Services.AddMvc();
 builder.Services.AddSingleton<LanguageService>();
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
@@ -64,8 +71,11 @@ builder.Services.AddSession(options =>
 });
 
 
+//builder.Services.AddIdentity<AppUserModel, IdentityRole>()
+//    .AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();// DbContext
 builder.Services.AddIdentity<AppUserModel, IdentityRole>()
     .AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();// DbContext
+
 
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -118,6 +128,9 @@ if (!app.Environment.IsDevelopment())
 }
 
 
+//chat
+app.UseHttpsRedirection();
+//chat
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -150,5 +163,5 @@ app.MapControllerRoute(
 
 var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<DataContext>();
 SeedData.SeedingData(context);
-
+app.MapHub<ChatHub>("/chatHub");
 app.Run();

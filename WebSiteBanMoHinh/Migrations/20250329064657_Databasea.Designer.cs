@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebSiteBanMoHinh.Repository;
 
@@ -11,9 +12,11 @@ using WebSiteBanMoHinh.Repository;
 namespace WebSiteBanMoHinh.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250329064657_Databasea")]
+    partial class Databasea
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -376,9 +379,6 @@ namespace WebSiteBanMoHinh.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
 
                     b.Property<string>("ReceiverId")
                         .HasColumnType("nvarchar(450)");
@@ -793,11 +793,11 @@ namespace WebSiteBanMoHinh.Migrations
             modelBuilder.Entity("WebSiteBanMoHinh.Models.MessageModel", b =>
                 {
                     b.HasOne("WebSiteBanMoHinh.Models.AppUserModel", "Receiver")
-                        .WithMany("ReceivedMessages")
+                        .WithMany()
                         .HasForeignKey("ReceiverId");
 
                     b.HasOne("WebSiteBanMoHinh.Models.AppUserModel", "Sender")
-                        .WithMany("SentMessages")
+                        .WithMany()
                         .HasForeignKey("SenderId");
 
                     b.Navigation("Receiver");
@@ -855,13 +855,6 @@ namespace WebSiteBanMoHinh.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("WebSiteBanMoHinh.Models.AppUserModel", b =>
-                {
-                    b.Navigation("ReceivedMessages");
-
-                    b.Navigation("SentMessages");
                 });
 
             modelBuilder.Entity("WebSiteBanMoHinh.Models.ProductModel", b =>

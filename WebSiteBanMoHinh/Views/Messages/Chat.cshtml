@@ -1,0 +1,328 @@
+﻿@using WebSiteBanMoHinh.ViewModels
+@model ChatViewModel
+
+<style>
+    :root {
+        --primary-color: #4361ee;
+        --secondary-color: #3f37c9;
+        --accent-color: #f72585;
+        --light-bg: #f8f9fa;
+        --dark-text: #212529;
+        --light-text: #f8f9fa;
+        --border-radius: 16px;
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+    }
+
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+
+    .chat-header {
+        display: flex;
+        align-items: center;
+        padding: 16px 20px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border-top-left-radius: var(--border-radius);
+        border-top-right-radius: var(--border-radius);
+    }
+
+    .avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background-color: var(--accent-color);
+        color: white;
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 16px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .user-info {
+        flex-grow: 1;
+    }
+
+        .user-info h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+    .user-status {
+        font-size: 14px;
+        opacity: 0.9;
+    }
+
+    /* Messages container */
+    .messages-container {
+        flex-grow: 1;
+        background-color: var(--light-bg);
+        padding: 20px;
+        overflow-y: auto;
+        max-height: 60vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .message-bubble {
+        position: relative;
+        padding: 12px 16px;
+        border-radius: 18px;
+        margin-bottom: 16px;
+        max-width: 70%;
+        box-shadow: var(--shadow);
+        animation: fadeIn 0.3s ease;
+    }
+
+   
+
+    
+
+    .message-sent {
+        align-self: flex-end;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border-bottom-right-radius: 4px;
+    }
+
+    .message-received {
+        align-self: flex-start;
+        background: white;
+        color: var(--dark-text);
+        border-bottom-left-radius: 4px;
+    }
+
+    .message-content {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.4;
+    }
+
+    .message-time {
+        display: block;
+        font-size: 12px;
+        text-align: right;
+        margin-top: 4px;
+        opacity: 0.8;
+    }
+
+    /* Message input area */
+    .message-input-container {
+        display: flex;
+        align-items: center;
+        padding: 16px;
+        background-color: white;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .message-input {
+        flex-grow: 1;
+        border: none;
+        background-color: var(--light-bg);
+        border-radius: 24px;
+        padding: 12px 20px;
+        font-size: 15px;
+        resize: none;
+        transition: var(--transition);
+    }
+
+        .message-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.3);
+        }
+
+    .send-button {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        margin-left: 12px;
+        cursor: pointer;
+        transition: var(--transition);
+        box-shadow: var(--shadow);
+    }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .send-button:active {
+            transform: translateY(0);
+        }
+
+    .send-icon {
+        font-size: 20px;
+    }
+
+    /* Scrollbar styling */
+    .messages-container::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .messages-container::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+    .messages-container::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+    }
+
+    /* Responsive adjustments */
+  
+</style>
+
+<!-- Main Chat Container -->
+<div class="chat-container">
+    <!-- Chat Header -->
+    <div class="chat-header">
+        <div class="avatar">
+            @(!string.IsNullOrEmpty(Model.ReceiverUserName) ? Model.ReceiverUserName.Substring(0, 1).ToUpper() : "?")
+        </div>
+        <div class="user-info">
+            <h3>@Model.ReceiverUserName</h3>
+            <div class="user-status">Online</div>
+        </div>
+    </div>
+
+    <!-- Messages Container -->
+    <div class="messages-container" id="messagesContainer">
+        @foreach (var item in Model.Messages)
+        {
+            if (item.IsCurrentUserSentMessage)
+            {
+                <div class="message-bubble message-sent">
+                    <p class="message-content">@item.Text</p>
+                    <span class="message-time">@item.Time · @item.Date</span>
+                </div>
+            }
+            else
+            {
+                <div class="message-bubble message-received">
+                    <p class="message-content">@item.Text</p>
+                    <span class="message-time">@item.Time · @item.Date</span>
+                </div>
+            }
+        }
+    </div>
+
+    <!-- Message Input Area -->
+    <div class="message-input-container">
+        <textarea class="message-input" id="messageField" placeholder="Nhập tin nhắn..." rows="1"></textarea>
+        <button class="send-button" id="sendBtn">
+            <span class="send-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </span>
+        </button>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Auto-resize textarea
+            const messageField = document.getElementById('messageField');
+            messageField.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight < 120) ? this.scrollHeight + 'px' : '120px';
+            });
+
+            // Connect to SignalR hub
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/chatHub")
+                .withAutomaticReconnect()
+                .build();
+
+            // Start connection
+            connection.start()
+                .then(() => console.log("Connected to chat hub!"))
+                .catch(err => console.error("Error connecting to hub:", err));
+
+            // Send message on button click
+            $("#sendBtn").click(sendMessage);
+
+            // Also send on Enter key (but Shift+Enter for new line)
+            $("#messageField").on('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            function sendMessage() {
+                const receiverId = "@Model.ReceiverId";
+                const message = $("#messageField").val().trim();
+
+                if (!message) return;
+
+                connection.invoke("SendMessage", receiverId, message)
+                    .catch(function (err) {
+                        console.error("Error sending message:", err);
+                        alert("Không thể gửi tin nhắn. Vui lòng thử lại!");
+                    });
+
+                $("#messageField").val("").focus();
+                $("#messageField").css("height", "auto");
+            }
+
+            // Receive message from SignalR
+            connection.on("ReceiveMessage", function (msg, date, time, senderId) {
+                const isCurrentUser = senderId == "@Model.CurrentUserId";
+                const messageClass = isCurrentUser ? "message-sent" : "message-received";
+
+                const messageHtml = `
+                    <div class="message-bubble ${messageClass}">
+                        <p class="message-content">${msg}</p>
+                        <span class="message-time">${time} · ${date}</span>
+                    </div>
+                `;
+
+                $("#messagesContainer").append(messageHtml);
+                scrollToBottom();
+
+                // Notification sound for received messages
+                if (!isCurrentUser) {
+                    playNotificationSound();
+                }
+            });
+
+            // Scroll to bottom of messages on load
+            function scrollToBottom() {
+                const container = document.getElementById('messagesContainer');
+                container.scrollTop = container.scrollHeight;
+            }
+
+            // Call on page load
+            scrollToBottom();
+
+            // Simple notification sound function
+            function playNotificationSound() {
+                // Create audio element - could be replaced with a permanent audio element
+                const audio = new Audio('/sounds/notification.mp3'); // Path to your sound file
+                audio.volume = 0.5;
+                audio.play().catch(e => console.log("Audio play failed:", e));
+            }
+        });
+    </script>
+}

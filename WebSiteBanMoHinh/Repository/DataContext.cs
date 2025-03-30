@@ -30,7 +30,7 @@ namespace WebSiteBanMoHinh.Repository
         public DbSet<MomoInfoModel> MomoInfoModels { get; set; }
         public DbSet<VnpayModel> VnpayInfos { get; set; }
 
-
+        public DbSet<MessageModel> Messages { get; set; }
 
 
     }

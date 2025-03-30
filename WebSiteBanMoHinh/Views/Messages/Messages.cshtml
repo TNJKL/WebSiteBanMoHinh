@@ -1,0 +1,505 @@
+﻿@using WebSiteBanMoHinh.ViewModels
+@model CombinedMessagesViewModel
+
+<style>
+    /* Biến toàn cục */
+    :root {
+        --primary-color: #facc15; /* Vàng nhạt chủ đạo */
+        --secondary-color: #fbbf24; /* Vàng đậm hơn một chút */
+        --accent-color: #f59e0b; /* Cam vàng nổi bật */
+        --light-bg: #fefce8; /* Nền vàng cực nhạt */
+        --dark-bg: #1e293b; /* Nền tối cho header */
+        --dark-text: #1e293b; /* Chữ tối nhẹ */
+        --light-text: #fff7ed; /* Chữ sáng vàng nhạt */
+        --border-radius: 14px; /* Bo góc mượt hơn */
+        --shadow: 0 5px 20px rgba(0, 0, 0, 0.06); /* Bóng siêu nhẹ */
+        --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.1); /* Bóng khi hover */
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Chuyển động mượt mà */
+    }
+
+    /* Container chính */
+    .main-container {
+        display: flex;
+        height: 100vh;
+        width: 100%;
+        background: linear-gradient(135deg, #fefce8, #fffbeb); /* Gradient vàng nhạt siêu nhẹ */
+    }
+
+    /* Danh sách người dùng */
+    .users-container {
+        max-width: 360px;
+        height: 100vh;
+        overflow-y: auto;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 20px;
+        border-right: 1px solid rgba(254, 243, 199, 0.5);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(12px); /* Hiệu ứng kính mờ mượt */
+    }
+
+    .user {
+        display: flex;
+        align-items: center;
+        padding: 14px;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: var(--transition);
+        margin-bottom: 12px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(254, 243, 199, 0.7);
+    }
+
+        .user:hover {
+            background: linear-gradient(135deg, #fefce8, #fef3c7);
+            transform: translateY(-3px); /* Nhấc lên mượt hơn */
+            box-shadow: var(--shadow-hover);
+        }
+
+    .user-avatar {
+        width: 46px;
+        height: 46px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: var(--dark-text);
+        font-size: 20px;
+        font-weight: 700;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        margin-right: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.9);
+        box-shadow: var(--shadow);
+    }
+
+    .user-info {
+        flex-grow: 1;
+    }
+
+    .user-name {
+        font-weight: 700;
+        margin: 0;
+        color: var(--dark-text);
+        font-size: 16px;
+    }
+
+    .last-message {
+        font-size: 13px;
+        color: #64748b;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 220px;
+    }
+
+    /* Container chat */
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        flex-grow: 1;
+        margin: 20px;
+        transition: var(--transition);
+    }
+
+    .chat-header {
+        display: flex;
+        align-items: center;
+        padding: 18px 25px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* Header vàng gradient */
+        color: var(--dark-text);
+        border-top-left-radius: var(--border-radius);
+        border-top-right-radius: var(--border-radius);
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent-color), #f97316);
+        color: var(--light-text);
+        font-size: 22px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.95);
+        box-shadow: var(--shadow);
+    }
+
+    .user-info h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .user-status {
+        font-size: 12px;
+        opacity: 0.85;
+        letter-spacing: 0.5px;
+    }
+
+    .messages-container {
+        flex-grow: 1;
+        background: var(--light-bg);
+        padding: 25px;
+        overflow-y: auto;
+        max-height: 60vh;
+        display: flex;
+        flex-direction: column;
+        gap: 14px; /* Khoảng cách tin nhắn mượt hơn */
+    }
+
+    .message-bubble {
+        padding: 12px 20px;
+        border-radius: var(--border-radius);
+        max-width: 70%;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        backdrop-filter: blur(8px); /* Hiệu ứng mờ mượt */
+    }
+
+    .message-sent {
+        align-self: flex-end;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: var(--dark-text);
+        border-bottom-right-radius: 4px;
+    }
+
+    .message-received {
+        align-self: flex-start;
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--dark-text);
+        border-bottom-left-radius: 4px;
+        border: 1px solid rgba(254, 243, 199, 0.7);
+    }
+
+    .message-bubble:hover {
+        transform: scale(1.03); /* Phóng nhẹ mượt mà */
+        box-shadow: var(--shadow-hover);
+    }
+
+    .message-content {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    .message-time {
+        display: block;
+        font-size: 11px;
+        text-align: right;
+        margin-top: 5px;
+        opacity: 0.7;
+    }
+
+    .message-input-container {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        background: white;
+        border-top: 1px solid rgba(254, 243, 199, 0.5);
+        box-shadow: 0 -3px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .message-input {
+        flex-grow: 1;
+        border: none;
+        background: var(--light-bg);
+        border-radius: 30px; /* Bo góc siêu mượt */
+        padding: 14px 22px;
+        font-size: 15px;
+        resize: none;
+        transition: var(--transition);
+        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+        .message-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.3), inset 0 2px 6px rgba(0, 0, 0, 0.04);
+        }
+
+    .send-button {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        color: var(--dark-text);
+        border: none;
+        margin-left: 12px;
+        cursor: pointer;
+        transition: var(--transition);
+        box-shadow: var(--shadow);
+    }
+
+        .send-button:hover {
+            transform: scale(1.12); /* Phóng to mượt hơn */
+            box-shadow: var(--shadow-hover);
+        }
+
+        .send-button:active {
+            transform: scale(1);
+        }
+
+    .send-icon {
+        font-size: 20px;
+    }
+
+    /* Thanh cuộn mượt mà */
+    .users-container::-webkit-scrollbar,
+    .messages-container::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .users-container::-webkit-scrollbar-track,
+    .messages-container::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .users-container::-webkit-scrollbar-thumb,
+    .messages-container::-webkit-scrollbar-thumb {
+        background: rgba(250, 204, 21, 0.4);
+        border-radius: 3px;
+    }
+
+        .users-container::-webkit-scrollbar-thumb:hover,
+        .messages-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(250, 204, 21, 0.7);
+        }
+</style>
+
+<!-- Container Chính -->
+<div class="main-container">
+    <!-- Danh Sách Người Dùng (từ Index) -->
+    <div class="users-container">
+        @foreach (var item in Model.Users)
+        {
+            <a href="/Messages/Messages?selectedUserId=@item.Id" class="user" data-user-id="@item.Id">
+                <div class="user-avatar">
+                    @item.UserName.Substring(0, 1).ToUpper()
+                </div>
+                <div class="user-info">
+                    <p class="user-name">@item.UserName</p>
+                    <p class="last-message">@item.LastMessage</p>
+                </div>
+            </a>
+        }
+    </div>
+
+    <!-- Container Chat (từ Chat) -->
+    @if (Model.Chat != null && !string.IsNullOrEmpty(Model.Chat.ReceiverId))
+    {
+        <div class="chat-container">
+            <!-- Tiêu Đề Chat -->
+            <div class="chat-header">
+                <div class="avatar">
+                    @(!string.IsNullOrEmpty(Model.Chat.ReceiverUserName) ? Model.Chat.ReceiverUserName.Substring(0, 1).ToUpper() : "?")
+                </div>
+                <div class="user-info">
+                    <h3>@Model.Chat.ReceiverUserName</h3>
+                    <div class="user-status">Đang hoạt động</div>
+                </div>
+            </div>
+
+            <!-- Container Tin Nhắn -->
+            <div class="messages-container" id="messagesContainer">
+                @foreach (var item in Model.Chat.Messages)
+                {
+                    if (item.IsCurrentUserSentMessage)
+                    {
+                        <div class="message-bubble message-sent">
+                            <p class="message-content">@item.Text</p>
+                            <span class="message-time">@item.Time · @item.Date</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="message-bubble message-received">
+                            <p class="message-content">@item.Text</p>
+                            <span class="message-time">@item.Time · @item.Date</span>
+                        </div>
+                    }
+                }
+            </div>
+
+            <!-- Khu Vực Nhập Tin Nhắn -->
+            <div class="message-input-container">
+                <textarea class="message-input" id="messageField" placeholder="Nhập tin nhắn..." rows="1"></textarea>
+                <button class="send-button" id="sendBtn">
+                    <span class="send-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="avatar">?</div>
+                <div class="user-info">
+                    <h3>Chọn một người dùng để trò chuyện</h3>
+                    <div class="user-status"></div>
+                </div>
+            </div>
+            <div class="messages-container" id="messagesContainer"></div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <!-- Script từ View Chat -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Tự động điều chỉnh kích thước textarea
+            const messageField = document.getElementById('messageField');
+            messageField.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight < 120) ? this.scrollHeight + 'px' : '120px';
+            });
+
+            // Kết nối với SignalR hub
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/chatHub")
+                .withAutomaticReconnect()
+                .build();
+
+            // Bắt đầu kết nối
+            connection.start()
+                .then(() => console.log("Đã kết nối với chat hub!"))
+                .catch(err => console.error("Lỗi khi kết nối với hub:", err));
+
+            // Gửi tin nhắn khi nhấn nút
+            $("#sendBtn").click(sendMessage);
+
+            // Cũng gửi khi nhấn phím Enter (nhưng Shift+Enter để xuống dòng)
+            $("#messageField").on('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            function sendMessage() {
+                const receiverId = "@(Model.Chat?.ReceiverId ?? "")";
+                const message = $("#messageField").val().trim();
+
+                if (!message) return;
+
+                connection.invoke("SendMessage", receiverId, message)
+                    .catch(function (err) {
+                        console.error("Lỗi khi gửi tin nhắn:", err);
+                        alert("Không thể gửi tin nhắn. Vui lòng thử lại!");
+                    });
+
+                $("#messageField").val("").focus();
+                $("#messageField").css("height", "auto");
+            }
+
+            // Nhận tin nhắn từ SignalR
+            connection.on("ReceiveMessage", function (msg, date, time, senderId) {
+                // Kiểm tra xem senderId có khớp với người dùng đang chat hay không
+                const receiverId = "@(Model.Chat?.ReceiverId ?? "")";
+                const currentUserId = "@(Model.Chat?.CurrentUserId ?? "")";
+
+                // Chỉ hiển thị tin nhắn nếu senderId là người dùng đang chat hoặc chính bạn
+                if (senderId === receiverId || senderId === currentUserId) {
+                    const isCurrentUser = senderId === currentUserId;
+                    const messageClass = isCurrentUser ? "message-sent" : "message-received";
+
+                    const messageHtml =
+                        `<div class="message-bubble ${messageClass}">
+                            <p class="message-content">${msg}</p>
+                            <span class="message-time">${time} · ${date}</span>
+                        </div>`;
+
+                    $("#messagesContainer").append(messageHtml);
+                    scrollToBottom();
+                }
+
+                // Âm thanh thông báo cho tin nhắn nhận được (nếu không phải từ bạn)
+                if (senderId !== currentUserId) {
+                    playNotificationSound();
+                }
+            });
+
+            // Cuộn xuống dưới cùng của tin nhắn khi tải trang
+            function scrollToBottom() {
+                const container = document.getElementById('messagesContainer');
+                container.scrollTop = container.scrollHeight;
+            }
+
+            // Gọi khi tải trang
+            scrollToBottom();
+
+            // Hàm phát âm thanh thông báo đơn giản
+            function playNotificationSound() {
+                const audio = new Audio('/sounds/thongbao.mp3');
+                audio.volume = 0.5;
+                audio.play().catch(e => console.log("Phát âm thanh thất bại:", e));
+            }
+        });
+    </script>
+
+    <!-- Script từ View Index -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+
+
+
+    @*<script>
+        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+        connection.start().catch(err => console.error(err.toString()));
+
+        connection.on("UpdateUserList", function (senderId, message) {
+            var userItem = document.querySelector(`[data-user-id='${senderId}'] .last-message`);
+            if (userItem) {
+                userItem.textContent = message;
+            }
+        });
+    </script>
+    *@
+
+        
+
+    <script>
+        //LƯU Ý NẾU MUỐN BACK UP LẠI THÌ XÓA ĐOẠN NÀY VÀ DÙNG ĐOẠN TRÊN NHÉ
+        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+        connection.start().catch(err => console.error(err.toString()));
+
+                connection.on("UpdateUserList", function (userIdToUpdate, message) {
+            // Tìm phần tử DOM dựa theo data-user-id chính là userIdToUpdate
+            var userItem = $(`[data-user-id='${userIdToUpdate}']`);
+            if (userItem.length > 0) {
+                userItem.find('.last-message').text(message);
+                // Di chuyển phần tử này lên đầu danh sách
+                $(".users-container").prepend(userItem);
+            }
+        });
+        //LƯU Ý NẾU MUỐN BACK UP LẠI THÌ XÓA ĐOẠN NÀY VÀ DÙNG ĐOẠN TRÊN NHÉ
+    </script>
+
+
+    
+
+
+
+
+
+}

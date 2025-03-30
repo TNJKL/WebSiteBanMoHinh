@@ -1,0 +1,94 @@
+﻿@using WebSiteBanMoHinh.ViewModels
+@model IEnumerable<MessagesUsersListViewModel>
+
+<style>
+    .users-container {
+        max-width: 400px;
+        height: 100vh;
+        overflow-y: auto;
+        border-right: 1px solid #ddd;
+        background-color: #f5f5f5;
+        padding: 10px;
+    }
+
+    .user {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+        .user:hover {
+            background-color: #e6e6e6;
+        }
+
+    .user-avatar {
+        width: 50px;
+        height: 50px;
+        background-color: darkblue;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .user-info {
+        flex-grow: 1;
+    }
+
+    .user-name {
+        font-weight: bold;
+        margin: 0;
+    }
+
+    .last-message {
+        font-size: 14px;
+        color: gray;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+    }
+</style>
+
+<div class="users-container">
+    @foreach (var item in Model)
+    {
+        <a href="/Messages/Chat?selectedUserId=@item.Id" class="user" data-user-id="@item.Id">
+            <div class="user-avatar">
+                @item.UserName.Substring(0, 1).ToUpper()
+            </div>
+            <div class="user-info">
+                <p class="user-name">@item.UserName</p>
+                <p class="last-message">@item.LastMessage</p>
+            </div>
+        </a>
+    }
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+<script>
+    var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+    connection.start().catch(err => console.error(err.toString()));
+
+    connection.on("UpdateUserList", function (senderId, message) {
+        var userItem = document.querySelector(`[data-user-id='${senderId}'] .last-message`);
+        if (userItem) {
+            userItem.textContent = message;
+        }
+    });
+</script>
+
+
+
+
+
+
