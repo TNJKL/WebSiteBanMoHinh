@@ -2,42 +2,168 @@
 @inject LanguageService ShareLocallizer
 @model AppUserModel
 @{
-	ViewData["Title"] = "Forget Password";
+    ViewData["Title"] = "Forget Password";
 }
 
-<section id="">
-	<!--form-->
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-8 col-sm-offset-1">
-				<div class="login-form">
-					<!--login form-->
-					<h2>@ShareLocallizer.GetLocalizedHTML("Forget Password")</h2>
-					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-					<form asp-action="SendMailForgotPass" asp-controller="Account">
-						<div class="form-group">
-							<label>@ShareLocallizer.GetLocalizedHTML("Email")</label>
-							<input asp-for="Email" class="form-control" />
-							<span asp-validation-for="Email" class="text-danger" />
-						</div>
+<section id="forget-pass-section">
+    <!--form-->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <div class="forget-pass-form">
+                    <!--forget pass form-->
+                    <h2>@ShareLocallizer.GetLocalizedHTML("Forget Password")</h2>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <form asp-action="SendMailForgotPass" asp-controller="Account">
+                        <div class="form-group">
+                            <label><i class="fa fa-envelope"></i> @ShareLocallizer.GetLocalizedHTML("Email")</label>
+                            <input asp-for="Email" class="form-control forget-pass-input" placeholder="Enter your email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
 
+                        <button type="submit" class="btn btn-send"><i class="fa fa-paper-plane"></i> @ShareLocallizer.GetLocalizedHTML("Send")</button>
+                    </form>
 
-						
-
-						<button class="btn btn-default">@ShareLocallizer.GetLocalizedHTML("Send")</button>
-						<a asp-action="Create" asp-controller="Account">@ShareLocallizer.GetLocalizedHTML("Register")</a><br />
-						
-
-					</form>
-				</div><!--/login form-->
-			</div>
-
-
-		</div>
-	</div>
+                    <div class="forget-pass-options">
+                        <div class="forget-pass-links">
+                            <a href="@Url.Action("Create", "Account")"><i class="fa fa-user-plus"></i> @ShareLocallizer.GetLocalizedHTML("Register")</a>
+                        </div>
+                    </div>
+                </div><!--/forget pass form-->
+            </div>
+        </div>
+    </div>
 </section><!--/form-->
 @section Scripts {
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
- }
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<style>
+    /* Style cho trang Forget Password */
+    #forget-pass-section {
+        padding: 50px 0;
+        background-color: #f5f5f5;
+    }
+
+    .forget-pass-form {
+        background-color: white;
+        border: 2px solid #e6b800;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+        .forget-pass-form h2 {
+            font-size: 2em;
+            font-weight: 700;
+            font-family: 'Roboto', sans-serif;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            border-bottom: 3px solid #e6b800;
+            padding-bottom: 10px;
+        }
+
+        .forget-pass-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .forget-pass-form label {
+            font-size: 1.1em;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .forget-pass-form .forget-pass-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            color: #333333;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .forget-pass-form .forget-pass-input:focus {
+                border-color: #e6b800;
+                box-shadow: 0 0 0 0.2rem rgba(230, 184, 0, 0.3);
+                outline: none;
+            }
+
+        .forget-pass-form .text-danger {
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .forget-pass-form .btn-send {
+            background-color: #e6b800;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 20px;
+            font-size: 1em;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            justify-content: center;
+        }
+
+            .forget-pass-form .btn-send:hover {
+                background-color: #cc9900;
+            }
+
+    .forget-pass-options {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+        .forget-pass-options .forget-pass-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+            .forget-pass-options .forget-pass-links a {
+                color: #e6b800;
+                font-size: 1em;
+                font-weight: 600;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: color 0.3s ease;
+            }
+
+                .forget-pass-options .forget-pass-links a:hover {
+                    color: #cc9900;
+                }
+
+    .forget-pass-form .forget-pass-input {
+        padding: 10px;
+        font-size: 0.9em;
+    }
+
+    .forget-pass-form .btn-send {
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
+
+    .forget-pass-options .forget-pass-links a {
+        font-size: 0.9em;
+    }
+
+    }
+</style>

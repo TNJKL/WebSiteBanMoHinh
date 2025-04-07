@@ -1,43 +1,182 @@
 ﻿@model VnpayModel
-
-
+@using WebSiteBanMoHinh.Resources;
+@inject LanguageService ShareLocallizer
 @{
-    ViewData["title"] = "VnPay infor";
+    ViewData["title"] = "VnPay Info";
 }
 
-<body>
+<style>
+    :root {
+        --primary-color: rgb(216,172,68);
+        --secondary-color: rgb(255,204,102);
+        --text-color: rgb(50,50,50);
+        --gold-color: #DAA520;
+    }
 
-    <h3>Payment Vnpay Info</h3>
+    .vnpay-info-container {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        padding: 30px;
+        margin: 20px auto;
+        max-width: 1000px; /* Tăng chiều rộng container để chứa nội dung dài */
+    }
 
-    <a class="btn btn-primary" asp-action="Index" asp-controller="Order">Back to Orders</a>
+        .vnpay-info-container h3 {
+            color: var(--primary-color);
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2rem;
+        }
 
-    <table class="table" id="myTable">
-        <thead>
-            <tr>
-                <th>TransactionId</th>
-                <th>OrderDescription</th>
-                <th>OrderId</th>
-                <th>PaymentMethod</th>
-                <th>PaymentId</th>
-                <th>DatePaid</th>               
-                
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>@Model.TransactionId</td>
-                <td>@Model.OrderDescription</td>
-                <td>@Model.OrderId</td>
-                <td>@Model.PaymentMethod</td>
-                <td>@Model.PaymentId</td>
-                <td>@Model.DateCreated</td>
-               
-              
-            </tr>
-        </tbody>
+        .vnpay-info-container .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+        }
 
-    </table>
+            .vnpay-info-container .table thead {
+                background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+                color: #fff;
+            }
 
+            .vnpay-info-container .table th,
+            .vnpay-info-container .table td {
+                padding: 12px 15px;
+                text-align: left;
+                border-bottom: 1px solid var(--gold-color);
+                word-wrap: break-word; /* Cho phép nội dung xuống dòng */
+            }
 
-</body>
+                /* Tùy chỉnh chiều rộng cột để phân bổ hợp lý */
+                .vnpay-info-container .table th:nth-child(1),
+                .vnpay-info-container .table td:nth-child(1) { /* TransactionId */
+                    width: 15%;
+                }
 
+                .vnpay-info-container .table th:nth-child(2),
+                .vnpay-info-container .table td:nth-child(2) { /* OrderDescription */
+                    width: 25%; /* Tăng chiều rộng để chứa nội dung dài */
+                }
+
+                .vnpay-info-container .table th:nth-child(3),
+                .vnpay-info-container .table td:nth-child(3) { /* OrderId */
+                    width: 15%;
+                }
+
+                .vnpay-info-container .table th:nth-child(4),
+                .vnpay-info-container .table td:nth-child(4) { /* PaymentMethod */
+                    width: 15%;
+                }
+
+                .vnpay-info-container .table th:nth-child(5),
+                .vnpay-info-container .table td:nth-child(5) { /* PaymentId */
+                    width: 15%;
+                }
+
+                .vnpay-info-container .table th:nth-child(6),
+                .vnpay-info-container .table td:nth-child(6) { /* DatePaid */
+                    width: 15%;
+                }
+
+            .vnpay-info-container .table tbody tr {
+                transition: all 0.3s ease;
+            }
+
+                .vnpay-info-container .table tbody tr:hover {
+                    background: rgba(216,172,68,0.1);
+                }
+
+        .vnpay-info-container .btn-primary {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+            .vnpay-info-container .btn-primary:hover {
+                background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+                transform: translateY(-2px);
+            }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .vnpay-info-container h3 {
+            font-size: 1.5rem;
+        }
+
+        .vnpay-info-container {
+            padding: 20px;
+            margin: 10px;
+        }
+
+            .vnpay-info-container .table th,
+            .vnpay-info-container .table td {
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+
+            .vnpay-info-container .btn-primary {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+    }
+</style>
+
+<div class="vnpay-info-container">
+    <h3>@ShareLocallizer.GetLocalizedHTML("Payment Vnpay Info")</h3>
+    <a class="btn btn-primary" asp-action="Index" asp-controller="Order">@ShareLocallizer.GetLocalizedHTML("Back to Orders")</a>
+    <div class="table-responsive">
+        <table class="table" id="vnpayTable">
+            <thead>
+                <tr>
+                    <th>@ShareLocallizer.GetLocalizedHTML("TransactionId")</th>
+                    <th>@ShareLocallizer.GetLocalizedHTML("OrderDescription")</th>
+                    <th>@ShareLocallizer.GetLocalizedHTML("OrderId")</th>
+                    <th>@ShareLocallizer.GetLocalizedHTML("PaymentMethod")</th>
+                    <th>@ShareLocallizer.GetLocalizedHTML("PaymentId")</th>
+                    <th>@ShareLocallizer.GetLocalizedHTML("DatePaid")</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@(Model.TransactionId ?? "N/A")</td>
+                    <td>@(Model.OrderDescription ?? "N/A")</td>
+                    <td>@(Model.OrderId ?? "N/A")</td>
+                    <td>@(Model.PaymentMethod ?? "N/A")</td>
+                    <td>@(Model.PaymentId ?? "N/A")</td>
+                    <td>@Model.DateCreated.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Kiểm tra nếu DataTable đã được khởi tạo thì hủy trước
+            if ($.fn.DataTable.isDataTable('#vnpayTable')) {
+                $('#vnpayTable').DataTable().destroy();
+            }
+
+            // Khởi tạo DataTable
+            $('#vnpayTable').DataTable({
+                layout: {
+                    topStart: {
+                        buttons: ['pdf', 'print']
+                    }
+                }
+            });
+        });
+    </script>
+}

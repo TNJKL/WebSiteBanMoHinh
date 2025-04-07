@@ -1,18 +1,105 @@
-﻿@using WebSiteBanMoHinh.Resources;
+﻿﻿@using WebSiteBanMoHinh.Resources;
 @inject LanguageService ShareLocallizer
+
+<style>
+    .left-sidebar {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+        .left-sidebar:hover {
+            transform: translateY(-5px);
+        }
+
+        .left-sidebar h2 {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #e6b800;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            font-family: 'Roboto', sans-serif;
+        }
+
+    .category-products .panel {
+        border: none;
+        box-shadow: none;
+        background: none;
+        margin-bottom: 10px;
+    }
+
+    .category-products .panel-heading {
+        background-color: #f5f5f5;
+        border: 2px solid #e6b800;
+        border-radius: 10px;
+        padding: 10px 15px;
+        transition: all 0.3s ease;
+    }
+
+        .category-products .panel-heading:hover {
+            background-color: #e6b800;
+            color: white;
+        }
+
+    .category-products .panel-title a {
+        font-size: 1em;
+        font-weight: 600;
+        color: #2c3e50;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .category-products .panel-title a:hover {
+            color: white;
+        }
+
+    .category-products .panel-title i {
+        font-size: 1.2em;
+        color: #e6b800;
+        transition: color 0.3s ease;
+    }
+
+    .category-products .panel-heading:hover i {
+        color: white;
+    }
+
+    .category-products .panel-body {
+        padding: 10px 15px;
+        background-color: #fff;
+        border-radius: 0 0 10px 10px;
+        border: 2px solid #e6b800;
+        border-top: none;
+    }
+
+        .category-products .panel-body a {
+            font-size: 0.9em;
+            color: #2c3e50;
+            text-decoration: none;
+            display: block;
+            padding: 5px 0;
+            transition: color 0.3s ease;
+        }
+
+            .category-products .panel-body a:hover {
+                color: #e6b800;
+            }
+</style>
+
 <div class="left-sidebar">
-	<h2>@ShareLocallizer.GetLocalizedHTML("Category")</h2>
-	<div class="panel-group category-products" id="accordian">
-		<!--category-productsr-->
-		
-		<vc:categories></vc:categories>
-		
-	</div><!--/category-products-->
-	<h2>@ShareLocallizer.GetLocalizedHTML("Brand")</h2>
-	<div class="panel-group category-products" id="accordian">
-		
-		<vc:brands></vc:brands>
-	</div><!--/brands_products-->
+    <h2>@ShareLocallizer.GetLocalizedHTML("Category")</h2>
+    <div class="panel-group category-products" id="accordian">
+        <!--category-products-->
+        <vc:categories></vc:categories>
+    </div><!--/category-products-->
 
-
+    <h2>@ShareLocallizer.GetLocalizedHTML("Brand")</h2>
+    <div class="panel-group category-products" id="accordian">
+        <!--brands_products-->
+        <vc:brands></vc:brands>
+    </div><!--/brands_products-->
 </div>

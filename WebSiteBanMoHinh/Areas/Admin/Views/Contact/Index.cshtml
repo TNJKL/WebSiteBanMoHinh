@@ -4,44 +4,327 @@
 @{
     ViewData["title"] = "Contact Info";
 }
-<h3>Contact</h3>
 
-<table class="table" id="myTable">
-    <thead>
-        <tr>
-           
-            <th scope="col">Name</th>
-            <th scope="col">Description</th>
-            <th scope="col">Map</th>
-            <th scope="col">Logo</th>
-            <th scope="col">Email</th>
-            <th scope="col">Phone</th>
-            <th scope="col">Action</th>
+<style>
+    :root {
+        --primary-color: rgb(216, 172, 68);
+        --secondary-color: rgb(255, 204, 102);
+        --text-color: rgb(50, 50, 50);
+        --gold-color: #DAA520;
+    }
 
-           
+    .contact-container {
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
 
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                
-                <td>@item.Name</td>
-                <td>@Html.Raw(@item.Description)</td>
-                <td>@Html.Raw(@item.Map)</td>
-                <td><img src="~/media/logos/@item.LogoImage" width="120px" height="150px" /></td>
-                <td>@item.Email</td>
-                <td>@item.Phone</td>
-               
-                <td>
-                    <a asp-action="Edit" class="btn btn-warning btn-sm" asp-controller="Contact" >@ShareLocallizer.GetLocalizedHTML("Edit")</a>
-
-                </td>
-
-            </tr>
-
+        .contact-container h3 {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 2rem;
+            text-align: center;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-    </tbody>
-</table>
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #fff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+        .table thead {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .table th, .table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            vertical-align: middle;
+        }
+
+        .table th {
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .table tbody tr {
+            transition: background-color 0.3s ease;
+        }
+
+            .table tbody tr:hover {
+                background-color: rgba(212, 160, 23, 0.1);
+            }
+
+        .table img {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+    .btn-warning {
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        border: none;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 5px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+        .btn-warning:hover {
+            background: linear-gradient(90deg, var(--gold-color), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+    .btn-sm {
+        padding: 6px 10px;
+        font-size: 0.9em;
+    }
+
+    /* Điều chỉnh độ rộng cột */
+    .table th.description-column,
+    .table td.description-column {
+        min-width: 200px;
+        max-width: 250px;
+        word-wrap: break-word;
+    }
+
+    .table th.map-column,
+    .table td.map-column {
+        min-width: 200px;
+        max-width: 250px;
+    }
+
+    .table th.email-column,
+    .table td.email-column {
+        min-width: 150px;
+        max-width: 200px;
+        word-wrap: break-word;
+    }
+
+    .table th.phone-column,
+    .table td.phone-column {
+        min-width: 120px;
+        max-width: 150px;
+    }
+
+    /* Cố định kích thước phần Map */
+    .table td.map-column iframe {
+        width: 200px !important;
+        height: 150px !important;
+        border-radius: 8px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    /* Style cho DataTables */
+    .dataTables_wrapper .dataTables_filter {
+        float: right;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+        .dataTables_wrapper .dataTables_filter label {
+            display: flex;
+            align-items: center;
+            margin: 0;
+        }
+
+        .dataTables_wrapper .dataTables_filter input {
+            border: 2px solid var(--secondary-color);
+            border-radius: 5px;
+            padding: 5px;
+            margin-left: 5px;
+            width: 200px; /* Đảm bảo thanh tìm kiếm có độ rộng hợp lý */
+        }
+
+    .dataTables_wrapper .dt-buttons {
+        float: left;
+        margin-bottom: 15px;
+    }
+
+    .dataTables_wrapper .dt-button {
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        border: none;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+        .dataTables_wrapper .dt-button:hover {
+            background: linear-gradient(90deg, var(--gold-color), var(--primary-color));
+        }
+
+    /* Căn chỉnh thanh phân trang sang bên phải giống Product */
+    .dataTables_wrapper .dataTables_paginate {
+        float: right;
+        margin-top: 15px;
+        text-align: right;
+    }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            background: var(--primary-color);
+            color: white !important;
+            border: none;
+            border-radius: 5px;
+            margin: 0 2px;
+            padding: 5px 10px;
+            transition: all 0.3s ease;
+        }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+                background: var(--secondary-color);
+                transform: translateY(-2px);
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+                background: var(--gold-color);
+            }
+
+    .dataTables_wrapper .dataTables_info {
+        float: left;
+        padding-top: 10px;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .contact-container {
+            padding: 15px;
+        }
+
+            .contact-container h3 {
+                font-size: 1.5rem;
+            }
+
+        .table th, .table td {
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        .table img {
+            max-width: 80px;
+            max-height: 80px;
+        }
+
+        .table th.description-column,
+        .table td.description-column {
+            min-width: 150px;
+            max-width: 200px;
+        }
+
+        .table th.map-column,
+        .table td.map-column {
+            min-width: 150px;
+            max-width: 200px;
+        }
+
+        .table th.email-column,
+        .table td.email-column {
+            min-width: 120px;
+            max-width: 150px;
+        }
+
+        .table th.phone-column,
+        .table td.phone-column {
+            min-width: 100px;
+            max-width: 120px;
+        }
+
+        .table td.map-column iframe {
+            width: 150px !important;
+            height: 100px !important;
+        }
+
+        .dataTables_wrapper .dataTables_filter {
+            float: none;
+            text-align: center;
+            justify-content: center;
+        }
+
+            .dataTables_wrapper .dataTables_filter input {
+                width: 150px;
+            }
+
+        .dataTables_wrapper .dt-buttons {
+            float: none;
+            text-align: center;
+        }
+
+        .dataTables_wrapper .dataTables_paginate {
+            float: none;
+            text-align: center;
+        }
+
+        .dataTables_wrapper .dataTables_info {
+            float: none;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="contact-container">
+    <h3>@ShareLocallizer.GetLocalizedHTML("Contact")</h3>
+
+    <table class="table" id="myTable">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col" class="description-column">Description</th>
+                <th scope="col" class="map-column">Map</th>
+                <th scope="col">Logo</th>
+                <th scope="col" class="email-column">Email</th>
+                <th scope="col" class="phone-column">Phone</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td class="description-column">@Html.Raw(@item.Description)</td>
+                    <td class="map-column">@Html.Raw(@item.Map)</td>
+                    <td><img src="~/media/logos/@item.LogoImage" alt="Logo" width="100px" height="100px" /></td>
+                    <td class="email-column">@item.Email</td>
+                    <td class="phone-column">@item.Phone</td>
+                    <td>
+                        <a asp-action="Edit" class="btn btn-warning btn-sm" asp-controller="Contact">@ShareLocallizer.GetLocalizedHTML("Edit")</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Kiểm tra nếu DataTable đã được khởi tạo thì hủy trước khi khởi tạo lại
+            if ($.fn.DataTable.isDataTable('#myTable')) {
+                $('#myTable').DataTable().destroy();
+            }
+                pageLength: 10,
+                responsive: true,
+                columnDefs: [
+                    { targets: [1, 2], render: function (data) { return data; } } // Đảm bảo cột Description và Map hiển thị HTML thô
+                ]
+            });
+        });
+    </script>
+}

@@ -2,118 +2,252 @@
 @{
     ViewData["Title"] = "Dashboard";
 }
-<html>
-    <head>
-        <meta name="viewport" content="width=device-width" />
-        <title>Dashboard</title>
-    </head>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #d4a017;
+            --secondary-color: #ffcc33;
+            --text-color: #333333;
+            --hover-color: #cc9900;
+            --background-color: #ffffff;
+        }
 
-    <body>
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
-        <h3>Dashboard Statistic</h3>
-        <div class="row">
-            <div class="col-md-3">
-                <p>Thống kê sản phẩm</p>
-                 @ViewBag.CountProduct
-            </div>
-            <div class="col-md-3">
-                <p>Thống kê đơn hàng</p>
-            @ViewBag.CountOrder 
-            </div>
-        <div class="col-md-3">
-            <p>Thống kê danh mục</p>
-            @ViewBag.CountCategory
-        </div>
-        <div class="col-md-3">
-            <p>Thống kê user</p>
-            @ViewBag.CountUser
-        </div>
-        </div>
+        .dashboard-container {
+            padding: 30px 15px;
+            background-color: var(--background-color);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            margin: 30px auto;
+            max-width: 1200px;
+        }
 
+            .dashboard-container h3 {
+                color: var(--primary-color);
+                font-weight: 700;
+                font-size: 2rem;
+                text-align: center;
+                text-transform: uppercase;
+                margin-bottom: 30px;
+                background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .stat-card p {
+                color: var(--text-color);
+                font-size: 1.1rem;
+                font-weight: 600;
+                margin-bottom: 10px;
+            }
+
+            .stat-card span {
+                color: var(--primary-color);
+                font-size: 1.5rem;
+                font-weight: 700;
+                background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+        .filter-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+            .filter-section h4 {
+                color: var(--primary-color);
+                font-weight: 600;
+                margin-bottom: 15px;
+            }
+
+        .filter-select, .form-control {
+            border: 2px solid var(--secondary-color);
+            border-radius: 8px;
+            padding: 8px;
+            width: 100%;
+            max-width: 250px;
+            transition: border-color 0.3s ease;
+        }
+
+            .filter-select:focus, .form-control:focus {
+                border-color: var(--hover-color);
+                outline: none;
+                box-shadow: 0 0 5px rgba(204, 153, 0, 0.3);
+            }
+
+        .btn-filter {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+            .btn-filter:hover {
+                background: linear-gradient(90deg, var(--hover-color), var(--primary-color));
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            }
+
+        .chart-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+            .chart-section p {
+                color: var(--text-color);
+                font-size: 1.2rem;
+                font-weight: 600;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .dashboard-container {
+                padding: 20px 10px;
+                margin: 15px;
+            }
+
+                .dashboard-container h3 {
+                    font-size: 1.5rem;
+                }
+
+            .stat-card {
+                margin-bottom: 15px;
+            }
+
+            .filter-select, .form-control {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
     <div class="container">
-        <div class="row">
-            <div class="col-md-3">
-                <h4>Lọc dữ liệu theo: </h4>
-                <select class="filter-select">
-                    <option value="30">----Lọc dữ liệu----</option>
-                    <option value="7">7 ngày trước</option>
-                    <option value="30">Tháng qua</option>
-                    <option value="90">3 tháng trước</option>
-                    <option value="365">1 năm</option>
-                </select>
+        <div class="dashboard-container">
+            <h3>Dashboard Statistic</h3>
+
+            <div class="row">
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card">
+                        <p>Thống kê sản phẩm</p>
+                        <span>@ViewBag.CountProduct</span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card">
+                        <p>Thống kê đơn hàng</p>
+                        <span>@ViewBag.CountOrder</span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card">
+                        <p>Thống kê danh mục</p>
+                        <span>@ViewBag.CountCategory</span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card">
+                        <p>Thống kê user</p>
+                        <span>@ViewBag.CountUser</span>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-3">
-                <h4>Tùy chọn:</h4>
-                <label>Từ ngày</label>
-                <input type="date" class="form-control" id="date_from" asp-for="@Model.CreatedDate" />
-                <label>Đến ngày</label>
-                <input type="date" class="form-control" id="date_to" asp-for="@Model.CreatedDate" />
-                <button id="filterButton" class="btn btn-primary">Filter</button>
+
+            <div class="filter-section">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <h4>Lọc dữ liệu theo:</h4>
+                        <select class="filter-select">
+                            <option value="30">----Lọc dữ liệu----</option>
+                            <option value="7">7 ngày trước</option>
+                            <option value="30">Tháng qua</option>
+                            <option value="90">3 tháng trước</option>
+                            <option value="365">1 năm</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <h4>Tùy chọn:</h4>
+                        <label>Từ ngày</label>
+                        <input type="date" class="form-control" id="date_from" asp-for="@Model.CreatedDate" />
+                        <label>Đến ngày</label>
+                        <input type="date" class="form-control" id="date_to" asp-for="@Model.CreatedDate" />
+                        <button id="filterButton" class="btn-filter">Filter</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <p>Biểu đồ thống kê</p>
+                <div id="myfirstchart" style="height: 300px;"></div>
             </div>
         </div>
     </div>
-        <div class="row">
-            <p>Biểu đồ thống kê</p>
-        <div id="myfirstchart" style="height: 250px;"></div>
-        </div>
-    </body>
- @section Scripts{
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
     <script>
-            $(document).ready(function () {
-                     var chartData = [];
-                    var ChartMorris = new Morris.Line({
-                                element: 'myfirstchart',
-                                data: chartData,
-                                xkey: 'date',
-                               
-                                ykeys: ['sold', 'quantity', 'revenue', 'profit'],
-                                    labels: ["Số lượng bán ra","Đơn hàng" , "Doanh thu", "Lợi nhuận"]
-                         });
+        $(document).ready(function () {
+            var chartData = [];
+            var ChartMorris = new Morris.Line({
+                element: 'myfirstchart',
+                data: chartData,
+                xkey: 'date',
+                ykeys: ['sold', 'quantity', 'revenue', 'profit'],
+                labels: ["Số lượng bán ra", "Đơn hàng", "Doanh thu", "Lợi nhuận"],
+                lineColors: ['#d4a017', '#ffcc33', '#cc9900', '#666633'],
+                pointFillColors: ['#ff4d4d', '#00aaff', '#28a745', '#ffcc33'], // Màu khác nhau cho các chấm
+                pointStrokeColors: ['#ff4d4d', '#00aaff', '#28a745', '#ffcc33'], // Viền chấm
+                lineWidth: 2,
+                pointSize: 5,
+                hideHover: 'auto'
+            });
 
-                $.ajax({
-                    url: "@Url.Action("GetChartData", "Dashboard")",
-                    type: "POST",
-                    dataType: "json",
-                    success: function (data) {
-                        if(data){
-                                ChartMorris.setData(data.map(function (item) {
-                                return {
-                                    date: item.date,
-                                    sold: item.sold,
-                                    quantity: item.quantity,
-                                    revenue: item.revenue,
-                                    profit: item.profit
-                                };
-                                }));
-                        }else{
-                            console.warn("No data received for Morris chart update.");
-                            ChartMorris.setData([]);
-                        }                                       
-        },
-        error: function (error){
-            console.error("Error fetching data:" ,error);
-        }
-        });
-
-        $('.filter-select').on('change' , function(){
-            var days = $(this).val();
-            var endDate = new Date();
-            var startDate = new Date(endDate.getTime() - days * 24 * 60 * 60 * 1000);
-
-            // alert(startDate);
-            // alert(endDate);
             $.ajax({
-                url: "@Url.Action("GetChartDataBySelect", "Dashboard")",
-                type: 'POST',
-                dateType: "json",
-                    data: {
-                        startDate: startDate.toISOString().split('T')[0],
-                        endDate: endDate.toISOString().split('T')[0]
-                    },
-                    success : function (data){
-
-                    if(data){
-                        ChartMorris.setData(data.map(function(item) {
+                url: "@Url.Action("GetChartData", "Dashboard")",
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+                    if (data) {
+                        ChartMorris.setData(data.map(function (item) {
                             return {
                                 date: item.date,
                                 sold: item.sold,
@@ -122,49 +256,81 @@
                                 profit: item.profit
                             };
                         }));
-                    }else{
+                    } else {
                         console.warn("No data received for Morris chart update.");
                         ChartMorris.setData([]);
                     }
+                },
+                error: function (error) {
+                    console.error("Error fetching data:", error);
+                }
+            });
+
+            $('.filter-select').on('change', function () {
+                var days = $(this).val();
+                var endDate = new Date();
+                var startDate = new Date(endDate.getTime() - days * 24 * 60 * 60 * 1000);
+
+                $.ajax({
+                    url: "@Url.Action("GetChartDataBySelect", "Dashboard")",
+                    type: 'POST',
+                    dataType: "json",
+                    data: {
+                        startDate: startDate.toISOString().split('T')[0],
+                        endDate: endDate.toISOString().split('T')[0]
                     },
-                    error: function (error){
+                    success: function (data) {
+                        if (data) {
+                            ChartMorris.setData(data.map(function (item) {
+                                return {
+                                    date: item.date,
+                                    sold: item.sold,
+                                    quantity: item.quantity,
+                                    revenue: item.revenue,
+                                    profit: item.profit
+                                };
+                            }));
+                        } else {
+                            console.warn("No data received for Morris chart update.");
+                            ChartMorris.setData([]);
+                        }
+                    },
+                    error: function (error) {
                         console.error("Error fetching data:", error);
                     }
-                  });
-               });
-
-               //loc
-                   $("#filterButton").click(function () {
-        var fromDate = $("#date_from").val();
-        var toDate = $("#date_to").val();
-
-        $.ajax({
-            url: "@Url.Action("FilterData", "Dashboard")",
-            data: { fromDate: fromDate, toDate: toDate },
-            type: "POST",
-            success: function (data) {
-                if (data) {
-                    ChartMorris.setData(data.map(function (item) {
-                        return {
-                            date: item.date,
-                            sold: item.sold,
-                            quantity: item.quantity,
-                            revenue: item.revenue,
-                            profit: item.profit
-                        };
-                    }));
-                } else {
-                    console.warn("No data received for Morris chart update.");
-                    ChartMorris.setData([]);
-                }
-                },
-                error: function (error){
-                    console.error("Error fectching data:" , error);
-                }
                 });
-                });
+            });
 
-    });
-     </script>
- }
+            $("#filterButton").click(function () {
+                var fromDate = $("#date_from").val();
+                var toDate = $("#date_to").val();
+
+                $.ajax({
+                    url: "@Url.Action("FilterData", "Dashboard")",
+                    data: { fromDate: fromDate, toDate: toDate },
+                    type: "POST",
+                    success: function (data) {
+                        if (data) {
+                            ChartMorris.setData(data.map(function (item) {
+                                return {
+                                    date: item.date,
+                                    sold: item.sold,
+                                    quantity: item.quantity,
+                                    revenue: item.revenue,
+                                    profit: item.profit
+                                };
+                            }));
+                        } else {
+                            console.warn("No data received for Morris chart update.");
+                            ChartMorris.setData([]);
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error fetching data:", error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
 </html>

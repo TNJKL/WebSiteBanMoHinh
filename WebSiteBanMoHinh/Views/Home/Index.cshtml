@@ -1,140 +1,882 @@
-﻿@using Microsoft.AspNetCore.Mvc.Localization
+﻿﻿@using Microsoft.AspNetCore.Mvc.Localization
 @model IEnumerable<ProductModel>
-@* @using NetCoreLocalization.Resources; *@
 @using WebSiteBanMoHinh.Resources;
 @inject LanguageService ShareLocallizer
 <partial name="_SliderPartial" />
-<div class="col-sm-3">
-	@Html.Partial("_SidebarPartial")
-</div>
 <style>
-	.product-image-wrapper{
-	height: 450px;
-	}
+    .product-image-wrapper {
+        background-color: white;
+        border: 2px solid #e6b800;
+        border-radius: 15px; /* Đồng bộ với View Category */
+        padding: 15px;
+        position: relative;
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Thêm box-shadow transition */
+        height: 520px; /* Đồng bộ với View Category */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 0 4px 15px rgba(230, 184, 0, 0.2); /* Shadow nhẹ ban đầu */
+    }
+
+        .product-image-wrapper:hover {
+            transform: translateY(-8px); /* Tăng hiệu ứng nâng lên */
+            box-shadow: 0 8px 20px rgba(230, 184, 0, 0.4);
+        }
+
+    .productinfo {
+        text-align: center;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 10px 0; /* Thêm padding để cân đối*/
+    }
+
+    .image-container {
+        position: relative;
+        overflow: hidden;
+        height: 260px; /* Tăng chiều cao ảnh cho cân đối */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .productinfo img {
+        max-height: 260px; /* Đồng bộ với View Category */
+        max-width: 100%;
+        object-fit: contain;
+        border-radius: 10px; /* Bo góc ảnh mượt hơn */
+        transition: transform 0.3s ease, opacity 0.3s ease; /* Thêm transform transition */
+    }
+
+    .productinfo .quick-view {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #e6b800;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px; /* Tăng border-radius cho hiện đại */
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        font-size: 0.9em;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        text-transform: uppercase; /* Đồng bộ với View Category */
+    }
+
+    .image-container:hover img {
+        opacity: 0.7;
+        transform: scale(1.05); /* Thêm hiệu ứng zoom giống View Category */
+    }
+
+    .image-container:hover .quick-view {
+        opacity: 1;
+    }
+
+    .productinfo .product-name {
+        font-size: 1.1em;
+        font-weight: 700;
+        font-family: 'Roboto', sans-serif;
+        color: #2c3e50;
+        margin: 10px 0;
+        line-height: 1.3;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .productinfo h2 {
+        margin: 5px 0;
+    }
+
+    .productinfo .price {
+        color: #e6b800; /* Đồng bộ màu giá với View Category */
+        font-weight: 700;
+        font-size: 1.2em; /* Tăng kích thước chữ cho nổi bật */
+    }
+
+    .add-to-cart, .add-to-wishlist, .add-to-compare {
+        background-color: #e6b800;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 25px; /* Đồng bộ với View Category */
+        transition: all 0.3s ease;
+        width: 100%;
+        margin: 5px 0; /* Điều chỉnh margin cho đều */
+        font-size: 0.9em;
+        font-weight: 600;
+        text-transform: uppercase; /* Đồng bộ với View Category */
+    }
+
+    .add-to-cart {
+        background-color: #e6b800;
+    }
+
+        .add-to-cart:hover {
+            background-color: #cc9900;
+           
+        }
+
+    .add-to-wishlist {
+        background-color: #ff4d4d;
+    }
+
+        .add-to-wishlist:hover {
+            background-color: #e63939;
+        }
+
+    .add-to-compare {
+        background-color: #0084ff;
+    }
+
+        .add-to-compare:hover {
+            background-color: #006cd1;
+        }
+
+    .video-item:hover .logo-overlay {
+        opacity: 1;
+    }
+
+    .video-item img {
+        transition: opacity 0.3s ease;
+    }
+
+    .video-item:hover img {
+        opacity: 0.7;
+    }
+
+    .support-buttons {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 1000;
+    }
+
+    .brand-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 120px;
+        height: 60px;
+        padding: 5px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+        .brand-item:hover {
+            transform: scale(1.05);
+        }
+
+        .brand-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+    /* CSS cho phần Series Nổi Bật */
+    .series-section {
+        margin-bottom: 40px;
+    }
+
+    .section-title {
+        font-family: 'Roboto', sans-serif;
+        color: #e6b800;
+        font-size: 2em;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 4px rgba(230, 184, 0, 0.3); /* Thêm shadow cho tiêu đề */
+        margin-bottom: 20px;
+    }
+
+    .series-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .series-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100px;
+        transition: transform 0.3s ease;
+    }
+
+        .series-item:hover {
+            transform: scale(1.05);
+        }
+
+        .series-item img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #e6b800;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        .series-item p {
+            margin-top: 10px;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+    /* Customer Reviews Slider */
+    .reviews-section {
+        background-color: #f5f5f5;
+        padding: 40px 0;
+        text-align: center;
+    }
+
+        .reviews-section h2 {
+            font-size: 2em;
+            font-weight: 700;
+            color: #e6b800; /* Đồng bộ với sidebar */
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            font-family: 'Roboto', sans-serif; /* Đồng bộ font */
+        }
+
+    .reviews-slider {
+        position: relative;
+        overflow: hidden;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .reviews-container {
+        display: flex;
+        transition: transform 0.5s ease;
+        cursor: grab;
+        user-select: none;
+    }
+
+        .reviews-container.dragging {
+            cursor: grabbing;
+            transition: none;
+        }
+
+    .review-item {
+        flex: 0 0 33.33%;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+
+    .review-card {
+        background-color: white;
+        border: 2px solid var(--secondary-color);
+        border-radius: 10px;
+        padding: 20px;
+        text-align: left;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+        .review-card p {
+            font-size: 1em;
+            color: var(--text-color);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .review-card .rating {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .review-card .reviewer {
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.9em;
+        }
+
+    .reviews-slider .carousel-indicators {
+        position: absolute;
+        bottom: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+    }
+
+        .reviews-slider .carousel-indicators span {
+            width: 10px;
+            height: 10px;
+            background-color: #ccc;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+            .reviews-slider .carousel-indicators span.active {
+                background-color: var(--primary-color);
+            }
+
+    .anime-swal {
+        border: 2px solid #e6b800;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .anime-swal-title {
+        font-family: 'Roboto', sans-serif;
+        font-weight: 700;
+        font-size: 1.5em;
+    }
+
+    .anime-swal-text {
+        font-family: 'Roboto', sans-serif;
+        font-size: 1.1em;
+    }
+
+    /* Responsive adjustments */
+    @@media screen and (max-width: 991px) {
+        .review-item {
+            flex: 0 0 50%;
+        }
+    }
+
+    @@media screen and (max-width: 767px) {
+        .review-item {
+            flex: 0 0 100%;
+        }
+
+        .reviews-section h2 {
+            font-size: 1.5em;
+        }
+
+        .review-card p {
+            font-size: 0.9em;
+        }
+    }
 </style>
-<div class="col-sm-9 padding-right">
-	<div class="features_items">
-		<!--features_items-->
-		<h2 class="title text-center">@ShareLocallizer.GetLocalizedHTML("Features Items")</h2>
-		@foreach(var item in Model){
-			<div class="col-sm-4">
-				<div class="product-image-wrapper">
 
-					<div class="single-products">
-
-						<div class="productinfo text-center">
-							<a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id">
-								<img src="~/media/products/@item.Image" alt="@item.Name" width="100%"/>
-								<h2>$@item.Price.ToString("#,##0 VND")</h2>
-								<p>@item.Name</p>
-								<p>@ShareLocallizer.GetLocalizedHTML("Category"): @item.Category.Name</p>
-								<p>@ShareLocallizer.GetLocalizedHTML("Brand"): @item.Brand.Name</p>
-							</a>
-							@* <a class="btn btn-default add-to-cart" asp-action="Add" asp-controller="Cart" asp-route-Id="@item.Id"><i class="fa fa-shopping-cart"></i>@ShareLocallizer.GetLocalizedHTML("Add to Cart")</a> *@
-							@if(item.Quantity > 0){
-								<button class="btn btn-default add-to-cart" data-product_id="@item.Id"><i class="fa fa-shopping-cart"></i>@ShareLocallizer.GetLocalizedHTML("Add to Cart")</button>
-							}
-							else
-							{
-								<button class="btn btn-default" ><i class="fa fa-shopping-cart"></i>@ShareLocallizer.GetLocalizedHTML("Sold out")</button>
-							}
-						</div>
-
-
-					</div>
-
-					<div class="choose">
-						@if(User.Identity?.IsAuthenticated ?? false)
-						{
-							<ul class="nav nav-pills nav-justified">
-								<li><button class="btn btn-danger add-btn-wishlist" data-product_id="@item.Id">Add to wishlist</button></li>
-								<li><button class="btn btn-primary add-btn-compare" data-product_id="@item.Id">Add to compare</button></li>
-							</ul>
-						}
-						
-				</div>
-			</div>
-		</div>
-		}
-	</div><!--features_items-->
+<div class="col-sm-3">
+    @Html.Partial("_SidebarPartial")
 </div>
+
+<div class="support-buttons">
+    <a href="tel:09169696969" class="support-button phone-button">
+        <i class="fas fa-phone"></i>
+    </a>
+    <a href="https://m.me/your-messenger-id" target="_blank" class="support-button messenger-button">
+        <i class="fab fa-facebook-messenger"></i>
+    </a>
+    <a href="https://zalo.me/09169696969" target="_blank" class="support-button zalo-button">
+        <i class="fas fa-comment-alt"></i>
+    </a>
+    <a href="#" id="scrollUp" class="support-button scroll-up-button">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+<div class="col-sm-9 padding-right">
+    <!-- Thêm phần Series Nổi Bật -->
+    <div class="series-section">
+        <h3 class="section-title">@ShareLocallizer.GetLocalizedHTML("Featured Series")</h3>
+        <div class="series-list">
+            <div class="series-item">
+                <img src="https://product.hstatic.net/1000160337/product/furyu_hatsune_miku__1__703a2b2923ce440e9b0c8c9a8571c210.jpg" alt="Hatsune Miku" />
+                <p>Hatsune Miku</p>
+            </div>
+            <div class="series-item">
+                <img src="https://ohgatcha.com/cdn/shop/files/miku-nakano-floral-dress-ver-1-7-scale-figure-estream-40571739472103_1200x.jpg?v=1683702176" alt="The Quintessential Quintuplets" />
+                <p>The Quintessential Quintuplets</p>
+            </div>
+            <div class="series-item">
+                <img src="https://bizweb.dktcdn.net/thumb/1024x1024/100/442/971/products/04623ddff55528ea33e4954e4fa01db9-1684084037170.jpg?v=1684102037013" alt="Fate Grand Order" />
+                <p>Fate Grand Order</p>
+            </div>
+            <div class="series-item">
+                <img src="https://onepiece.store/wp-content/uploads/2024/08/kf-S34842a08ca4c4cd1acdf8065cb9e03afw-21cm-Anime-One-Piece-Gear-5-Luffy-Figure-Sun-God-Nika-Luffy-Pvc-Action-Figures-Gk.webp" alt="One Piece" />
+                <p>One Piece</p>
+            </div>
+            <div class="series-item">
+                <img src="https://product.hstatic.net/1000160337/product/spy_x_family_yor_forger_1__9__95374ef11cc34b4797366c502036fca4_master.jpg" alt="Spy X Family" />
+                <p>Spy X Family</p>
+            </div>
+            <div class="series-item">
+                <img src="https://api.otaku.vn/image/product/NNwrO3CI/slide/plOpeOLZoQ8zsNgHv9RZ9mcP3Vtg5lVn.jpg" alt="Hololive" />
+                <p>Hololive</p>
+            </div>
+            <div class="series-item">
+                <img src="https://dinotoystore.vn/wp-content/uploads/2023/11/2-2.jpg" alt="Demon Slayer" />
+                <p>Demon Slayer</p>
+            </div>
+            <div class="series-item">
+                <img src="https://product.hstatic.net/1000160337/product/overlord_ainz_ooal_gown_1_7__10__master.jpg" alt="Overlord" />
+                <p>Overlord</p>
+            </div>
+            <div class="series-item">
+                <img src="https://product.hstatic.net/1000160337/product/rezero_-_starting_life_in_another_world_-_echidna_-_hanfu_-_1__3__efd64a0e615f4c7f901a72f16e2f37ec.jpg" alt="Re:Zero" />
+                <p>Re:Zero</p>
+            </div>
+            <div class="series-item">
+                <img src="https://product.hstatic.net/200000462939/product/10009_24cd0d30f1304582b74010c83dd026aa.jpg" alt="Goddess of Victory: Nikke" />
+                <p>Goddess of Victory: Nikke</p>
+            </div>
+            <div class="series-item">
+                <img src="https://product.hstatic.net/1000160337/product/b-style_hunter_x_hunter_killua_zoldyck_1__2__25540e4587564d6896c3e8c3ed2ef7de_master.jpg" alt="Hunter X Hunter" />
+                <p>Hunter X Hunter</p>
+            </div>
+            <div class="series-item">
+                <img src="https://product.hstatic.net/1000105776/product/866cb4f367f10f50f96f05bbc19002cb40c9babd_16c34c1a7f8745f08cc3ffab467cfbe5.jpeg" alt="My Hero Academia" />
+                <p>My Hero Academia</p>
+            </div>
+            <div class="series-item">
+                <img src="https://product.hstatic.net/1000160337/product/jujutsu_kaisen_ryomen_sukuna_-noroi_no_ou-_1__1__b56f0cc0f9224ad199bf02a52ddc7f01.jpg" alt="Jujutsu Kaisen" />
+                <p>Jujutsu Kaisen</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="features_items">
+        <h2 class="section-title">@ShareLocallizer.GetLocalizedHTML("Features Items")</h2>
+        @foreach (var item in Model)
+        {
+            <div class="col-sm-4">
+                <div class="product-image-wrapper">
+                    <div class="single-products">
+                        <div class="productinfo">
+                            <div class="image-container">
+                                <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id">
+                                    <img src="~/media/products/@item.Image" alt="@item.Name" />
+                                    <div class="quick-view">
+                                        <i class="fa fa-eye"></i> @ShareLocallizer.GetLocalizedHTML("Quick View")
+                                    </div>
+                                </a>
+                            </div>
+                            <p class="product-name">@item.Name</p>
+                            <h2>
+                                <span class="price">@item.Price.ToString("#,##0")₫</span>
+                            </h2>
+                            @if (item.Quantity > 0)
+                            {
+                                <button class="btn btn-default add-to-cart" data-product-id="@item.Id">
+                                    <i class="fa fa-shopping-cart"></i> @ShareLocallizer.GetLocalizedHTML("Add to Cart")
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-default" disabled>
+                                    <i class="fa fa-shopping-cart"></i> @ShareLocallizer.GetLocalizedHTML("Sold out")
+                                </button>
+                            }
+                            <button class="btn btn-default add-to-wishlist add-btn-wishlist" data-product_id="@item.Id">
+                                <i class="fas fa-heart"></i> @ShareLocallizer.GetLocalizedHTML("Add to Wishlist")
+                            </button>
+                            <button class="btn btn-default add-to-compare add-btn-compare" data-product_id="@item.Id">
+                                <i class="fas fa-balance-scale"></i> @ShareLocallizer.GetLocalizedHTML("Add to Compare")
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<section id="video-reviews" style="padding: 40px 0; background-color: #ffffff;">
+    <div class="container">
+        <h3 class="section-title">@ShareLocallizer.GetLocalizedHTML("Video Reviews")</h3>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="video-item" style="background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); overflow: hidden;">
+                    <a href="https://www.youtube.com/watch?v=cnyVn9hUbbU&ab_channel=AlliahLee" target="_blank">
+                        <img src="https://i.ytimg.com/vi/cnyVn9hUbbU/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLBuVKJlUqTy2zc5YJU58QkZ89SLtw" alt="Video 1" style="width: 100%; height: 200px; object-fit: cover;" />
+                        <div style="padding: 15px;">
+                            <h4 style="font-size: 1.1em; font-weight: 600; color: var(--text-color); margin-bottom: 5px;">
+                                MÔ HÌNH GOJO X SUKUNA LUMINASTA (SEGA)
+                            </h4>
+                            <p style="font-size: 0.9em; color: var(--text-color);">
+                                Review mô hình Gojo và Sukuna từ Jujutsu Kaisen, phiên bản Luminasta của SEGA...
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="video-item" style="background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); overflow: hidden;">
+                    <a href="https://www.youtube.com/watch?v=SO5eFr-FXyo&ab_channel=OneStickerMan" target="_blank">
+                        <img src="https://i.ytimg.com/vi/SO5eFr-FXyo/hq2.jpg?sqp=-oaymwEnCOADEI4CSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLAFeBqDmsQsRH7DE6ofjIGVe3hgoQ" alt="Video 2" style="width: 100%; height: 200px; object-fit: cover;" />
+                        <div style="padding: 15px;">
+                            <h4 style="font-size: 1.1em; font-weight: 600; color: var(--text-color); margin-bottom: 5px;">
+                                MÔ HÌNH 2B - ICHIBAN KUJI NIER:AUTOMATA VER1.1A
+                            </h4>
+                            <p style="font-size: 0.9em; color: var(--text-color);">
+                                Review mô hình 2B từ NieR:Automata, phiên bản Ichiban Kuji Ver1.1a...
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="video-item" style="background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); overflow: hidden;">
+                    <a href="https://www.youtube.com/watch?v=qfv0SQtiskk&ab_channel=SolarisJapan" target="_blank">
+                        <img src="https://i.ytimg.com/vi/qfv0SQtiskk/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLC3hQpTP9rv-wqof8Y0eKh2cURedQ" alt="Video 3" style="width: 100%; height: 200px; object-fit: cover;" />
+                        <div style="padding: 15px;">
+                            <h4 style="font-size: 1.1em; font-weight: 600; color: var(--text-color); margin-bottom: 5px;">
+                                MÔ HÌNH HATSUNE MIKU - COREFUL - LOLITA VER.
+                            </h4>
+                            <p style="font-size: 0.9em; color: var(--text-color);">
+                                Review mô hình Hatsune Miku phiên bản Coreful Lolita của TAITO...
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="brands-section" style="margin-bottom: 40px;">
+        <h3 class="section-title">@ShareLocallizer.GetLocalizedHTML("Famous Brands")</h3>
+        <div class="brands-list" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+            <div class="brand-item">
+                <img src="https://files.virtual-boy.com/company/181978/taito-logo.png" alt="TAITO" />
+            </div>
+            <div class="brand-item">
+                <img src="https://images.seeklogo.com/logo-png/46/2/bandai-spirits-logo-png_seeklogo-468119.png" alt="BANDAI" />
+            </div>
+            <div class="brand-item">
+                <img src="https://images.seeklogo.com/logo-png/12/2/sega-logo-png_seeklogo-124469.png" alt="SEGA" />
+            </div>
+            <div class="brand-item">
+                <img src="https://ohgatcha.com/cdn/shop/files/nendoroid-doll-shoes-set-01-good-smile-company-39597906231527_600x.webp?v=1683631457" alt="GOOD SMILE" />
+            </div>
+            <div class="brand-item">
+                <img src="https://shop.bandai.co.uk/wp-content/uploads/2024/05/bandai-shop-megahouse-logo-1000x1000.png" alt="MEGAHOUSE" />
+            </div>
+            <div class="brand-item">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Furyu_logo.svg/2560px-Furyu_logo.svg.png" alt="FuRyu" />
+            </div>
+            <div class="brand-item">
+                <img src="https://cdn.freebiesupply.com/logos/large/2x/alt-logo-png-transparent.png" alt="ALTER" />
+            </div>
+            <div class="brand-item">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a1/Logo-daikio.png" alt="DAIKI" />
+            </div>
+            <div class="brand-item">
+                <img src="https://segaretro.org/images/d/d8/MaxFactory_logo.png" alt="Max Factory" />
+            </div>
+            <div class="brand-item">
+                <img src="https://static.wixstatic.com/media/92249f_c72c4310e5194e5f91345403d4c38aec~mv2.png/v1/fill/w_1200,h_540,al_c/92249f_c72c4310e5194e5f91345403d4c38aec~mv2.png" alt="MIMEYOI" />
+            </div>
+        </div>
+    </div>
+
+    <div class="news-section">
+        <h3 class="section-title">@ShareLocallizer.GetLocalizedHTML("News")</h3>
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="news-item" style="background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); padding: 15px; position: relative;">
+                    <span style="position: absolute; top: 10px; left: 10px; background-color: var(--primary-color); color: white; padding: 5px 10px; border-radius: 5px; font-size: 0.8em;">
+                        10/03/2025
+                    </span>
+                    <img src="https://bizweb.dktcdn.net/thumb/large/100/477/898/articles/screenshot-1741675287.jpg?v=1741675342233" alt="News 1" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px; margin-top: 30px;" />
+                    <h4 style="font-size: 1.1em; font-weight: 600; margin: 10px 0; color: var(--text-color);">[ELCOCO/SYSTEM SERVICE/KONAMI]</h4>
+                    <p style="font-size: 0.9em; color: var(--text-color);">
+                        Hutech Figure update list mô hình Game Prize sắp ra mắt trong tháng 3/2025 của hãng ELCOCO/SYSTEM SERVICE/KONAMI. Giá dao động từ 350K - 750K. Các bạn có thể...
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="news-item" style="background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); padding: 15px; position: relative;">
+                    <span style="position: absolute; top: 10px; left: 10px; background-color: var(--primary-color); color: white; padding: 5px 10px; border-radius: 5px; font-size: 0.8em;">
+                        10/03/2025
+                    </span>
+                    <img src="https://bizweb.dktcdn.net/thumb/large/100/477/898/articles/screenshot-1741674040.jpg?v=1741674114613" alt="News 2" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px; margin-top: 30px;" />
+                    <h4 style="font-size: 1.1em; font-weight: 600; margin: 10px 0; color: var(--text-color);">[FURYU] LỊCH PHÁT HÀNH MỚI</h4>
+                    <p style="font-size: 0.9em; color: var(--text-color);">
+                        Hutech Figure update list mô hình Game Prize sắp ra mắt trong tháng 3/2025 của hãng FURYU. Giá dao động từ 350K - 750K. Các bạn có thể...
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="news-item" style="background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); padding: 15px; position: relative;">
+                    <span style="position: absolute; top: 10px; left: 10px; background-color: var(--primary-color); color: white; padding: 5px 10px; border-radius: 5px; font-size: 0.8em;">
+                        10/03/2025
+                    </span>
+                    <img src="https://bizweb.dktcdn.net/thumb/large/100/477/898/articles/screenshot-1741673200.jpg?v=1741673262427" alt="News 3" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px; margin-top: 30px;" />
+                    <h4 style="font-size: 1.1em; font-weight: 600; margin: 10px 0; color: var(--text-color);">[TAITO] LỊCH PHÁT HÀNH MỚI</h4>
+                    <p style="font-size: 0.9em; color: var(--text-color);">
+                        Hutech Figure update list mô hình Game Prize sắp ra mắt trong tháng 3/2025 của hãng TAITO. Giá dao động từ 350K - 750K. Các bạn có thể...
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="news-item" style="background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); padding: 15px; position: relative;">
+                    <span style="position: absolute; top: 10px; left: 10px; background-color: var(--primary-color); color: white; padding: 5px 10px; border-radius: 5px; font-size: 0.8em;">
+                        10/03/2025
+                    </span>
+                    <img src="https://bizweb.dktcdn.net/thumb/large/100/477/898/articles/untitled-1-a530a282-9287-46a6-99eb-777d65e0f9c3.jpg?v=1741606199380" alt="News 4" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px; margin-top: 30px;" />
+                    <h4 style="font-size: 1.1em; font-weight: 600; margin: 10px 0; color: var(--text-color);">[CHIBAN KUU] LỊCH PHÁT HÀNH MỚI</h4>
+                    <p style="font-size: 0.9em; color: var(--text-color);">
+                        Hutech Figure update list mô hình Ichiban Kuji sắp ra mắt trong tháng 3/2025 của hãng BANDAI. Các bạn có thể Đặt Trước...
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="reviews-section">
+        <h2 class="section-title">@ShareLocallizer.GetLocalizedHTML("Reviews")</h2>
+        <div class="reviews-slider">
+            <div class="reviews-container">
+                <div class="review-item">
+                    <div class="review-card">
+                        <p>Mô hình Gintama mình mua đẹp không tì vết, đóng gói rất cẩn thận! Rất hài lòng với sản phẩm này, sẽ quay lại mua thêm!</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="reviewer">Nguyễn Minh Anh</div>
+                    </div>
+                </div>
+                <div class="review-item">
+                    <div class="review-card">
+                        <p>Mình đã mua một chiếc vòng cổ anime ở đây, chất lượng tuyệt vời và giao hàng rất nhanh. Cảm ơn shop nhiều nhé!</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="reviewer">Trần Quốc Bảo</div>
+                    </div>
+                </div>
+                <div class="review-item">
+                    <div class="review-card">
+                        <p>Mô hình đến đúng hạn, hộp không bị móp méo gì cả. Chất lượng sản phẩm thì khỏi chê, rất đáng tiền. Sẽ ủng hộ shop lâu dài!</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="reviewer">Lê Thị Hồng Nhung</div>
+                    </div>
+                </div>
+                <div class="review-item">
+                    <div class="review-card">
+                        <p>Shop tư vấn rất nhiệt tình, sản phẩm đúng như mô tả. Mình rất thích cách đóng gói cẩn thận của shop. Sẽ giới thiệu cho bạn bè!</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="reviewer">Phạm Văn Hùng</div>
+                    </div>
+                </div>
+                <div class="review-item">
+                    <div class="review-card">
+                        <p>Mô hình Naruto mình mua rất chi tiết, màu sắc đẹp. Giao hàng nhanh, đóng gói kỹ càng. Rất đáng để mua ở đây!</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="reviewer">Đỗ Thanh Tùng</div>
+                    </div>
+                </div>
+                <div class="review-item">
+                    <div class="review-card">
+                        <p>Mình mua một bộ mô hình One Piece, chất lượng rất tốt, không có lỗi gì. Shop hỗ trợ nhiệt tình, sẽ quay lại ủng hộ!</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="reviewer">Hoàng Thị Mai</div>
+                    </div>
+                </div>
+                <div class="review-item">
+                    <div class="review-card">
+                        <p>Mô hình Dragon Ball đẹp mê ly, đúng như hình quảng cáo. Giao hàng nhanh, đóng gói cẩn thận. Rất hài lòng!</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="reviewer">Vũ Quốc Huy</div>
+                    </div>
+                </div>
+                <div class="review-item">
+                    <div class="review-card">
+                        <p>Mua lần đầu ở shop mà ấn tượng lắm! Mô hình chất lượng, giá cả hợp lý, giao hàng đúng hẹn. Sẽ tiếp tục ủng hộ!</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="reviewer">Ngô Thị Lan</div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-indicators">
+                <span class="active"></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @section Scripts {
-	<script>
-		$(document).ready(function () {
-		$('.add-to-cart').click(function () {
-			var Id = $(this).data("product_id");
+    <script src="~/js/Review.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Lấy số lượng giỏ hàng ban đầu khi trang tải
+            updateCartCount();
 
-			//alert(product_id);
+            // Xử lý nút "Add to Cart"
+            $('.add-to-cart').click(function (e) {
+                e.preventDefault();
+                var productId = $(this).data("product-id");
 
-			$.ajax({
-				type: "POST",
-				url: "@Url.Action("Add", "Cart")",
-				data: { Id: Id }, // Send data to the server
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Add", "Cart")",
+                    data: { Id: productId },
+                    success: function (result) {
+                        if (result.success) {
+                            // Cập nhật số lượng giỏ hàng trong layout
+                            $('#cartCount').text(result.count);
+                            Swal.fire({
+                                title: "Thành công!",
+                                text: result.message || "@Html.Raw(ShareLocallizer.GetLocalizedHTML("Add Item to cart successfully"))",
+                                icon: "success",
+                                confirmButtonText: "OK",
+                                background: "#fff0f5",
+                                color: "#2c3e50",
+                                confirmButtonColor: "#e6b800",
+                                customClass: {
+                                    popup: 'anime-swal',
+                                    title: 'anime-swal-title',
+                                    content: 'anime-swal-text'
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "Lỗi",
+                                text: result.message || "Không thể thêm sản phẩm vào giỏ hàng!",
+                                icon: "error",
+                                confirmButtonColor: "#e6b800"
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            title: "Lỗi",
+                            text: "Đã xảy ra lỗi khi thêm vào giỏ hàng!",
+                            icon: "error",
+                            confirmButtonColor: "#e6b800"
+                        });
+                    }
+                });
+            });
 
-				success: function (result) {
-					// Handle successful update
-					if (result) {
+            $('.add-btn-wishlist').click(function (e) {
+                e.preventDefault();
+                var Id = $(this).data("product_id");
 
-						Swal.fire("@ShareLocallizer.GetLocalizedHTML("Add Item to cart successfully")");
-					}
-				}
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("AddWishList", "Home")",
+                    data: { Id: Id },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                title: "Thành công!",
+                                text: "@ShareLocallizer.GetLocalizedHTML("Added to Wishlist successfully")",
+                                icon: "success",
+                                confirmButtonText: "OK",
+                                background: "#fff0f5",
+                                color: "#2c3e50",
+                                confirmButtonColor: "#ff4d4d",
+                                customClass: {
+                                    popup: 'anime-swal',
+                                    title: 'anime-swal-title',
+                                    content: 'anime-swal-text'
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire("Đã xảy ra lỗi khi thêm vào danh sách yêu thích!");
+                    }
+                });
+            });
 
-			});
-		});
-		});
+            $('.add-btn-compare').click(function (e) {
+                e.preventDefault();
+                var Id = $(this).data("product_id");
 
-	</script>
-	<!--Add to wishlish-->
-	<script>
-		$(document).ready(function () {
-		$('.add-btn-wishlist').click(function () {
-			var Id = $(this).data("product_id");
-
-			//alert(product_id);
-
-			$.ajax({
-				type: "POST",
-				url: "@Url.Action("AddWishList", "Home")",
-				data: { Id: Id }, // Send data to the server
-
-				success: function (result) {
-					// Handle successful update
-					if (result) {
-
-						Swal.fire("@ShareLocallizer.GetLocalizedHTML("Add Item to cart successfully")");
-					}
-				}
-
-			});
-		});
-		});
-
-	</script>
-
-	<!--Add to compare-->
-	<script>
-		$(document).ready(function () {
-		$('.add-btn-compare').click(function () {
-			var Id = $(this).data("product_id");
-
-			//alert(product_id);
-
-			$.ajax({
-				type: "POST",
-				url: "@Url.Action("AddCompare", "Home")",
-				data: { Id: Id }, // Send data to the server
-
-				success: function (result) {
-					// Handle successful update
-					if (result) {
-
-						Swal.fire("@ShareLocallizer.GetLocalizedHTML("Add Item to cart successfully")");
-					}
-				}
-
-			});
-		});
-		});
-
-	</script>
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("AddCompare", "Home")",
+                    data: { Id: Id },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                title: "Thành công!",
+                                text: "@ShareLocallizer.GetLocalizedHTML("Added to Compare successfully")",
+                                icon: "success",
+                                confirmButtonText: "OK",
+                                background: "#fff0f5",
+                                color: "#2c3e50",
+                                confirmButtonColor: "#0084ff",
+                                customClass: {
+                                    popup: 'anime-swal',
+                                    title: 'anime-swal-title',
+                                    content: 'anime-swal-text'
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire("Đã xảy ra lỗi khi thêm vào danh sách so sánh!");
+                    }
+                });
+            });
+        });
+    </script>
 }

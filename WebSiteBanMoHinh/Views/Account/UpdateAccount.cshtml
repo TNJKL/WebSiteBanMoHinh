@@ -2,59 +2,176 @@
 @inject LanguageService ShareLocallizer
 @model AppUserModel
 @{
-	ViewData["Title"] = "Update Account Information";
+    ViewData["Title"] = "Update Account Information";
 }
 
-<section id="">
-	<!--form-->
-	<div class="container">
-		<div class="row">
+<section id="update-account-section">
+    <!--form-->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <div class="login-form">
+                    <!--sign up form-->
+                    <input type="hidden" asp-for="Id" />
+                    <h2>@ShareLocallizer.GetLocalizedHTML("Update Account Information")!</h2>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <form autocomplete="off" asp-action="UpdateInfoAccount" asp-controller="Account">
+                        <div class="form-group">
+                            <label><i class="fa fa-user"></i> @ShareLocallizer.GetLocalizedHTML("Username")</label>
+                            <input asp-for="UserName" required readonly class="form-control login-input" />
+                            <span asp-validation-for="UserName" class="text-danger" />
+                        </div>
 
+                        <div class="form-group">
+                            <label><i class="fa fa-envelope"></i> @ShareLocallizer.GetLocalizedHTML("Email")</label>
+                            <input asp-for="Email" readonly required class="form-control login-input" />
+                            <span asp-validation-for="Email" class="text-danger" />
+                        </div>
 
-			<div class="col-sm-8 col-sm-offset-1">
-				<div class="signup-form">
-					<!--sign up form-->
-					<input type="hidden" asp-for="Id" />
-					<h2>@ShareLocallizer.GetLocalizedHTML("Update Account Information")!</h2>
-					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-					<form autocomplete="off" asp-action="UpdateInfoAccount" asp-controller="Account">
+                        <div class="form-group">
+                            <label><i class="fa fa-phone"></i> @ShareLocallizer.GetLocalizedHTML("Phone Number")</label>
+                            <input asp-for="PhoneNumber" class="form-control login-input" placeholder="Enter your phone number" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger" />
+                        </div>
 
-						<div class="form-group">
-							<label>@ShareLocallizer.GetLocalizedHTML("Username")</label>
-							<input asp-for="UserName" required readonly class="form-control" method="POST" />
-							<span asp-validation-for="UserName" class="text-danger" />
-						</div>
+                        <div class="form-group">
+                            <label><i class="fa fa-lock"></i> @ShareLocallizer.GetLocalizedHTML("Old Password")</label>
+                            <input type="text" readonly value="@Model.PasswordHash" class="form-control login-input" />
+                        </div>
 
-						<div class="form-group">
-							<label>Email</label>
-							<input asp-for="Email" readonly required class="form-control" />
-							<span asp-validation-for="Email" class="text-danger" />
-						</div>
+                        <div class="form-group">
+                            <label><i class="fa fa-lock"></i> @ShareLocallizer.GetLocalizedHTML("New Password")</label>
+                            <input type="password" name="PasswordHash" class="form-control login-input" placeholder="Enter new password" />
+                            <span asp-validation-for="PasswordHash" class="text-danger" />
+                        </div>
 
-						<div class="form-group">
-							<label>@ShareLocallizer.GetLocalizedHTML("Phone Number")</label>
-							<input asp-for="PhoneNumber" class="form-control" />
-							<span asp-validation-for="PhoneNumber" class="text-danger" />
-						</div>
-						<div class="form-group">
-							<label>@ShareLocallizer.GetLocalizedHTML("Old Password")</label>
-							<input type="text" readonly value="@Model.PasswordHash" class="form-control" />
-						</div>
-						<div class="form-group">
-							<label>@ShareLocallizer.GetLocalizedHTML("New Password")</label>
-							<input typr="text" name="PasswordHash"   class="form-control" />
-							<span asp-validation-for="PasswordHash" class="text-danger" />
-						</div>
+                        <button type="submit" class="btn btn-login"><i class="fa fa-save"></i> @ShareLocallizer.GetLocalizedHTML("Update")</button>
+                    </form>
 
-						<button class="btn btn-default">@ShareLocallizer.GetLocalizedHTML("Update")</button>
-					</form>
-				</div><!--/sign up form-->
-			</div>
-		</div>
-	</div>
+                    <div class="login-options">
+                        <div class="login-links">
+                            <a href="@Url.Action("Login", "Account")"><i class="fa fa-sign-in-alt"></i> @ShareLocallizer.GetLocalizedHTML("Login")</a>
+                        </div>
+                    </div>
+                </div><!--/sign up form-->
+            </div>
+        </div>
+    </div>
 </section><!--/form-->
 @section Scripts {
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
- }
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<style>
+    /* Style cho trang Update Account */
+    #update-account-section {
+        padding: 50px 0;
+        background-color: #f5f5f5;
+    }
+
+    .login-form {
+        background-color: white;
+        border: 2px solid #e6b800;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+        .login-form h2 {
+            font-size: 2em;
+            font-weight: 700;
+            font-family: 'Roboto', sans-serif;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            border-bottom: 3px solid #e6b800;
+            padding-bottom: 10px;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .login-form label {
+            font-size: 1.1em;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .login-form .login-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            color: #333333;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .login-form .login-input:focus {
+                border-color: #e6b800;
+                box-shadow: 0 0 0 0.2rem rgba(230, 184, 0, 0.3);
+                outline: none;
+            }
+
+        .login-form .text-danger {
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .login-form .btn-login {
+            background-color: #e6b800;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 20px;
+            font-size: 1em;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            justify-content: center;
+        }
+
+            .login-form .btn-login:hover {
+                background-color: #cc9900;
+            }
+
+    .login-options {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+        .login-options .login-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+            .login-options .login-links a {
+                color: #e6b800;
+                font-size: 1em;
+                font-weight: 600;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: color 0.3s ease;
+            }
+
+                .login-options .login-links a:hover {
+                    color: #cc9900;
+                }
+</style>

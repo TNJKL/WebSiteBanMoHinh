@@ -1,0 +1,167 @@
+﻿@{
+    ViewData["Title"] = "About Us";
+}
+
+<style>
+    /* Đảm bảo đồng bộ với style của layout */
+    .about-section {
+        padding: 60px 0;
+        background-color: var(--background-color);
+    }
+
+        .about-section h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .about-section p {
+            font-size: 1.1em;
+            color: var(--text-color);
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .about-section .team-member {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+            .about-section .team-member img {
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 3px solid var(--primary-color);
+                margin-bottom: 15px;
+            }
+
+            .about-section .team-member h4 {
+                font-size: 1.2em;
+                font-weight: 600;
+                color: var(--text-color);
+            }
+
+            .about-section .team-member p {
+                font-size: 0.9em;
+                color: #666;
+            }
+
+    .mission-vision {
+        background-color: var(--slider-bg-color);
+        padding: 40px;
+        border-radius: 10px;
+        margin-top: 40px;
+    }
+
+        .mission-vision h2 {
+            font-size: 1.8em;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+    .core-values {
+        margin-top: 40px;
+    }
+
+        .core-values h2 {
+            font-size: 1.8em;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .core-values ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .core-values li {
+            font-size: 1.1em;
+            color: var(--text-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+            .core-values li i {
+                color: var(--primary-color);
+                margin-right: 10px;
+            }
+</style>
+
+<section class="about-section">
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="https://ih1.redbubble.net/cover.1457307.2400x600.jpg" alt="Alternate Text" style="border: 3px solid var(--primary-color); max-width: 100%; height: auto;" />
+        </div>
+        <h1>About HUTECH FIGURE</h1>
+        <p>
+            Chào mừng bạn đến với <strong>HUTECH FIGURE</strong> - điểm đến hàng đầu cho các tín đồ yêu thích mô hình anime figure chính hãng tại Việt Nam! Chúng tôi tự hào mang đến những sản phẩm chất lượng cao, từ các thương hiệu nổi tiếng như TAITO, BANDAI, SEGA, GOOD SMILE và MEGAHOUSE.
+        </p>
+        <p>
+            Thành lập vào năm 2025 bởi một nhóm đam mê anime và văn hóa Nhật Bản, HUTECH FIGURE không chỉ là một cửa hàng bán mô hình, mà còn là nơi kết nối cộng đồng yêu thích anime. Chúng tôi cam kết cung cấp những sản phẩm tinh xảo nhất, cùng với dịch vụ chăm sóc khách hàng tận tâm, để bạn có trải nghiệm mua sắm tuyệt vời.
+        </p>
+        <p>
+            Hành trình của chúng tôi bắt đầu từ niềm đam mê mãnh liệt với anime và mong muốn mang đến cho cộng đồng Việt Nam những sản phẩm mô hình chất lượng cao, chính hãng. Từ những ngày đầu tiên, HUTECH FIGURE đã không ngừng nỗ lực để xây dựng uy tín, mở rộng danh mục sản phẩm và hợp tác với các thương hiệu lớn trên thế giới. Chúng tôi tin rằng mỗi mô hình không chỉ là một món đồ sưu tầm, mà còn là một tác phẩm nghệ thuật, chứa đựng câu chuyện và cảm xúc của từng nhân vật.
+        </p>
+
+        <!-- Sứ mệnh và tầm nhìn -->
+        <div class="mission-vision">
+            <h2>Sứ mệnh & Tầm nhìn</h2>
+            <p>
+                <strong>Sứ mệnh:</strong> Mang đến những mô hình anime chất lượng cao, giúp người hâm mộ thể hiện niềm đam mê và sở thích cá nhân qua từng sản phẩm.
+            </p>
+            <p>
+                <strong>Tầm nhìn:</strong> Trở thành thương hiệu hàng đầu tại Việt Nam trong lĩnh vực kinh doanh mô hình anime figure, đồng thời xây dựng một cộng đồng gắn kết, nơi mọi người có thể chia sẻ niềm yêu thích với anime.
+            </p>
+        </div>
+
+        <!-- Giá trị cốt lõi -->
+        <div class="core-values">
+            <h2>Giá trị cốt lõi</h2>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> <strong>Chất lượng:</strong> Chỉ cung cấp các sản phẩm chính hãng, đảm bảo độ tinh xảo và bền bỉ.</li>
+                <li><i class="fas fa-heart"></i> <strong>Đam mê:</strong> Đặt niềm đam mê với anime vào từng sản phẩm và dịch vụ.</li>
+                <li><i class="fas fa-users"></i> <strong>Cộng đồng: </strong> Xây dựng một cộng đồng yêu anime, nơi mọi người có thể giao lưu và chia sẻ.</li>
+                <li><i class="fas fa-star"></i> <strong>Dịch vụ: </strong> Luôn lắng nghe và hỗ trợ khách hàng với sự tận tâm và chuyên nghiệp.</li>
+            </ul>
+        </div>
+
+        <!-- Đội ngũ -->
+        <h2 style="text-align: center; margin-top: 40px;">Đội ngũ của chúng tôi</h2>
+        <div class="row">
+            <div class="col-sm-4 team-member">
+                <img src="https://i.pinimg.com/736x/dd/5e/ca/dd5eca3a6f1252245cd2cc0ed703cafb.jpg" alt="Team Member 1">
+                <h4>Công Phước</h4>
+                <p>Marketing Manager</p>
+            </div>
+            <div class="col-sm-4 team-member">
+                <img src="https://i.pinimg.com/736x/79/da/6e/79da6eeb8277b2f886f8564311284b70.jpg" alt="Team Member 2">
+                <h4>Thành Thi</h4>
+                <p>Founder & CEO</p>
+            </div>
+            <div class="col-sm-4 team-member">
+                <img src="https://i.pinimg.com/736x/67/80/67/6780671534127a59bb2dc1203c62c186.jpg" alt="Team Member 3">
+                <h4>Quốc Khánh</h4>
+                <p>Product Specialist</p>
+            </div>
+            <div class="col-sm-4 offset-sm-2 team-member">
+                <img src="https://i.pinimg.com/474x/2d/d9/5b/2dd95bc968f1f840ddf3d9b799dca75b.jpg" alt="Team Member 4">
+                <h4>Phương Nam</h4>
+                <p>Customer Support Lead</p>
+            </div>
+            <div class="col-sm-4 team-member">
+                <img src="https://i.pinimg.com/736x/e2/cc/b4/e2ccb4ba9b5c3bb42df512f54e98e73c.jpg" alt="Team Member 5">
+                <h4>Quốc Việt</h4>
+                <p>Logistics Coordinator</p>
+            </div>
+        </div>
+    </div>
+</section>

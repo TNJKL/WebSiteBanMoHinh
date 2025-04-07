@@ -1,48 +1,260 @@
-﻿
-@{
+﻿@{
     ViewData["title"] = "List User";
 }
-<h3>List User</h3>
-<a asp-action="Add" asp-controller="User">Add User</a>
-<table class="table" id="myTable">
-    <thead>
-        <tr>
-            <th scope="col">Id</th>
-            <th scope="col">UserName</th>
-            <th scope="col">Email</th>
 
-            <th scope="col">PasswordHash</th>
-            <th scope="col">Phone</th>
-            <th scope="col">Role</th>
-            <th scope="col">Action</th>
+<style>
+    :root {
+        --primary-color: rgb(216,172,68);
+        --secondary-color: rgb(255,204,102);
+        --text-color: rgb(50,50,50);
+        --gold-color: #DAA520;
+    }
 
+    h3 {
+        color: var(--primary-color);
+        font-weight: 900;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 2.5rem;
+    }
 
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var usersWithRoles in Model)
-        {
-            <tr>
-                <th scope="row">@usersWithRoles.User.Id</th>
-                <td>@usersWithRoles.User.UserName</td>
-                <td>@usersWithRoles.User.Email</td>
-                <td>@usersWithRoles.User.PasswordHash</td>
-                <td>@usersWithRoles.User.PhoneNumber</td>
-                <td>
-                    @usersWithRoles.RoleName
-                </td>
-               
+    .btn-primary {
+        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        border: none;
+        color: #fff;
+        transition: all 0.3s ease;
+        padding: 8px 20px;
+        border-radius: 5px;
+    }
 
-               
-                <td>
-                    <a asp-action="Edit" class="btn btn-warning btn-sm" asp-controller="User" asp-route-Id="@usersWithRoles.User.Id">Edit</a>
-                    <a asp-action="Delete" class="btn btn-danger btn-sm confirmDeletion" asp-controller="User" asp-route-Id="@usersWithRoles.User.Id">Delete</a>
-                </td>
-
-            </tr>
-
+        .btn-primary:hover {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            transform: translateY(-2px);
         }
 
+    .table-container {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto; /* Ensure the table is scrollable on small screens */
+    }
 
-    </tbody>
-</table>
+    .table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        color: var(--text-color);
+        table-layout: fixed; /* Use fixed layout to enforce column widths */
+    }
+
+        .table thead {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: #fff;
+        }
+
+        .table th, .table td {
+            padding: 8px 10px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            vertical-align: middle;
+            width: auto;
+            overflow: hidden; /* Handle overflow content */
+            text-overflow: ellipsis; /* Add ellipsis for overflow */
+            white-space: nowrap; /* Prevent text wrapping by default */
+        }
+
+            /* Adjusted column widths */
+            .table th:nth-child(1), .table td:nth-child(1) {
+                width: 5%; /* Id */
+            }
+
+            .table th:nth-child(2), .table td:nth-child(2) {
+                width: 15%; /* UserName */
+            }
+
+            .table th:nth-child(3), .table td:nth-child(3) {
+                width: 20%; /* Email */
+            }
+
+            .table th:nth-child(4), .table td:nth-child(4) {
+                width: 25%; /* PasswordHash - increased to accommodate long content */
+            }
+
+            .table th:nth-child(5), .table td:nth-child(5) {
+                width: 15%; /* Phone */
+            }
+
+            .table th:nth-child(6), .table td:nth-child(6) {
+                width: 10%; /* Role */
+            }
+
+            .table th:nth-child(7), .table td:nth-child(7) {
+                width: 10%; /* Action */
+            }
+
+            /* Allow PasswordHash to wrap if needed */
+            .table th:nth-child(4), .table td:nth-child(4) {
+                white-space: normal; /* Allow wrapping for PasswordHash */
+                word-break: break-all; /* Break long words */
+            }
+
+        .table th {
+            font-weight: 900;
+            font-size: 1rem;
+        }
+
+        .table td {
+            font-size: 0.75rem;
+        }
+
+            /* Bold and larger text for specific columns */
+            .table th:nth-child(2), .table td:nth-child(2), /* UserName */
+            .table th:nth-child(3), .table td:nth-child(3), /* Email */
+            .table th:nth-child(4), .table td:nth-child(4), /* PasswordHash */
+            .table th:nth-child(5), .table td:nth-child(5), /* Phone */
+            .table th:nth-child(6), .table td:nth-child(6) /* Role */ {
+                font-weight: 900;
+                font-size: 0.9rem;
+            }
+
+        .table tbody tr:hover {
+            background: rgba(216,172,68,0.1);
+            transition: all 0.3s ease;
+        }
+
+    .btn-warning {
+        background: var(--gold-color);
+        border: none;
+        color: #fff;
+        transition: all 0.3s ease;
+        margin: 2px;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 0.75rem;
+    }
+
+        .btn-warning:hover {
+            background: #c69500;
+            transform: translateY(-2px);
+        }
+
+    .btn-danger {
+        background: #dc3545;
+        border: none;
+        color: #fff;
+        transition: all 0.3s ease;
+        margin: 2px;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 0.75rem;
+    }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+    /* Media queries for smaller screens */
+    @@media (max-width: 1200px) {
+        .table th, .table td
+
+    {
+        padding: 6px 8px;
+    }
+
+    .table th {
+        font-size: 0.9rem;
+    }
+
+    .table td {
+        font-size: 0.7rem;
+    }
+
+        .table th:nth-child(2), .table td:nth-child(2),
+        .table th:nth-child(3), .table td:nth-child(3),
+        .table th:nth-child(4), .table td:nth-child(4),
+        .table th:nth-child(5), .table td:nth-child(5),
+        .table th:nth-child(6), .table td:nth-child(6) {
+            font-size: 0.8rem;
+        }
+
+    .btn-warning, .btn-danger {
+        padding: 3px 6px;
+        font-size: 0.7rem;
+    }
+
+    }
+
+    @@media (max-width: 768px) {
+        h3
+
+    {
+        font-size: 2rem;
+    }
+
+    .table th, .table td {
+        padding: 4px 6px;
+    }
+
+    .table th {
+        font-size: 0.8rem;
+    }
+
+    .table td {
+        font-size: 0.65rem;
+    }
+
+        .table th:nth-child(2), .table td:nth-child(2),
+        .table th:nth-child(3), .table td:nth-child(3),
+        .table th:nth-child(4), .table td:nth-child(4),
+        .table th:nth-child(5), .table td:nth-child(5),
+        .table th:nth-child(6), .table td:nth-child(6) {
+            font-size: 0.7rem;
+        }
+
+    .btn-warning, .btn-danger {
+        padding: 2px 4px;
+        font-size: 0.65rem;
+    }
+
+    }
+</style>
+
+<div class="table-container">
+    <h3>List User</h3>
+    <a class="btn btn-primary mb-3" asp-action="Add" asp-controller="User">Add User</a>
+    <table class="table" id="myTable">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">UserName</th>
+                <th scope="col">Email</th>
+                <th scope="col">PasswordHash</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Role</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var usersWithRoles in Model)
+            {
+                <tr>
+                    <th scope="row">@usersWithRoles.User.Id</th>
+                    <td>@usersWithRoles.User.UserName</td>
+                    <td>@usersWithRoles.User.Email</td>
+                    <td>@usersWithRoles.User.PasswordHash</td>
+                    <td>@usersWithRoles.User.PhoneNumber</td>
+                    <td>@usersWithRoles.RoleName</td>
+                    <td>
+                        <a asp-action="Edit" class="btn btn-warning btn-sm" asp-controller="User" asp-route-Id="@usersWithRoles.User.Id">Edit</a>
+                        <a asp-action="Delete" class="btn btn-danger btn-sm confirmDeletion" asp-controller="User" asp-route-Id="@usersWithRoles.User.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,33 +1,134 @@
 ﻿﻿@{
     var currentUrl = Url.ActionContext.HttpContext.Request.Path;
 }
-<div class="container">
-    <div class="row">
-        <div class="col-md-2">
-            <h5>Sắp xếp theo</h5>
-            <select class="form-control" id="sort_by">
-                @*<option>---------</option>*@
-                <option value="@currentUrl?sort_by=price_increase">Giá tăng dần</option>
-                <option value="@currentUrl?sort_by=price_decrease">Giá giảm dần</option>
-                <option value="@currentUrl?sort_by=price_newest">Mới nhất</option>
-                <option value="@currentUrl?sort_by=price_oldest">Cũ nhất</option>
+<style>
+    .filter-container {
+        background: #fff;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 3px 10px rgba(230, 184, 0, 0.2);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
 
-            </select>
-        </div>
-        <div class="col-md-5">
-            <h5>Lọc theo giá</h5>
-            <form asp-action="Index" asp-controller="Category">
+        .filter-container h5 {
+            color: #e6b800;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0;
+            font-size: 14px;
+        }
 
-                
+    .form-control {
+        border: 2px solid #e6b800;
+        border-radius: 15px;
+        padding: 8px 10px;
+        color: #2c3e50;
+        font-weight: 600;
+        font-size: 14px;
+        width: 220px; /* Tăng chiều dài để dropdown hiển thị hết nội dung */
+        height: 40px; /* Tăng chiều cao để option không bị cắt */
+        transition: all 0.3s ease;
+    }
 
-                <p>
-                    <label for="amount">Price range:</label>
-                    <input type="text" id="amount" readonly="" style="border:0; color:#f6931f; font-weight:bold;">
-                </p>
-                <button type="submit" name="locgia" data-current_url="@currentUrl" class="btn btn-danger btn-locgia">Lọc</button>
-                <div id="slider-range"></div>
-            </form>
+        .form-control:focus {
+            border-color: #cc9900;
+            box-shadow: 0 0 5px rgba(230, 184, 0, 0.5);
+            outline: none;
+        }
 
-        </div>
+    #price-slider {
+        margin: 10px 0;
+        height: 6px;
+        border-radius: 3px;
+        width: 250px;
+    }
+
+        #price-slider .noUi-connect {
+            background: #e6b800;
+        }
+
+        #price-slider .noUi-handle {
+            background: #fff;
+            border: 2px solid #e6b800;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            top: -4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+            #price-slider .noUi-handle:hover {
+                border-color: #cc9900;
+            }
+
+    #amount {
+        width: 180px; /* Tăng chiều dài để hiển thị hết giá trị "100,000 đ - 5,000,000 đ" */
+        text-align: center;
+        padding: 6px;
+        border: 2px solid #e6b800;
+        border-radius: 15px;
+        color: #2c3e50;
+        font-weight: 600;
+        font-size: 14px;
+        background: #fff;
+    }
+
+    .btn-locgia {
+        background-color: #e6b800;
+        color: white;
+        border: none;
+        padding: 8px 20px; /* Tăng chiều dài nút lọc */
+        border-radius: 15px;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 13px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-locgia:hover {
+            background-color: #cc9900;
+            transform: scale(1.03);
+        }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .filter-container {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .form-control, #amount, .btn-locgia {
+            width: 100%;
+            font-size: 12px;
+        }
+
+        #price-slider {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="container filter-container">
+    <div class="sort-section">
+        <h5>Sắp xếp Figure</h5>
+        <select class="form-control" id="sort_by">
+            <option value="@currentUrl?sort_by=price_increase">Giá tăng dần</option>
+            <option value="@currentUrl?sort_by=price_decrease">Giá giảm dần</option>
+            <option value="@currentUrl?sort_by=price_newest">Hàng mới nhất</option>
+            <option value="@currentUrl?sort_by=price_oldest">Hàng cũ nhất</option>
+        </select>
+    </div>
+    <div class="price-filter-section">
+        <h5>Lọc giá Figure</h5>
+        <form asp-action="Index" asp-controller="Category" style="display: flex; align-items: center; gap: 10px;">
+            <input type="text" id="amount" readonly>
+            <div id="price-slider"></div>
+            <button type="button" name="locgia" data-current_url="@currentUrl" class="btn btn-locgia">Lọc ngay</button>
+        </form>
     </div>
 </div>

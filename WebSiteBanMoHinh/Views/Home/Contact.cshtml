@@ -1,145 +1,120 @@
-﻿@*
-@model ContactModel
-<div class="row">
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Thêm Facebook SDK -->
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v20.0"></script>
+</head>
+<body>
+    <div id="fb-root"></div> <!-- Thêm div fb-root để Facebook SDK hoạt động -->
 
-	
-		<div class="companyinfo">
-			<p><img src="~/media/logos/@Model.LogoImage" width="200px" height="120px" /></p>
-			<p>@Html.Raw(@Model.Description)</p>
-		</div>
-	
-	<div class="col-sm-5 col-md-5">
-		@Html.Raw(@Model.Map)
-	</div>
-	<div class="col-sm-4">
-		<div class="address">
-			<h5><b>Name : @Model.Name</b></h5>
-			<h5>Email : @Model.Email</h5>
-			<h5>@Model.Phone</h5>
-
-		</div>
-	</div>
-	<div class="fb-page"
-		 data-href="https://www.facebook.com/aow.page"
-		 data-tabs="message"
-		 data-width="340"
-		 data-height="500"
-		 data-small-header="false"
-		 data-adapt-container-width="true"
-		 data-hide-cover="false"
-		 data-show-facepile="true">
-		<blockquote cite="https://www.facebook.com/aow.page" class="fb-xfbml-parse-ignore">
-			<a href="https://www.facebook.com/aow.page">AOW - Anime/Manga Fanpage</a>
-		</blockquote>
-	</div>
-
-</div>
-*@
-
-@model ContactModel
-
-<div class="contact-page">
-    <!-- Hero section with background image -->
-    <div class="contact-hero" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/home/contact-bg.jpg') no-repeat center center; background-size: cover; padding: 60px 0; margin-bottom: 40px; color: white; text-align: center;">
-        <div class="container">
-            <h1>Contact Us</h1>
-            <p>We'd love to hear from you</p>
+    <div class="contact-page">
+        <!-- Hero Section with Anime-Themed Background -->
+        <div class="contact-hero" style="background: #2A2A2A; padding: 100px 0; margin-bottom: 50px; color: white; text-align: center; position: relative;">
+            <div class="container">
+                <h1 style="font-size: 4rem; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; text-shadow: 3px 3px 6px rgba(0,0,0,0.7); margin-bottom: 15px;">Contact Us</h1>
+                <p style="font-size: 1.5rem; font-weight: 300; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">Reach out to us for all your anime figure needs!</p>
+            </div>
+            <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 5px; background: linear-gradient(to right, #D4A017, transparent);"></div>
         </div>
-    </div>
 
-    <div class="container">
-        <div class="row">
-            <!-- Company Information Section -->
-            <div class="col-md-4">
-                <div class="company-card">
-                    <div class="card" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 25px; margin-bottom: 30px;">
+        <div class="container">
+            <div class="row">
+                <!-- Left Column: Company Info, Social Links, and Description -->
+                <div class="col-md-4">
+                    <!-- Company Info Card -->
+                    <div class="card anime-card" style="border-radius: 15px; background: #fff; box-shadow: 0 6px 12px rgba(0,0,0,0.15); padding: 30px; margin-bottom: 30px; border: 2px solid #D4A017;">
                         <div class="companyinfo text-center">
-                            <img src="~/media/logos/@Model.LogoImage" class="img-responsive center-block" alt="Company Logo" style="max-width: 200px; margin-bottom: 20px;">
+                            <img src="~/media/logos/@Model.LogoImage" class="img-responsive center-block" alt="Company Logo" style="max-width: 180px; margin-bottom: 20px; border-radius: 10px;">
                             <div class="company-details">
-                                <div class="address" style="margin-top: 25px;">
-                                    <h4 style="color: #FE980F; margin-bottom: 15px; font-weight: 600;">GET IN TOUCH</h4>
-                                    <p><i class="fa fa-user" style="width: 25px; color: #FE980F;"></i> <b>@Model.Name</b></p>
-                                    <p><i class="fa fa-envelope" style="width: 25px; color: #FE980F;"></i> @Model.Email</p>
-                                    <p><i class="fa fa-phone" style="width: 25px; color: #FE980F;"></i> @Model.Phone</p>
-                                </div>
+                                <h4 style="color: #D4A017; margin-bottom: 20px; font-weight: 700; text-transform: uppercase;">Get in Touch</h4>
+                                <p style="color: #333; font-size: 1.1rem;"><i class="fa fa-user" style="width: 25px; color: #D4A017;"></i> <b>@Model.Name</b></p>
+                                <p style="color: #333; font-size: 1.1rem;"><i class="fa fa-envelope" style="width: 25px; color: #D4A017;"></i> @Model.Email</p>
+                                <p style="color: #333; font-size: 1.1rem;"><i class="fa fa-phone" style="width: 25px; color: #D4A017;"></i> @Model.Phone</p>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Company Description -->
-                    <div class="card" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 25px; margin-bottom: 30px;">
-                        <h4 style="color: #FE980F; margin-bottom: 15px; font-weight: 600;">ABOUT US</h4>
-                        <div style="line-height: 1.6;">
-                            @Html.Raw(@Model.Description)
                         </div>
                     </div>
 
                     <!-- Social Media Links -->
-                    <div class="card" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 25px; margin-bottom: 30px;">
-                        <h4 style="color: #FE980F; margin-bottom: 15px; font-weight: 600;">FOLLOW US</h4>
+                    <div class="card anime-card" style="border-radius: 15px; background: #fff; box-shadow: 0 6px 12px rgba(0,0,0,0.15); padding: 30px; margin-bottom: 30px; border: 2px solid #D4A017;">
+                        <h4 style="color: #D4A017; margin-bottom: 20px; font-weight: 700; text-transform: uppercase;">Follow Us</h4>
                         <div class="social-icons text-center">
-                            <a href="#" style="display: inline-block; margin: 0 10px; font-size: 24px; color: #FE980F;"><i class="fa fa-facebook"></i></a>
-                            <a href="#" style="display: inline-block; margin: 0 10px; font-size: 24px; color: #FE980F;"><i class="fa fa-twitter"></i></a>
-                            <a href="#" style="display: inline-block; margin: 0 10px; font-size: 24px; color: #FE980F;"><i class="fa fa-instagram"></i></a>
-                            <a href="#" style="display: inline-block; margin: 0 10px; font-size: 24px; color: #FE980F;"><i class="fa fa-linkedin"></i></a>
+                            <a href="https://www.facebook.com/your-facebook-page" target="_blank" style="display: inline-block; margin: 0 15px; font-size: 28px; color: #D4A017; transition: transform 0.3s ease;">
+                                <i class="fab fa-facebook"></i>
+                            </a>
+                            <a href="https://twitter.com/your-twitter-handle" target="_blank" style="display: inline-block; margin: 0 15px; font-size: 28px; color: #D4A017; transition: transform 0.3s ease;">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="https://www.instagram.com/your-instagram-handle" target="_blank" style="display: inline-block; margin: 0 15px; font-size: 28px; color: #D4A017; transition: transform 0.3s ease;">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="https://discord.gg/your-discord-invite" target="_blank" style="display: inline-block; margin: 0 15px; font-size: 28px; color: #D4A017; transition: transform 0.3s ease;">
+                                <i class="fab fa-discord"></i>
+                            </a>
                         </div>
+                    </div>
+
+                    <!-- Company Description -->
+                    <div class="card anime-card" style="border-radius: 15px; background: #fff; box-shadow: 0 6px 12px rgba(0,0,0,0.15); padding: 30px; margin-bottom: 30px; border: 2px solid #D4A017; position: relative; overflow: hidden;">
+                        <h4 style="color: #D4A017; margin-bottom: 20px; font-weight: 700; text-transform: uppercase; position: relative; display: inline-block;">
+                            About Us
+                            <span style="position: absolute; bottom: -5px; left: 0; width: 50%; height: 3px; background: #D4A017;"></span>
+                        </h4>
+                        <div style="line-height: 1.8; color: #333; font-size: 1rem; font-style: italic;">
+                            @Html.Raw(@Model.Description)
+                        </div>
+                        <div style="position: absolute; top: 0; right: 0; width: 50px; height: 50px; background: #D4A017; clip-path: polygon(100% 0, 0 100%, 100% 100%); opacity: 0.2;"></div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Map Section -->
-            <div class="col-md-8">
-                <div class="row">
+                <!-- Right Column: Map, Contact Form, and Facebook Plugin -->
+                <div class="col-md-8">
                     <!-- Google Map -->
-                    <div class="col-md-12">
-                        <div class="card" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-bottom: 30px; overflow: hidden;">
-                            <h4 style="color: #FE980F; padding: 20px 25px 0; font-weight: 600;">OUR LOCATION</h4>
-                            <div class="map-container" style="height: 350px; width: 100%;">
-                                @Html.Raw(@Model.Map)
+                    <div class="card anime-card" style="border-radius: 15px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); margin-bottom: 30px; overflow: hidden; border: 2px solid #D4A017;">
+                        <h4 style="color: #D4A017; padding: 20px 25px 0; font-weight: 700; text-transform: uppercase;">Our Location</h4>
+                        <div class="map-container" style="height: 400px; width: 100%;">
+                            @Html.Raw(@Model.Map)
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Contact Form -->
+                        <div class="col-md-6">
+                            <div class="card anime-card" style="border-radius: 15px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); padding: 30px; margin-bottom: 30px; border: 2px solid #D4A017;">
+                                <h4 style="color: #D4A017; margin-bottom: 25px; font-weight: 700; text-transform: uppercase;">Send a Message</h4>
+                                <form>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control anime-input" placeholder="Your Name" style="margin-bottom: 20px; border-radius: 8px; height: 50px; border: 1px solid #D4A017; padding-left: 15px;">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="email" class="form-control anime-input" placeholder="Your Email" style="margin-bottom: 20px; border-radius: 8px; height: 50px; border: 1px solid #D4A017; padding-left: 15px;">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control anime-input" placeholder="Subject" style="margin-bottom: 20px; border-radius: 8px; height: 50px; border: 1px solid #D4A017; padding-left: 15px;">
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea class="form-control anime-input" rows="5" placeholder="Your Message" style="margin-bottom: 20px; border-radius: 8px; border: 1px solid #D4A017; padding: 15px;"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn anime-btn" style="background-color: #D4A017; border: none; padding: 12px 40px; border-radius: 8px; color: white; font-weight: 600; text-transform: uppercase; transition: background-color 0.3s ease;">Send Message</button>
+                                </form>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Contact Form -->
-                    <div class="col-md-6">
-                        <div class="card" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 25px; margin-bottom: 30px;">
-                            <h4 style="color: #FE980F; margin-bottom: 20px; font-weight: 600;">SEND A MESSAGE</h4>
-                            <form>
-                                <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Your Name" style="margin-bottom: 15px; border-radius: 5px; height: 45px;">
+                        <!-- Facebook Page Plugin -->
+                        <div class="col-md-6">
+                            <div class="card anime-card" style="border-radius: 15px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); padding: 30px; margin-bottom: 30px; border: 2px solid #D4A017; position: relative; overflow: hidden;">
+                                <h4 style="color: #D4A017; margin-bottom: 25px; font-weight: 700; text-transform: uppercase; position: relative; display: inline-block;">
+                                    Join Our Community
+                                    <span style="position: absolute; bottom: -5px; left: 0; width: 50%; height: 3px; background: #D4A017;"></span>
+                                </h4>
+                                <div class="facebook-container" style="display: flex; justify-content: center;">
+                                    <div class="fb-page"
+                                         data-href="https://www.facebook.com/aow.page"
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <input type="email" class="form-control" placeholder="Your Email" style="margin-bottom: 15px; border-radius: 5px; height: 45px;">
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Subject" style="margin-bottom: 15px; border-radius: 5px; height: 45px;">
-                                </div>
-                                <div class="form-group">
-                                    <textarea class="form-control" rows="4" placeholder="Your Message" style="margin-bottom: 15px; border-radius: 5px;"></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-warning pull-right" style="background-color: #FE980F; border: none; padding: 10px 30px; border-radius: 5px;">Send Message</button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Facebook Page Plugin -->
-                    <div class="col-md-6">
-                        <div class="card" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 25px; margin-bottom: 30px;">
-                            <h4 style="color: #FE980F; margin-bottom: 20px; font-weight: 600;">CONNECT WITH US</h4>
-                            <div class="facebook-container" style="display: flex; justify-content: center;">
-                                <div class="fb-page"
-                                     data-href="https://www.facebook.com/aow.page"
-                                     data-tabs="message"
-                                     data-width="340"
-                                     data-height="400"
-                                     data-small-header="false"
-                                     data-adapt-container-width="true"
-                                     data-hide-cover="false"
-                                     data-show-facepile="true">
-                                    <blockquote cite="https://www.facebook.com/aow.page" class="fb-xfbml-parse-ignore">
-                                        <a href="https://www.facebook.com/aow.page">AOW - Anime/Manga Fanpage</a>
-                                    </blockquote>
-                                </div>
+                                <div style="position: absolute; top: 0; right: 0; width: 50px; height: 50px; background: #D4A017; clip-path: polygon(100% 0, 0 100%, 100% 100%); opacity: 0.2;"></div>
                             </div>
                         </div>
                     </div>
@@ -147,47 +122,62 @@
             </div>
         </div>
     </div>
-</div>
 
-<!-- Additional styles -->
-<style>
-    .contact-page .card {
-        transition: all 0.3s ease;
-    }
-
-        .contact-page .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    <!-- Additional Styles -->
+    <style>
+        .contact-page .anime-card {
+            transition: all 0.3s ease;
+            background: #fff;
         }
 
-    .contact-page .form-control:focus {
-        border-color: #FE980F;
-        box-shadow: 0 0 0 0.2rem rgba(254, 152, 15, 0.25);
-    }
+            .contact-page .anime-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+            }
 
-    .contact-page .map-container iframe {
-        width: 100%;
-        height: 100%;
-        border: 0;
-    }
+        .contact-page .anime-input:focus {
+            border-color: #D4A017;
+            box-shadow: 0 0 0 0.2rem rgba(212, 160, 23, 0.3);
+            outline: none;
+        }
 
-    .contact-hero h1 {
-        font-size: 3rem;
-        font-weight: 700;
-        margin-bottom: 15px;
-    }
+        .contact-page .anime-btn:hover {
+            background-color: #b58900;
+        }
 
-    .media (max-width: 768px) {
-        .contact-hero
+        .contact-page .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
 
-    {
-        padding: 40px 0;
-    }
+        .contact-hero h1 {
+            font-family: 'Anime Ace', sans-serif; /* Use an anime-style font if available */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
 
-    .contact-hero h1 {
-        font-size: 2rem;
-    }
+        .social-icons a:hover {
+            transform: scale(1.2);
+            color: #b58900;
+        }
 
-    }
-</style>
+        .contact-hero h1 {
+            font-size: 2.5rem;
+        }
 
+        .contact-page .anime-card {
+            margin-bottom: 20px;
+        }
+
+        .contact-hero p {
+            font-size: 1.2rem !important;
+        }
+
+        .contact-hero p {
+            font-size: 1.2rem !important;
+        }
+
+        }
+    </style>
+</body>
+</html>

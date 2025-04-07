@@ -91,18 +91,57 @@ namespace WebSiteBanMoHinh.Areas.Admin.Controllers
             return View(category);
         }
 
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(CategoryModel category)
+        //{
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        category.Slug = category.Name.Replace(" ", "-");
+        //        var slug = await _dataContext.Categories.FirstOrDefaultAsync(p => p.Slug == category.Slug);
+        //        if (slug != null)
+        //        {
+        //            ModelState.AddModelError("", "Danh mục đã tồn tại");
+        //            return View(category);
+        //        }
+
+        //        _dataContext.Update(category);
+        //        await _dataContext.SaveChangesAsync();
+        //        TempData["success"] = "Cập nhật danh mục thành công";
+        //        return RedirectToAction("Index");
+        //    }
+        //    else
+        //    {
+        //        TempData["error"] = "Model có một vài thứ đang bị lỗi";
+        //        List<string> errors = new List<string>();
+        //        foreach (var value in ModelState.Values)
+        //        {
+        //            foreach (var error in value.Errors)
+        //            {
+        //                errors.Add(error.ErrorMessage);
+        //            }
+        //        }
+        //        string errorMessage = string.Join("\n", errors);
+        //        return BadRequest(errorMessage);
+        //    }
+
+        //    return View(category);
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(CategoryModel category)
         {
-
             if (ModelState.IsValid)
             {
                 category.Slug = category.Name.Replace(" ", "-");
-                var slug = await _dataContext.Categories.FirstOrDefaultAsync(p => p.Slug == category.Slug);
-                if (slug != null)
+                // Kiểm tra slug trùng lặp, nhưng loại trừ bản ghi hiện tại
+                var existingCategory = await _dataContext.Categories
+                    .FirstOrDefaultAsync(p => p.Slug == category.Slug && p.Id != category.Id);
+                if (existingCategory != null)
                 {
-                    ModelState.AddModelError("", "Danh mục đã tồn tại");
+                    ModelState.AddModelError("", "Danh mục với slug này đã tồn tại");
                     return View(category);
                 }
 
@@ -111,22 +150,10 @@ namespace WebSiteBanMoHinh.Areas.Admin.Controllers
                 TempData["success"] = "Cập nhật danh mục thành công";
                 return RedirectToAction("Index");
             }
-            else
-            {
-                TempData["error"] = "Model có một vài thứ đang bị lỗi";
-                List<string> errors = new List<string>();
-                foreach (var value in ModelState.Values)
-                {
-                    foreach (var error in value.Errors)
-                    {
-                        errors.Add(error.ErrorMessage);
-                    }
-                }
-                string errorMessage = string.Join("\n", errors);
-                return BadRequest(errorMessage);
-            }
-
-            return View(category);
+            // Xử lý lỗi ModelState
+            TempData["error"] = "Model có một vài thứ đang bị lỗi";
+            var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+            return BadRequest(string.Join("\n", errors));
         }
         public async Task<IActionResult> Delete(int Id)
         {

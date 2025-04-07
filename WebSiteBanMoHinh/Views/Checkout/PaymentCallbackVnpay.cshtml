@@ -1,13 +1,168 @@
 ﻿@using WebSiteBanMoHinh.Models.Vnpay
- @model PaymentResponseModel
+@using WebSiteBanMoHinh.Resources;
+@inject LanguageService ShareLocallizer
+@model PaymentResponseModel
 
 @{
-    ViewData["title"] = "Kết quả thông tin giao dịch thanh toán Vnpay thành công";
+    ViewData["title"] = "Vnpay Payment Success";
 }
-<h1>Thanh toán VNPAY thành công</h1>
-<h5>Thanh toán VnPay thành công với:</h5>
-<h6>OrderId : @Model.OrderId</h6>
-<h6>OrderInfo : @Model.OrderDescription</h6>
-<h6>Tổng tiền: @Model.PaymentMethod</h6>
-<h6>Mã giao dịch: @Model.TransactionId</h6>
-<h5>Xem <a asp-controller="Account" asp-action="History">lịch sử đơn hàng đã đặt</a></h5>
+
+<style>
+    :root {
+        --vnpay-blue: #0072B5; /* Màu xanh của VNPAY */
+        --text-color: #333333;
+        --gold-color: #DAA520;
+        --border-color: #E5E7EB;
+    }
+
+    .vnpay-success-container {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        padding: 40px;
+        margin: 30px auto;
+        max-width: 650px;
+        text-align: center;
+    }
+
+        .vnpay-success-container h1 {
+            color: var(--vnpay-blue);
+            font-weight: 900;
+            margin-bottom: 25px;
+            font-size: 2.5rem;
+            background: linear-gradient(to right, var(--vnpay-blue), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .vnpay-success-container h5 {
+            color: var(--text-color);
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+        }
+
+    .payment-info-box {
+        background: #F8FAFC;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 15px 0;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+    .info-label {
+        font-weight: 700;
+        color: var(--vnpay-blue);
+        font-size: 1rem;
+        flex: 0 0 40%;
+        text-align: left;
+    }
+
+    .info-value {
+        color: var(--text-color);
+        font-weight: 500;
+        font-size: 1rem;
+        flex: 0 0 60%;
+        text-align: right;
+        word-break: break-word;
+    }
+
+    .vnpay-success-container a {
+        display: inline-block;
+        margin-top: 25px;
+        color: var(--vnpay-blue);
+        font-weight: 700;
+        font-size: 1rem;
+        text-decoration: none;
+        padding: 12px 24px;
+        border: 2px solid var(--vnpay-blue);
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+        .vnpay-success-container a:hover {
+            background: linear-gradient(to right, var(--vnpay-blue), var(--secondary-color));
+            color: #fff;
+            border-color: transparent;
+            transform: translateY(-2px);
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .vnpay-success-container {
+            padding: 25px;
+            margin: 15px;
+        }
+
+            .vnpay-success-container h1 {
+                font-size: 2rem;
+            }
+
+            .vnpay-success-container h5 {
+                font-size: 1.1rem;
+            }
+
+        .info-item {
+            flex-direction: column;
+            align-items: flex-start;
+            margin: 10px 0;
+        }
+
+        .info-label, .info-value {
+            flex: none;
+            text-align: left;
+            width: 100%;
+        }
+
+        .info-label {
+            margin-bottom: 5px;
+        }
+
+        .vnpay-success-container a {
+            padding: 10px 20px;
+            font-size: 0.95rem;
+        }
+    }
+</style>
+
+<div class="vnpay-success-container">
+    <h1>@ShareLocallizer.GetLocalizedHTML("Vnpay Payment Success")</h1>
+    <h5>@ShareLocallizer.GetLocalizedHTML("Payment Success With"):</h5>
+
+    <div class="payment-info-box">
+        <div class="info-item">
+            <span class="info-label">@ShareLocallizer.GetLocalizedHTML("OrderId"):</span>
+            <span class="info-value">@(Model.OrderId ?? "N/A")</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">@ShareLocallizer.GetLocalizedHTML("OrderInfo"):</span>
+            <span class="info-value">@(Model.OrderDescription ?? "N/A")</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">@ShareLocallizer.GetLocalizedHTML("Total Amount"):</span>
+            <span class="info-value">@(Model.PaymentMethod ?? "N/A")</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">@ShareLocallizer.GetLocalizedHTML("TransactionId"):</span>
+            <span class="info-value">@(Model.TransactionId ?? "N/A")</span>
+        </div>
+    </div>
+
+    <h5>
+        @ShareLocallizer.GetLocalizedHTML("View")
+        <a asp-controller="Account" asp-action="History">@ShareLocallizer.GetLocalizedHTML("Order History")</a>
+    </h5>
+</div>

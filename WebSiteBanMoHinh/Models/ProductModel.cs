@@ -37,7 +37,9 @@ namespace WebSiteBanMoHinh.Models
 
         [Required(ErrorMessage = "Yêu cầu nhập giá vốn sản phẩm")]
         public double CapitalPrice { get; set; }
-        public  RatingModel Ratings { get; set; }
+        //public  RatingModel Ratings { get; set; }
+
+        public ICollection<RatingModel> Ratings { get; set; } = new List<RatingModel>();
         [NotMapped]
         [FileExtension]
         public IFormFile? ImageUpload { get; set; }

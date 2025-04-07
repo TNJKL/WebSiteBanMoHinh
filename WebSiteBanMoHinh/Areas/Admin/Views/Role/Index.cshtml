@@ -1,38 +1,182 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @model IEnumerable<IdentityRole>
+@using WebSiteBanMoHinh.Resources;
+@inject LanguageService ShareLocallizer
 @{
     ViewData["title"] = "List Role";
 }
-<h3>List Role</h3>
-<a asp-action="Add" asp-controller="Role">Add Role</a>
-<table class="table" id="myTable">
-    <thead>
-        <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Role Name</th>      
-            <th scope="col">Action</th>
 
+<style>
+    :root {
+        --primary-color: rgb(216,172,68);
+        --secondary-color: rgb(255,204,102);
+        --text-color: rgb(50,50,50);
+        --gold-color: #DAA520;
+    }
 
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <th scope="row">@item.Id</th>
-                <td>@item.Name</td>
-                
-                
+    .role-container {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        padding: 30px;
+        margin: 20px auto;
+        max-width: 800px; /* Tăng chiều rộng để phù hợp với bảng */
+    }
 
-                <td>
-                    <a asp-action="Edit" class="btn btn-warning btn-sm" asp-controller="Role" asp-route-Id="@item.Id">Edit</a>
-                    <a asp-action="Delete" class="btn btn-danger btn-sm confirmDeletion" asp-controller="Role" asp-route-Id="@item.Id">Delete</a>
-                </td>
-
-            </tr>
-
+        .role-container h3 {
+            color: var(--primary-color);
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2rem;
         }
 
+        .role-container .add-role-link {
+            display: inline-block;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
 
-    </tbody>
-</table>
+            .role-container .add-role-link:hover {
+                background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+                transform: translateY(-2px);
+            }
+
+        .role-container .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+            .role-container .table thead {
+                background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+                color: #fff;
+            }
+
+            .role-container .table th,
+            .role-container .table td {
+                padding: 12px 15px;
+                text-align: left;
+                border-bottom: 1px solid var(--gold-color);
+            }
+
+            .role-container .table tbody tr {
+                transition: all 0.3s ease;
+            }
+
+                .role-container .table tbody tr:hover {
+                    background: rgba(216,172,68,0.1);
+                }
+
+        .role-container .btn-warning {
+            background: var(--gold-color);
+            border: none;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+            .role-container .btn-warning:hover {
+                background: var(--primary-color);
+                transform: translateY(-2px);
+            }
+
+        .role-container .btn-danger {
+            background: #dc3545;
+            border: none;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+            .role-container .btn-danger:hover {
+                background: #c82333;
+                transform: translateY(-2px);
+            }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .role-container h3 {
+            font-size: 1.5rem;
+        }
+
+        .role-container {
+            padding: 20px;
+            margin: 10px;
+        }
+
+            .role-container .add-role-link {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+
+            .role-container .table th,
+            .role-container .table td {
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+
+            .role-container .btn-warning,
+            .role-container .btn-danger {
+                padding: 4px 8px;
+                font-size: 0.8rem;
+            }
+    }
+</style>
+
+<div class="role-container">
+    <h3>@ShareLocallizer.GetLocalizedHTML("List Role")</h3>
+    <a asp-action="Add" asp-controller="Role" class="add-role-link">@ShareLocallizer.GetLocalizedHTML("Add Role")</a>
+    <table class="table" id="myTable">
+        <thead>
+            <tr>
+                <th scope="col">@ShareLocallizer.GetLocalizedHTML("Id")</th>
+                <th scope="col">@ShareLocallizer.GetLocalizedHTML("Role Name")</th>
+                <th scope="col">@ShareLocallizer.GetLocalizedHTML("Action")</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th scope="row">@item.Id</th>
+                    <td>@item.Name</td>
+                    <td>
+                        <a asp-action="Edit" class="btn btn-warning btn-sm" asp-controller="Role" asp-route-Id="@item.Id">@ShareLocallizer.GetLocalizedHTML("Edit")</a>
+                        <a asp-action="Delete" class="btn btn-danger btn-sm confirmDeletion" asp-controller="Role" asp-route-Id="@item.Id">@ShareLocallizer.GetLocalizedHTML("Delete")</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        let table = new DataTable('#myTable', {
+            layout: {
+                topStart: {
+                    buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                }
+            },
+            language: {
+                url: '@ShareLocallizer.GetLocalizedHTML("DataTableLanguageUrl")' // Nếu bạn có file ngôn ngữ riêng
+            }
+        });
+    </script>
+}

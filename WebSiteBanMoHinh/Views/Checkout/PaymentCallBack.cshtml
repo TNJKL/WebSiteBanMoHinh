@@ -2,11 +2,161 @@
 @model MomoExecuteResponseModel
 
 @{
-    ViewData["title"] = "Kết quả thanh toán thành công";
+    ViewData["title"] = "Momo Payment Success";
 }
 
-<h5>Thanh toán MOMO thành công với:</h5>
-<h6>OrderId : @Model.OrderId</h6>
-<h6>OrderInfo : @Model.OrderInfo</h6>
-<h6>Tổng tiền: @Model.Amount</h6>
-<h5>Xem <a asp-controller="Account" asp-action="History">lịch sử đơn hàng đã đặt</a></h5>
+<style>
+    :root {
+        --momo-pink: #D82D8B; /* Màu hồng của Momo */
+        --text-color: #333333;
+        --gold-color: #DAA520;
+        --border-color: #E5E7EB;
+    }
+
+    .momo-success-container {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        padding: 40px;
+        margin: 30px auto;
+        max-width: 650px;
+        text-align: center;
+    }
+
+        .momo-success-container h1 {
+            color: var(--momo-pink);
+            font-weight: 900;
+            margin-bottom: 25px;
+            font-size: 2.5rem;
+            background: linear-gradient(to right, var(--momo-pink), #FF69B4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .momo-success-container h5 {
+            color: var(--text-color);
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+        }
+
+    .payment-info-box {
+        background: #F8FAFC;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 15px 0;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+    .info-label {
+        font-weight: 700;
+        color: var(--momo-pink);
+        font-size: 1rem;
+        flex: 0 0 40%;
+        text-align: left;
+    }
+
+    .info-value {
+        color: var(--text-color);
+        font-weight: 500;
+        font-size: 1rem;
+        flex: 0 0 60%;
+        text-align: right;
+        word-break: break-word;
+    }
+
+    .momo-success-container a {
+        display: inline-block;
+        margin-top: 25px;
+        color: var(--momo-pink);
+        font-weight: 700;
+        font-size: 1rem;
+        text-decoration: none;
+        padding: 12px 24px;
+        border: 2px solid var(--momo-pink);
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+        .momo-success-container a:hover {
+            background: linear-gradient(to right, var(--momo-pink), #FF69B4);
+            color: #fff;
+            border-color: transparent;
+            transform: translateY(-2px);
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .momo-success-container {
+            padding: 25px;
+            margin: 15px;
+        }
+
+            .momo-success-container h1 {
+                font-size: 2rem;
+            }
+
+            .momo-success-container h5 {
+                font-size: 1.1rem;
+            }
+
+        .info-item {
+            flex-direction: column;
+            align-items: flex-start;
+            margin: 10px 0;
+        }
+
+        .info-label, .info-value {
+            flex: none;
+            text-align: left;
+            width: 100%;
+        }
+
+        .info-label {
+            margin-bottom: 5px;
+        }
+
+        .momo-success-container a {
+            padding: 10px 20px;
+            font-size: 0.95rem;
+        }
+    }
+</style>
+
+<div class="momo-success-container">
+    <h1>Momo Payment Success</h1>
+    <h5>Thanh toán MOMO thành công với:</h5>
+
+    <div class="payment-info-box">
+        <div class="info-item">
+            <span class="info-label">OrderId:</span>
+            <span class="info-value">@(Model.OrderId ?? "N/A")</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">OrderInfo:</span>
+            <span class="info-value">@(Model.OrderInfo ?? "N/A")</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Tổng tiền:</span>
+            <span class="info-value">@(Model.Amount ?? "N/A")</span>
+        </div>
+    </div>
+
+    <h5>
+        Xem
+        <a asp-controller="Account" asp-action="History">lịch sử đơn hàng đã đặt</a>
+    </h5>
+</div>

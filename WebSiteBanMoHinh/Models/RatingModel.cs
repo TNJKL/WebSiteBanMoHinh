@@ -19,5 +19,6 @@ namespace WebSiteBanMoHinh.Models
         [ForeignKey("ProductId")]
         public ProductModel Product { get; set; }
 
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
     }
 }

@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<CategoryModel>
 
-@foreach(var item in Model)
+@foreach (var item in Model.Where(x => x.Status == 1))
 {
 	<div class="panel panel-default">
 		<div class="panel-heading">

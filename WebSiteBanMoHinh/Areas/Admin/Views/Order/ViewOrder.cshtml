@@ -1,134 +1,260 @@
 ﻿@model IEnumerable<OrderDetails>
-
+@using WebSiteBanMoHinh.Resources;
+@inject LanguageService ShareLocallizer
 @{
     ViewData["title"] = "Order Details";
     double total = 0; // Store total amount
     double subtotal = 0;
-   
 }
 
-<!DOCTYPE html>
+<style>
+    :root {
+        --primary-color: rgb(216,172,68);
+        --secondary-color: rgb(255,204,102);
+        --text-color: rgb(50,50,50);
+        --gold-color: #DAA520;
+    }
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Order Details</title>
-</head>
-<body>
-    <h3>Order Details</h3>
+    .order-details-container {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        padding: 30px;
+        margin: 20px auto;
+        max-width: 1000px;
+    }
 
+        .order-details-container h3 {
+            color: var(--primary-color);
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2rem;
+        }
 
-    <div class="table table-responsive">
-    <table class="table" id="detail_order">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Order Code</th>
-                <th>UserName</th>
-                <th>Product Name</th>
-                <th>Product Price</th>
-                <th>Quantity</th>
-                <th>Subtotal</th>
-              
-                    
-            </tr>
-        </thead>
-        <tbody>
-           
-            @foreach (var item in Model)
-            {
-                subtotal = item.Quantity * item.Price; //số lượng * giá
-                total += subtotal; 
-                <tr>
-                    <input type="hidden" asp-for="@item.OrderCode" class="getId" />
-                    <td>@item.Id</td>
-                    <td>@item.OrderCode</td>
-                    <td>@item.UserName</td>
-                    <td>@item.Product.Name</td>
-                    <td>@item.Price.ToString("#,##0 VNĐ")</td>
-                    <td>@item.Quantity</td>
-                    <td>@subtotal.ToString("#,##0 VNĐ")</td>
+        .order-details-container .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+        }
 
-                </tr>
+            .order-details-container .table thead {
+                background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+                color: #fff;
             }
-            <tr>
-                <td>Total:</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-               
-                <td>Tổng : @total.ToString("#,##0 đ")</td>
-                    <td>Shipping Cost : @ViewBag.ShippingCost.ToString("#,##0 đ")</td>
-                    
-                    
-                <td>
-                        @if (@ViewBag.Status!=3)
-                        {
-                            <select class="form-control select-update-order">
-                                @if (@ViewBag.Status == 0)
-                                {
-                                    <option disabled value="1">Đơn hàng mới</option>
-                                    <option value="0">Đã xử lý</option>
-                                }
-                                else
-                                {
-                                    <option value="1">Đơn hàng mới</option>
-                                    <option value="0">Đã xử lý</option>
-                                }
-                            </select>                                                                      
-                        }
-                </td>
-            </tr>
-        </tbody>
-            <a asp-action="Index">Back to list Orders</a>
-    </table>
-   
-    </div>
-</body>
 
-</html>
-@section Scripts{
-    
+            .order-details-container .table th,
+            .order-details-container .table td {
+                padding: 12px 15px;
+                text-align: left;
+                border-bottom: 1px solid var(--gold-color);
+            }
+
+            .order-details-container .table tbody tr {
+                transition: all 0.3s ease;
+            }
+
+                .order-details-container .table tbody tr:hover {
+                    background: rgba(216,172,68,0.1);
+                }
+
+        .order-details-container .summary-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(216,172,68,0.1);
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .order-details-container .summary-section .summary-right {
+                display: flex;
+                gap: 20px; /* Khoảng cách giữa Total và Shipping Cost */
+            }
+
+            .order-details-container .summary-section .total-label,
+            .order-details-container .summary-section .shipping-label {
+                font-weight: 700;
+                color: var(--text-color);
+            }
+
+        .order-details-container .form-control {
+            width: 150px;
+            padding: 6px;
+            border: 1px solid var(--gold-color);
+            border-radius: 5px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+            .order-details-container .form-control:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 5px rgba(216,172,68,0.3);
+                outline: none;
+            }
+
+        .order-details-container .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+            .order-details-container .back-link:hover {
+                color: var(--gold-color);
+                text-decoration: underline;
+            }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .order-details-container h3 {
+            font-size: 1.5rem;
+        }
+
+        .order-details-container {
+            padding: 20px;
+            margin: 10px;
+        }
+
+            .order-details-container .table th,
+            .order-details-container .table td {
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+
+            .order-details-container .summary-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+                .order-details-container .summary-section .summary-right {
+                    flex-direction: column;
+                    gap: 10px;
+                }
+
+            .order-details-container .form-control {
+                width: 120px;
+                font-size: 0.8rem;
+            }
+
+            .order-details-container .back-link {
+                font-size: 0.9rem;
+            }
+    }
+</style>
+
+<div class="order-details-container">
+    <h3>@ShareLocallizer.GetLocalizedHTML("Order Details")</h3>
+    <div class="table-responsive">
+        <table class="table" id="detail_order">
+            <thead>
+                <tr>
+                    <th>@ShareLocallizer.GetLocalizedHTML("Id")</th>
+                    <th>@ShareLocallizer.GetLocalizedHTML("Order Code")</th>
+                    <th>@ShareLocallizer.GetLocalizedHTML("Username")</th>
+                    <th>@ShareLocallizer.GetLocalizedHTML("Product Name")</th>
+                    <th>@ShareLocallizer.GetLocalizedHTML("Product Price")</th>
+                    <th>@ShareLocallizer.GetLocalizedHTML("Quantity")</th>
+                    <th>@ShareLocallizer.GetLocalizedHTML("Subtotal")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    subtotal = item.Quantity * item.Price;
+                    total += subtotal;
+                    <tr>
+                        <input type="hidden" asp-for="@item.OrderCode" class="getId" />
+                        <td>@item.Id</td>
+                        <td>@(item.OrderCode ?? "N/A")</td>
+                        <td>@(item.UserName ?? "N/A")</td>
+                        <td>@(item.Product?.Name ?? "N/A")</td>
+                        <td>@item.Price.ToString("#,##0 VNĐ")</td>
+                        <td>@item.Quantity</td>
+                        <td>@subtotal.ToString("#,##0 VNĐ")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="summary-section">
+        <div>
+            @if (@ViewBag.Status != 3)
+            {
+                <select class="form-control select-update-order">
+                    @if (@ViewBag.Status == 0)
+                    {
+                        <option disabled value="1">@ShareLocallizer.GetLocalizedHTML("New Order")</option>
+                        <option value="0">@ShareLocallizer.GetLocalizedHTML("Processed Order")</option>
+                    }
+                    else
+                    {
+                        <option value="1">@ShareLocallizer.GetLocalizedHTML("New Order")</option>
+                        <option value="0">@ShareLocallizer.GetLocalizedHTML("Processed Order")</option>
+                    }
+                </select>
+            }
+        </div>
+        <div class="summary-right">
+            <div>
+                <span class="total-label">@ShareLocallizer.GetLocalizedHTML("Total"):</span> @total.ToString("#,##0 VNĐ")
+            </div>
+            <div>
+                <span class="shipping-label">@ShareLocallizer.GetLocalizedHTML("Shipping Cost"):</span> @ViewBag.ShippingCost.ToString("#,##0 VNĐ")
+            </div>
+        </div>
+    </div>
+
+    <a asp-action="Index" asp-controller="Order" class="back-link">@ShareLocallizer.GetLocalizedHTML("Back to list Orders")</a>
+</div>
+
+@section Scripts {
     <script>
         new DataTable('#detail_order', {
             layout: {
                 topStart: {
-                    buttons: ['pdf','print']
+                    buttons: ['pdf', 'print']
                 }
             }
         });
-
     </script>
     <script>
         $(document).ready(function () {
             $('.select-update-order').change(function () {
-                var status = $(this).val(); //status = 1
-                var ordercode = $('.getId').val(); //
-                // alert(status);
-                // alert(ordercode);
+                var status = $(this).val();
+                var ordercode = $('.getId').val();
 
                 $.ajax({
                     type: "POST",
                     url: "@Url.Action("UpdateOrder")",
-                    data: { status: status, ordercode: ordercode }, // Send data to the server
-                   
+                    data: { status: status, ordercode: ordercode },
                     success: function (result) {
-                        // Handle successful update
                         if (result.success) {
-                          
-                            Swal.fire("Cập nhật đơn hàng thành công.");
+                            Swal.fire({
+                                title: "@ShareLocallizer.GetLocalizedHTML("Order updated successfully")",
+                                icon: "success",
+                                confirmButtonColor: 'var(--primary-color)'
+                            });
                         } else {
-                          
-                            Swal.fire("Cập nhật đơn hàng thất bại." + result.message);
-                           
+                            Swal.fire({
+                                title: "@ShareLocallizer.GetLocalizedHTML("Order update failed")",
+                                text: result.message,
+                                icon: "error",
+                                confirmButtonColor: 'var(--primary-color)'
+                            });
                         }
                     }
-                   
                 });
             });
         });
     </script>
 }
-
-    

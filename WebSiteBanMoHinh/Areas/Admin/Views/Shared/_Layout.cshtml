@@ -5,11 +5,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
+    <meta name="description" content="Website bán mô hình Anime Figure chuyên nghiệp">
     <meta name="author" content="">
-    <title>@ViewData["title"] - Admin Areas</title>
+    <title>@ViewData["title"] - Anime Figure Shop Admin</title>
     <link href="~/css/bootstrap.min.css" rel="stylesheet">
-    <link href="~/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Đảm bảo Font Awesome được tải đúng -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css" rel="stylesheet">
     <link href="~/css/prettyPhoto.css" rel="stylesheet">
     <link href="~/css/price-range.css" rel="stylesheet">
@@ -19,107 +20,167 @@
     <link href="//cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/3.2.2/css/buttons.dataTables.css" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+    <style>
+        :root {
+            --primary-color: rgb(216,172,68);
+            --secondary-color: rgb(255,204,102);
+            --text-color: rgb(50,50,50);
+            --gold-color: #DAA520; /* Màu vàng đậm hơn để nổi bật */
+        }
 
-    
-    
-    <!--[if lt IE 9]>
-    <script src="js/html5shiv.js"></script>
-    <script src="js/respond.min.js"></script>
-    <![endif]-->
-    <link rel="shortcut icon" href="images/ico/favicon.ico">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
-</head><!--/head-->
+        body {
+            background: linear-gradient(120deg, #fff, #f9e8c0);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .header-middle, .header-bottom {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 5px 0;
+        }
+
+        .shop-menu ul.nav li a {
+            color: var(--text-color);
+            padding: 8px 15px;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            margin: 2px;
+        }
+
+            .shop-menu ul.nav li a:hover {
+                background: rgba(0,0,0,0.1);
+                transform: translateY(-2px);
+            }
+
+        .mainmenu ul.nav li a {
+            color: var(--text-color);
+            padding: 8px 15px;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+        }
+
+            .mainmenu ul.nav li a:hover {
+                background: rgba(0,0,0,0.1);
+                transform: translateY(-2px);
+            }
+
+        .dropdown-menu {
+            background: var(--primary-color);
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+            .dropdown-menu li a {
+                color: var(--text-color);
+                transition: all 0.3s ease;
+            }
+
+                .dropdown-menu li a:hover {
+                    background: var(--secondary-color);
+                    padding-left: 20px;
+                }
+
+        .navbar-toggle {
+            border: 1px solid var(--text-color);
+        }
+
+            .navbar-toggle .icon-bar {
+                background: var(--text-color);
+            }
+
+        section .container {
+            background: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        footer {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: var(--text-color);
+            padding: 15px 0;
+            margin-top: 15px;
+            position: relative;
+        }
+
+        .btn-default {
+            background: #fff;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+            .btn-default:hover {
+                background: var(--primary-color);
+                color: #fff;
+            }
+
+        .admin-icon, .home-icon {
+            margin-right: 5px;
+            color: var(--text-color); /* Đảm bảo icon có màu phù hợp */
+        }
+
+        .admin-box {
+            border: 2px solid var(--gold-color); /* Sử dụng màu vàng đậm */
+            border-radius: 5px;
+            padding: 5px 10px;
+            background: rgba(255,255,255,0.3);
+            display: inline-block;
+        }
+    </style>
+</head>
 
 <body>
-
-    <header id="header">
-        <!--header-->
-            <!--header-->
-            <div class="header_top">
-                <!--header_top-->
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="contactinfo">
-                                <ul class="nav nav-pills">
-                                    <li><a href="#"><i class="fa fa-phone"></i> +2 95 01 88 821</a></li>
-                                    <li><a href="#"><i class="fa fa-envelope"></i> info@domain.com</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="social-icons pull-right">
-                                <ul class="nav navbar-nav">
-                                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div><!--/header_top-->
-
-            <div class="header-middle">
-                <!--header-middle-->
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="logo pull-left">
-                                <a href="index.html"><img src="images/home/logo.png" alt="" /></a>
-                            </div>
-                            <div class="btn-group pull-right">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-                                        @ShareLocallizer.GetLocalizedHTML("Language")
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                    <li><a asp-area="" asp-controller="Home" asp-action="ChangeLang" asp-route-culture="vi-VN">VN</a></li>
-                                    <li><a asp-area="" asp-controller="Home" asp-action="ChangeLang" asp-route-culture="en-US">EN</a></li>
-                                    </ul>
-                                </div>
-
-
-                            </div>
-                        </div>
-                        <div class="col-sm-8">
-                            <div class="shop-menu pull-right">
-                                <ul class="nav navbar-nav">
-
-
-                                    <li><a href="cart.html"><i class="fa fa-shopping-cart"></i> @ShareLocallizer.GetLocalizedHTML("Cart")</a></li>
-                                    @if (User.Identity?.IsAuthenticated ?? false)
-                                    {
-                                        <li><a asp-controller="Account" asp-action="Logout"><i class="fa fa-lock"></i> Hi, @User.Identity.Name, @ShareLocallizer.GetLocalizedHTML("Logout")</a></li>
-                                        <li><a href="checkout.html"><i class="fa fa-crosshairs"></i> Checkout</a></li>
-
-                                        <li><a href="#"><i class="fa fa-user"></i> Account</a></li>
-                                        <li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
-                                    }
-
-                                    else
-                                    {
-                                        <li><a asp-controller="Account" asp-action="Login"><i class="fa fa-lock"></i>@ShareLocallizer.GetLocalizedHTML("Login")</a></li>
-                                    }
-
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div><!--/header-middle-->
-
-        <div class="header-bottom">
-            <!--header-bottom-->
+    <header>
+        <div class="header-middle">
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-9">
+                    <div class="col-sm-1">
+                        <div class="btn-group pull-right">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
+                                    @ShareLocallizer.GetLocalizedHTML("Language")
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-area="" asp-controller="Home" asp-action="ChangeLang" asp-route-culture="vi-VN">VN</a></li>
+                                    <li><a asp-area="" asp-controller="Home" asp-action="ChangeLang" asp-route-culture="en-US">EN</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-11">
+                        <div class="shop-menu pull-right">
+                            <ul class="nav navbar-nav">
+                                @if (User.Identity?.IsAuthenticated ?? false)
+                                {
+                                    <li>
+                                        <a asp-controller="Account" asp-action="Logout" class="admin-box">
+                                            <i class="fas fa-user admin-icon"></i> Hi, @User.Identity.Name, @ShareLocallizer.GetLocalizedHTML("Logout")
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a asp-controller="Account" asp-action="Login">
+                                            <i class="fas fa-lock admin-icon"></i>@ShareLocallizer.GetLocalizedHTML("Login")
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
                         <div class="navbar-header">
                             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                                 <span class="sr-only">Toggle navigation</span>
@@ -130,7 +191,7 @@
                         </div>
                         <div class="mainmenu pull-left">
                             <ul class="nav navbar-nav collapse navbar-collapse">
-                                <li><a asp-area="" asp-controller="Home" class="active">Home</a></li>
+                                <li><a asp-area="" asp-controller="Home" class="active"><i class="fas fa-home home-icon"></i>Home</a></li>
                                 <li><a asp-controller="Dashboard">Dashboard</a></li>
                                 <li><a asp-controller="Product">@ShareLocallizer.GetLocalizedHTML("Products")</a></li>
                                 <li><a asp-controller="Shipping">Shipping</a></li>
@@ -142,22 +203,13 @@
                                 <li><a asp-controller="Slider">Manage Slider</a></li>
                                 <li><a asp-controller="Contact">Contact</a></li>
                                 <li><a asp-controller="Coupon">Coupon</a></li>
-                                
-                                
-
                             </ul>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="search_box pull-right">
-                            <input type="text" placeholder="Search" />
                         </div>
                     </div>
                 </div>
             </div>
-        </div><!--/header-bottom-->
-    </header><!--/header-->
-
+        </div>
+    </header>
 
     <section>
         <div class="container">
@@ -169,27 +221,23 @@
     </section>
 
     <footer id="footer">
-        <!--Footer-->
-
-
-
-
-
-
-    </footer><!--/Footer-->
-
-
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <p>© 2025 Hutech Figure Shop. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script src="~/js/jquery.js"></script>
     <script src="~/js/bootstrap.min.js"></script>
-    <script src="~/js/jquery.scrollUp.min.js"></script>
     <script src="~/js/price-range.js"></script>
     <script src="~/js/jquery.prettyPhoto.js"></script>
     <script src="~/js/main.js"></script>
     <script src="~/backend/js/site.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
     <script src="//cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
-
     <script src="https://cdn.datatables.net/buttons/3.2.2/js/dataTables.buttons.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.2.2/js/buttons.dataTables.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -197,30 +245,31 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.2.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.2.2/js/buttons.print.min.js"></script>
-     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
     <script>
         $(function(){
             var message = '@TempData["success"]';
             if(message != '')
-            // Swal.fire(message);
             Swal.fire({
-  title: message,
-  icon: "success",
-  draggable: true
-});
+                title: message,
+                icon: "success",
+                draggable: true,
+                background: 'rgba(255,255,255,0.95)',
+                confirmButtonColor: 'var(--primary-color)'
+            });
         });
     </script>
     <script>
-            let table = new DataTable('#myTable', {
-        layout: {
-            topStart: {
-                buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+        let table = new DataTable('#myTable', {
+            layout: {
+                topStart: {
+                    buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                }
             }
-        }
         });
     </script>
-    @await RenderSectionAsync("Scripts", required:false)
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

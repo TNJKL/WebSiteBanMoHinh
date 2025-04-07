@@ -574,6 +574,9 @@ namespace WebSiteBanMoHinh.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -590,8 +593,7 @@ namespace WebSiteBanMoHinh.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId")
-                        .IsUnique();
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Ratings");
                 });
@@ -838,8 +840,8 @@ namespace WebSiteBanMoHinh.Migrations
             modelBuilder.Entity("WebSiteBanMoHinh.Models.RatingModel", b =>
                 {
                     b.HasOne("WebSiteBanMoHinh.Models.ProductModel", "Product")
-                        .WithOne("Ratings")
-                        .HasForeignKey("WebSiteBanMoHinh.Models.RatingModel", "ProductId")
+                        .WithMany("Ratings")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

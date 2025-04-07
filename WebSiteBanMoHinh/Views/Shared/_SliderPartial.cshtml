@@ -2,11 +2,173 @@
     int index = 0;
 }
 <style>
+    #slider {
+        background-color: var(--slider-bg-color);
+        padding: 30px 0;
+    }
+
     .carousel-inner {
         width: 100%;
-        max-height: 400px !important;
+        max-height: 500px !important;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+        .carousel-inner .item {
+            position: relative;
+        }
+
+            .carousel-inner .item img {
+                width: 100%;
+                height: 500px;
+                object-fit: cover;
+                transition: transform 0.5s ease;
+            }
+
+                .carousel-inner .item img:hover {
+                    transform: scale(1.05);
+                }
+
+            /* Lớp phủ tối nhẹ để văn bản dễ đọc */
+            .carousel-inner .item::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.3);
+                z-index: 1;
+            }
+
+    /* Văn bản trên slide */
+    .carousel-caption {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+        text-align: center;
+        width: 80%;
+        padding: 20px;
+        background: linear-gradient(135deg, rgba(255, 204, 51, 0.7), rgba(255, 182, 193, 0.7)); /* Gradient vàng nhạt đến hồng nhạt */
+        border-radius: 10px;
+    }
+
+        .carousel-caption h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            color: white; /* Chuyển toàn bộ thành màu trắng */
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7); /* Tăng bóng chữ để nổi bật */
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        .carousel-caption p {
+            font-size: 1.2em;
+            font-weight: 400;
+            color: white; /* Màu trắng */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Tăng bóng chữ */
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+    /* Hiệu ứng cho văn bản */
+    @@keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .carousel-indicators {
+        bottom: 10px;
+        z-index: 3;
+    }
+
+        .carousel-indicators li {
+            background-color: white;
+            border: 1px solid var(--primary-color);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-indicators .active {
+            background-color: var(--primary-color);
+            border-color: var(--hover-color);
+            width: 14px;
+            height: 14px;
+        }
+
+    .control-carousel i {
+        color: white; /* Màu trắng cho mũi tên */
+        font-size: 20px;
+        transition: all 0.3s ease;
+    }
+
+
+    .left.control-carousel {
+        left: 20px;
+    }
+
+    .right.control-carousel {
+        right: 20px;
+    }
+
+    @@media screen and (max-width: 767px) {
+        .carousel-inner {
+            max-height: 300px !important;
+        }
+
+            .carousel-inner .item img {
+                height: 300px;
+            }
+
+        .carousel-caption {
+            padding: 10px;
+        }
+
+            .carousel-caption h1 {
+                font-size: 1.5em;
+            }
+
+            .carousel-caption p {
+                font-size: 0.9em;
+            }
+
+        .control-carousel {
+            width: 30px;
+            height: 30px;
+        }
+
+            .control-carousel i {
+                font-size: 16px;
+            }
     }
 </style>
+
 <section id="slider">
     <!--slider-->
     <div class="container">
@@ -20,21 +182,32 @@
                     </ol>
 
                     <div class="carousel-inner">
-                        
-                            @foreach (var slider in ViewBag.Sliders)
-                            {
-                                <div class="item @(index == 0 ? "active" : "")">
-
-                                    <div class="col-sm-12">
-                                        <img src="~/media/sliders/@slider.Image" class="girl img-responsive" alt="" />
-
+                        @foreach (var slider in ViewBag.Sliders)
+                        {
+                            <div class="item @(index == 0 ? "active" : "")">
+                                <div class="col-sm-12">
+                                    <img src="~/media/sliders/@slider.Image" class="img-responsive" alt="@slider.Image" />
+                                    <div class="carousel-caption">
+                                        @if (index == 0)
+                                        {
+                                            <h1>Welcome to HUTECH FIGURE</h1>
+                                            <p>Your one-stop shop for premium anime figures!</p>
+                                        }
+                                        else if (index == 1)
+                                        {
+                                            <h1>Exclusive Collections</h1>
+                                            <p>Discover our latest arrivals and limited editions!</p>
+                                        }
+                                        else if (index == 2)
+                                        {
+                                            <h1>Limited Edition Figures</h1>
+                                            <p>Get yours before they're gone!</p>
+                                        }
                                     </div>
                                 </div>
-                                index++;
-                            }
-
-                       
-
+                            </div>
+                            index++;
+                        }
                     </div>
 
                     <a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
@@ -44,7 +217,6 @@
                         <i class="fa fa-angle-right"></i>
                     </a>
                 </div>
-
             </div>
         </div>
     </div>

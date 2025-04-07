@@ -3,58 +3,257 @@
     ViewData["title"] = "Category Listed";
     Paginate pager = new Paginate();
     int pageNo = 0;
-    if(ViewBag.Pager != null)
+    if (ViewBag.Pager != null)
     {
         pager = ViewBag.Pager;
         pageNo = pager.CurrentPage;
     }
 }
-<h3>List Category</h3>
-<a asp-action="Add" asp-controller="Category">Add Category</a>
-<table class="table" id="myTable">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Category Name</th>
-            <th scope="col">Category Description</th>
 
-            <th scope="col">Category Slug</th>
-            <th scope="col">Category Status</th>
-            <th scope="col">Action</th>
+<style>
+    :root {
+        --primary-color: rgb(216,172,68);
+        --secondary-color: rgb(255,204,102);
+        --text-color: rgb(50,50,50);
+        --gold-color: #DAA520;
+    }
 
+    h3 {
+        color: var(--primary-color);
+        font-weight: 900;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 2.5rem;
+    }
 
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <th scope="row">@item.Id</th>
-                <td>@item.Name</td>
-                <td>@Html.Raw(@item.Description)</td>
-                <td>@item.Slug</td>
+    .btn-primary {
+        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        border: none;
+        color: #fff;
+        transition: all 0.3s ease;
+        padding: 8px 20px;
+        border-radius: 5px;
+    }
 
-                <td>
-                    @if(item.Status == 1)
-                    {
-                        <span class="text text-success">Hiển thị</span>
-                    }
-                    else
-                    {
-                        <span class="text text-danger">Ẩn</span>
-                    }
-
-                </td>
-                <td>
-                    <a asp-action="Edit" class="btn btn-warning btn-sm" asp-controller="Category" asp-route-Id="@item.Id">Edit</a>
-                    <a asp-action="Delete" class="btn btn-danger btn-sm confirmDeletion" asp-controller="Category" asp-route-Id="@item.Id">Delete</a>
-                </td>
-
-            </tr>
-
+        .btn-primary:hover {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            transform: translateY(-2px);
         }
 
-    </tbody>
-</table>
+    .table-container {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 100%;
+    }
 
-<partial name="_paging" model="@pager" />
+    .table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        color: var(--text-color);
+        table-layout: auto;
+    }
+
+        .table thead {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: #fff;
+        }
+
+        .table th, .table td {
+            padding: 8px 10px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            vertical-align: middle;
+            width: auto;
+        }
+
+            .table th:nth-child(1), .table td:nth-child(1) {
+                width: 5%;
+            }
+            /* # */
+            .table th:nth-child(2), .table td:nth-child(2) {
+                width: 20%;
+            }
+            /* Category Name */
+            .table th:nth-child(3), .table td:nth-child(3) {
+                width: 30%;
+            }
+            /* Category Description */
+            .table th:nth-child(4), .table td:nth-child(4) {
+                width: 20%;
+            }
+            /* Category Slug */
+            .table th:nth-child(5), .table td:nth-child(5) {
+                width: 10%;
+            }
+            /* Category Status */
+            .table th:nth-child(6), .table td:nth-child(6) {
+                width: 15%;
+            }
+        /* Action */
+
+        .table th {
+            font-weight: 900;
+            font-size: 1.1rem; /* Tăng kích thước chữ tiêu đề */
+        }
+
+        .table td {
+            font-size: 0.9rem; /* Tăng kích thước chữ nội dung */
+        }
+
+            /* In đậm và tăng kích thước cho các cột Category Name, Description, Slug */
+            .table th:nth-child(2), .table td:nth-child(2), /* Category Name */
+            .table th:nth-child(3), .table td:nth-child(3), /* Category Description */
+            .table th:nth-child(4), .table td:nth-child(4) /* Category Slug */ {
+                font-weight: 900;
+                font-size: 1rem; /* Tăng kích thước chữ cho các cột này */
+            }
+
+        .table tbody tr:hover {
+            background: rgba(216,172,68,0.1);
+            transition: all 0.3s ease;
+        }
+
+    .btn-warning {
+        background: var(--gold-color);
+        border: none;
+        color: #fff;
+        transition: all 0.3s ease;
+        margin: 2px;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 0.75rem;
+    }
+
+        .btn-warning:hover {
+            background: #c69500;
+            transform: translateY(-2px);
+        }
+
+    .btn-danger {
+        background: #dc3545;
+        border: none;
+        color: #fff;
+        transition: all 0.3s ease;
+        margin: 2px;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 0.75rem;
+    }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+    .text-success {
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    .text-danger {
+        color: #dc3545;
+        font-weight: bold;
+    }
+
+    /* Media queries để điều chỉnh trên màn hình nhỏ */
+    @@media (max-width: 1200px) {
+        .table th, .table td {
+            padding: 6px 8px;
+        }
+
+        .table th {
+            font-size: 1rem; /* Giảm nhẹ nhưng vẫn rõ */
+        }
+
+        .table td {
+            font-size: 0.85rem; /* Tăng kích thước chữ */
+        }
+
+            .table th:nth-child(2), .table td:nth-child(2),
+            .table th:nth-child(3), .table td:nth-child(3),
+            .table th:nth-child(4), .table td:nth-child(4) {
+                font-size: 0.9rem; /* Điều chỉnh cho cột in đậm */
+            }
+
+        .btn-warning, .btn-danger {
+            padding: 3px 6px;
+            font-size: 0.7rem;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        h3 {
+            font-size: 2rem;
+        }
+
+        .table th, .table td {
+            padding: 4px 6px;
+        }
+
+        .table th {
+            font-size: 0.9rem; /* Giảm kích thước hợp lý */
+        }
+
+        .table td {
+            font-size: 0.8rem; /* Tăng kích thước chữ */
+        }
+
+            .table th:nth-child(2), .table td:nth-child(2),
+            .table th:nth-child(3), .table td:nth-child(3),
+            .table th:nth-child(4), .table td:nth-child(4) {
+                font-size: 0.85rem; /* Điều chỉnh cho cột in đậm */
+            }
+
+        .btn-warning, .btn-danger {
+            padding: 2px 4px;
+            font-size: 0.65rem;
+        }
+    }
+</style>
+
+<div class="table-container">
+    <h3>List Category</h3>
+    <a class="btn btn-primary mb-3" asp-action="Add" asp-controller="Category">Add Category</a>
+    <table class="table" id="myTable">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Category Name</th>
+                <th scope="col">Category Description</th>
+                <th scope="col">Category Slug</th>
+                <th scope="col">Category Status</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th scope="row">@item.Id</th>
+                    <td>@item.Name</td>
+                    <td>@Html.Raw(@item.Description)</td>
+                    <td>@item.Slug</td>
+                    <td>
+                        @if (item.Status == 1)
+                        {
+                            <span class="text text-success">Hiển thị</span>
+                        }
+                        else
+                        {
+                            <span class="text text-danger">Ẩn</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" class="btn btn-warning btn-sm" asp-controller="Category" asp-route-Id="@item.Id">Edit</a>
+                        <a asp-action="Delete" class="btn btn-danger btn-sm confirmDeletion" asp-controller="Category" asp-route-Id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

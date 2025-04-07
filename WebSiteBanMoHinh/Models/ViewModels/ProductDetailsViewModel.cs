@@ -11,6 +11,8 @@ namespace WebSiteBanMoHinh.Models.ViewModels
         public string Name { get; set; }
         [Required(ErrorMessage = "Yêu cầu nhập email")]
         public string Email { get; set; }
-      
+
+
+        public List<RatingModel> Ratings { get; set; }
     }
 }

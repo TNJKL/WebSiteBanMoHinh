@@ -81,18 +81,58 @@ namespace WebSiteBanMoHinh.Areas.Admin.Controllers
         }
 
 
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(BrandModel brand)
+        //{
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        brand.Slug = brand.Name.Replace(" ", "-");
+        //        var slug = await _dataContext.Brands.FirstOrDefaultAsync(p => p.Slug == brand.Slug);
+        //        if (slug != null)
+        //        {
+        //            ModelState.AddModelError("", "Brand đã tồn tại");
+        //            return View(brand);
+        //        }
+
+        //        _dataContext.Update(brand);
+        //        await _dataContext.SaveChangesAsync();
+        //        TempData["success"] = "Cập nhật brand thành công";
+        //        return RedirectToAction("Index");
+        //    }
+        //    else
+        //    {
+        //        TempData["error"] = "Model có một vài thứ đang bị lỗi";
+        //        List<string> errors = new List<string>();
+        //        foreach (var value in ModelState.Values)
+        //        {
+        //            foreach (var error in value.Errors)
+        //            {
+        //                errors.Add(error.ErrorMessage);
+        //            }
+        //        }
+        //        string errorMessage = string.Join("\n", errors);
+        //        return BadRequest(errorMessage);
+        //    }
+
+        //    return View(brand);
+        //}
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(BrandModel brand)
         {
-
             if (ModelState.IsValid)
             {
                 brand.Slug = brand.Name.Replace(" ", "-");
-                var slug = await _dataContext.Categories.FirstOrDefaultAsync(p => p.Slug == brand.Slug);
-                if (slug != null)
+                // Kiểm tra slug trùng lặp trong bảng Brands, loại trừ bản ghi hiện tại
+                var existingBrand = await _dataContext.Brands
+                    .FirstOrDefaultAsync(p => p.Slug == brand.Slug && p.Id != brand.Id);
+                if (existingBrand != null)
                 {
-                    ModelState.AddModelError("", "Brand đã tồn tại");
+                    ModelState.AddModelError("", "Brand với slug này đã tồn tại");
                     return View(brand);
                 }
 
@@ -101,22 +141,10 @@ namespace WebSiteBanMoHinh.Areas.Admin.Controllers
                 TempData["success"] = "Cập nhật brand thành công";
                 return RedirectToAction("Index");
             }
-            else
-            {
-                TempData["error"] = "Model có một vài thứ đang bị lỗi";
-                List<string> errors = new List<string>();
-                foreach (var value in ModelState.Values)
-                {
-                    foreach (var error in value.Errors)
-                    {
-                        errors.Add(error.ErrorMessage);
-                    }
-                }
-                string errorMessage = string.Join("\n", errors);
-                return BadRequest(errorMessage);
-            }
-
-            return View(brand);
+            // Xử lý lỗi ModelState
+            TempData["error"] = "Model có một vài thứ đang bị lỗi";
+            var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+            return BadRequest(string.Join("\n", errors));
         }
     }
 }

@@ -2,54 +2,175 @@
 @{
     ViewData["title"] = "Edit User";
 }
-<h4>Edit User</h4>
-<div>
-    <form asp-action="Edit" enctype="multipart/form-data">
-        <input type="hidden" asp-for="Id" />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label>UserName</label>
-            <input asp-for="UserName" required class="form-control" />
-            <span asp-validation-for="UserName" class="text-danger" />
-        </div>
 
-        <div class="form-group">
-            <label>Email</label>
-            <input asp-for="Email" required class="form-control" />
-            <span asp-validation-for="Email" class="text-danger" />
-        </div>
+<style>
+    :root {
+        --primary-color: rgb(216,172,68);
+        --secondary-color: rgb(255,204,102);
+        --text-color: rgb(50,50,50);
+        --gold-color: #DAA520;
+    }
 
-        <div class="form-group">
-            <label>Phone Number</label>
-            <input asp-for="PhoneNumber" required class="form-control" />
-            <span asp-validation-for="PhoneNumber" class="text-danger" />
-        </div>
+    .edit-user-container h4 {
+        color: var(--primary-color) !important;
+        font-weight: 900 !important;
+        margin-bottom: 20px !important;
+        text-align: center !important;
+        font-size: 2rem !important;
+    }
 
-        <div class="form-group">
-            <label>Password</label>
-            <input asp-for="PasswordHash" readonly required class="form-control" />
-            <span asp-validation-for="PasswordHash" class="text-danger" />
-        </div>
+    .edit-user-container {
+        background: #fff !important;
+        border-radius: 10px !important;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+        padding: 30px !important;
+        margin: 20px auto !important;
+        max-width: 600px !important;
+    }
 
+        .edit-user-container .form-group {
+            margin-bottom: 20px !important;
+        }
 
-        <div class="form-group">
-            <label>Roles</label>
-            <select asp-for="RoleId" class="form-control" asp-items="ViewBag.Roles">
-            </select>
-            <span asp-validation-for="RoleId" class="text-danger" />
-        </div>
+            .edit-user-container .form-group label {
+                color: var(--text-color) !important;
+                font-weight: 700 !important;
+                font-size: 1.1rem !important;
+                display: block !important;
+                margin-bottom: 5px !important;
+            }
 
+            .edit-user-container .form-group input,
+            .edit-user-container .form-group select {
+                width: 100% !important;
+                padding: 10px !important;
+                border: 1px solid var(--gold-color) !important;
+                border-radius: 5px !important;
+                font-size: 1rem !important;
+                color: var(--text-color) !important;
+                transition: all 0.3s ease !important;
+            }
 
-        <div class="form-group">
-            <button class="btn btn-primary">Update</button>
-        </div>
-    </form>
-    <a asp-action="Index">Back to list users</a>
+                .edit-user-container .form-group input:focus,
+                .edit-user-container .form-group select:focus {
+                    border-color: var(--primary-color) !important;
+                    box-shadow: 0 0 5px rgba(216,172,68,0.3) !important;
+                    outline: none !important;
+                }
+
+                .edit-user-container .form-group input[readonly] {
+                    background-color: #f5f5f5 !important;
+                    cursor: not-allowed !important;
+                }
+
+        .edit-user-container .text-danger {
+            color: #dc3545 !important;
+            font-size: 0.9rem !important;
+            margin-top: 5px !important;
+            display: block !important;
+        }
+
+        .edit-user-container .btn-primary {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color)) !important;
+            border: none !important;
+            color: #fff !important;
+            padding: 10px 20px !important;
+            border-radius: 5px !important;
+            font-size: 1rem !important;
+            font-weight: 700 !important;
+            transition: all 0.3s ease !important;
+            display: inline-block !important;
+        }
+
+            .edit-user-container .btn-primary:hover {
+                background: linear-gradient(to right, var(--secondary-color), var(--primary-color)) !important;
+                transform: translateY(-2px) !important;
+            }
+
+        .edit-user-container .back-link {
+            display: inline-block !important;
+            margin-top: 20px !important;
+            color: var(--primary-color) !important;
+            font-weight: 700 !important;
+            font-size: 1rem !important;
+            text-decoration: none !important;
+            transition: all 0.3s ease !important;
+        }
+
+            .edit-user-container .back-link:hover {
+                color: var(--gold-color) !important;
+                text-decoration: underline !important;
+            }
+
+    /* Media queries để điều chỉnh trên màn hình nhỏ */
+    @@media (max-width: 768px) {
+        .edit-user-container h4 {
+            font-size: 1.5rem !important;
+        }
+
+        .edit-user-container {
+            padding: 20px !important;
+            margin: 10px !important;
+        }
+
+            .edit-user-container .form-group input,
+            .edit-user-container .form-group select {
+                padding: 8px !important;
+                font-size: 0.9rem !important;
+            }
+
+            .edit-user-container .btn-primary {
+                padding: 8px 16px !important;
+                font-size: 0.9rem !important;
+            }
+
+            .edit-user-container .back-link {
+                font-size: 0.9rem !important;
+            }
+    }
+</style>
+
+<div class="edit-user-container">
+    <h4>Edit User</h4>
+    <div>
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserName">UserName</label>
+                <input asp-for="UserName" required class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Email">Email</label>
+                <input asp-for="Email" required class="form-control" />
+                <span asp-validation-for="Email" class="text-danger" />
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber">Phone Number</label>
+                <input asp-for="PhoneNumber" required class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger" />
+            </div>
+            <div class="form-group">
+                <label asp-for="PasswordHash">Password</label>
+                <input asp-for="PasswordHash" readonly required class="form-control" />
+                <span asp-validation-for="PasswordHash" class="text-danger" />
+            </div>
+            <div class="form-group">
+                <label asp-for="RoleId">Roles</label>
+                <select asp-for="RoleId" class="form-control" asp-items="ViewBag.Roles"></select>
+                <span asp-validation-for="RoleId" class="text-danger" />
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary">Update</button>
+            </div>
+        </form>
+        <a asp-action="Index" class="back-link">Back to list users</a>
+    </div>
 </div>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
- }
-
+}

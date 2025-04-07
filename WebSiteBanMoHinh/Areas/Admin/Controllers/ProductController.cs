@@ -26,16 +26,29 @@ namespace WebSiteBanMoHinh.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Add()
         {
-            ViewBag.Categories = new SelectList(_dataContext.Categories, "Id", "Name");
-            ViewBag.Brands = new SelectList(_dataContext.Brands, "Id", "Name");
+            ViewBag.Categories = new SelectList(_dataContext.Categories.Where(c => c.Status == 1), "Id", "Name");
+            ViewBag.Brands = new SelectList(_dataContext.Brands.Where(b => b.Status == 1), "Id", "Name");
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(ProductModel product)
         {
-            ViewBag.Categories = new SelectList(_dataContext.Categories, "Id", "Name", product.CategoryId);
-            ViewBag.Brands = new SelectList(_dataContext.Brands, "Id", "Name", product.BrandId);
+            //ViewBag.Categories = new SelectList(_dataContext.Categories, "Id", "Name", product.CategoryId);
+            //ViewBag.Brands = new SelectList(_dataContext.Brands, "Id", "Name", product.BrandId);
+
+            ViewBag.Categories = new SelectList(
+        _dataContext.Categories.Where(c => c.Status == 1),
+        "Id",
+        "Name",
+        product.CategoryId
+    );
+            ViewBag.Brands = new SelectList(
+                _dataContext.Brands.Where(b => b.Status == 1),
+                "Id",
+                "Name",
+                product.BrandId
+            );
             if (ModelState.IsValid)
             {
                 product.Slug = product.Name.Replace(" ", "-");

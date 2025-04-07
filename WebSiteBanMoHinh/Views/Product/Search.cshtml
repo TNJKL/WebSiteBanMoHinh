@@ -6,9 +6,140 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    .product-image-wrapper {
+        background-color: white;
+        border: 2px solid #e6b800;
+        border-radius: 15px;
+        padding: 15px;
+        position: relative;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 520px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 0 4px 15px rgba(230, 184, 0, 0.2);
+    }
 
+        .product-image-wrapper:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(230, 184, 0, 0.4);
+        }
 
+    .productinfo {
+        text-align: center;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 10px 0;
+    }
 
+    .image-container {
+        position: relative;
+        overflow: hidden;
+        height: 260px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .productinfo img {
+        max-height: 260px;
+        max-width: 100%;
+        object-fit: contain;
+        border-radius: 10px;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .productinfo .quick-view {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #e6b800;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        font-size: 0.9em;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        text-transform: uppercase;
+    }
+
+    .image-container:hover img {
+        opacity: 0.7;
+        transform: scale(1.05);
+    }
+
+    .image-container:hover .quick-view {
+        opacity: 1;
+    }
+
+    .productinfo .product-name {
+        font-size: 1.1em;
+        font-weight: 700;
+        font-family: 'Roboto', sans-serif;
+        color: #2c3e50;
+        margin: 10px 0;
+        line-height: 1.3;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .productinfo h2 {
+        margin: 5px 0;
+    }
+
+    .productinfo .price {
+        color: #e6b800;
+        font-weight: 700;
+        font-size: 1.2em;
+    }
+
+    .add-to-cart, .add-to-wishlist, .add-to-compare {
+        background-color: #e6b800;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin: 5px 0;
+        font-size: 0.9em;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .add-to-cart {
+        background-color: #e6b800;
+    }
+
+        .add-to-cart:hover {
+            background-color: #cc9900;
+        }
+
+    .add-to-wishlist {
+        background-color: #ff4d4d;
+    }
+
+        .add-to-wishlist:hover {
+            background-color: #e63939;
+        }
+
+    .add-to-compare {
+        background-color: #0084ff;
+    }
+
+        .add-to-compare:hover {
+            background-color: #006cd1;
+        }
+</style>
 
 <div class="col-sm-3">
     <partial name="_SidebarPartial" />
@@ -16,54 +147,168 @@
 
 <div class="col-sm-9 padding-right">
     <div class="features_items">
-        <!--features_items-->
-        <h2 class="title text-center">@ShareLocallizer.GetLocalizedHTML("Features Items")</h2>
-
+        <h2 class="section-title">@ShareLocallizer.GetLocalizedHTML("Search Results for") " @ViewBag.Keyword"</h2>
         @foreach (var item in Model)
         {
-
             <div class="col-sm-4">
                 <div class="product-image-wrapper">
-
-                    <a>
-                        <div class="single-products">
-                            <div class="productinfo text-center">
-                                <img src="~/media/products/@item.Image" alt="@item.Name" width="100px" height="200px" />
-                                <h2>@item.Price</h2>
-                                <p>@item.Name</p>
-                                <p>Danh mục: @item.Category.Name</p>
-                                <p>Thương hiệu: @item.Brand.Name</p>
-                                @if (item.Quantity > 0)
-                                {
-                                    <a asp-action="Add" asp-controller="Cart" asp-route-Id="@item.Id" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-                                }
-                                else
-                                {
-                                    <a  class="btn btn-default"><i class="fa fa-shopping-cart"></i>Sold out</a>
-                                }
-                                
+                    <div class="single-products">
+                        <div class="productinfo">
+                            <div class="image-container">
+                                <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id">
+                                    <img src="~/media/products/@item.Image" alt="@item.Name" />
+                                    <div class="quick-view">
+                                        <i class="fa fa-eye"></i> @ShareLocallizer.GetLocalizedHTML("Quick View")
+                                    </div>
+                                </a>
                             </div>
+                            <p class="product-name">@item.Name</p>
+                            <h2>
+                                <span class="price">@item.Price.ToString("#,##0")₫</span>
+                            </h2>
+                            @if (item.Quantity > 0)
+                            {
+                                <button class="btn btn-default add-to-cart" data-product-id="@item.Id">
+                                    <i class="fa fa-shopping-cart"></i> @ShareLocallizer.GetLocalizedHTML("Add to Cart")
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-default" disabled>
+                                    <i class="fa fa-shopping-cart"></i> @ShareLocallizer.GetLocalizedHTML("Sold out")
+                                </button>
+                            }
+                            <button class="btn btn-default add-to-wishlist add-btn-wishlist" data-product_id="@item.Id">
+                                <i class="fas fa-heart"></i> @ShareLocallizer.GetLocalizedHTML("Add to Wishlist")
+                            </button>
+                            <button class="btn btn-default add-to-compare add-btn-compare" data-product_id="@item.Id">
+                                <i class="fas fa-balance-scale"></i> @ShareLocallizer.GetLocalizedHTML("Add to Compare")
+                            </button>
                         </div>
-                    </a>
-
-                    <div class="choose">
-                        <ul class="nav nav-pills nav-justified">
-                            <li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
-                            <li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
-                        </ul>
                     </div>
                 </div>
             </div>
         }
-
-    </div><!--features_items-->
-
-
-
+    </div>
 </div>
+
 @section Scripts {
+    <script src="~/js/Review.js"></script>
     <script>
-        // Script tìm kiếm bằng giọng nói được thêm vào đây
-        @await Html.PartialAsync("_VoiceSearchScript")
+        $(document).ready(function () {
+            // Lấy số lượng giỏ hàng ban đầu khi trang tải
+            updateCartCount();
+
+            // Xử lý nút "Add to Cart"
+            $('.add-to-cart').click(function (e) {
+                e.preventDefault();
+                var productId = $(this).data("product-id");
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Add", "Cart")",
+                    data: { Id: productId },
+                    success: function (result) {
+                        if (result.success) {
+                            // Cập nhật số lượng giỏ hàng trong layout
+                            $('#cartCount').text(result.count);
+                            Swal.fire({
+                                title: "Thành công!",
+                                text: result.message || "@Html.Raw(ShareLocallizer.GetLocalizedHTML("Add Item to cart successfully"))",
+                                icon: "success",
+                                confirmButtonText: "OK",
+                                background: "#fff0f5",
+                                color: "#2c3e50",
+                                confirmButtonColor: "#e6b800",
+                                customClass: {
+                                    popup: 'anime-swal',
+                                    title: 'anime-swal-title',
+                                    content: 'anime-swal-text'
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "Lỗi",
+                                text: result.message || "Không thể thêm sản phẩm vào giỏ hàng!",
+                                icon: "error",
+                                confirmButtonColor: "#e6b800"
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            title: "Lỗi",
+                            text: "Đã xảy ra lỗi khi thêm vào giỏ hàng!",
+                            icon: "error",
+                            confirmButtonColor: "#e6b800"
+                        });
+                    }
+                });
+            });
+
+            $('.add-btn-wishlist').click(function (e) {
+                e.preventDefault();
+                var Id = $(this).data("product_id");
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("AddWishList", "Home")",
+                    data: { Id: Id },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                title: "Thành công!",
+                                text: "@ShareLocallizer.GetLocalizedHTML("Added to Wishlist successfully")",
+                                icon: "success",
+                                confirmButtonText: "OK",
+                                background: "#fff0f5",
+                                color: "#2c3e50",
+                                confirmButtonColor: "#ff4d4d",
+                                customClass: {
+                                    popup: 'anime-swal',
+                                    title: 'anime-swal-title',
+                                    content: 'anime-swal-text'
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire("Đã xảy ra lỗi khi thêm vào danh sách yêu thích!");
+                    }
+                });
+            });
+
+            $('.add-btn-compare').click(function (e) {
+                e.preventDefault();
+                var Id = $(this).data("product_id");
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("AddCompare", "Home")",
+                    data: { Id: Id },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                title: "Thành công!",
+                                text: "@ShareLocallizer.GetLocalizedHTML("Added to Compare successfully")",
+                                icon: "success",
+                                confirmButtonText: "OK",
+                                background: "#fff0f5",
+                                color: "#2c3e50",
+                                confirmButtonColor: "#0084ff",
+                                customClass: {
+                                    popup: 'anime-swal',
+                                    title: 'anime-swal-title',
+                                    content: 'anime-swal-text'
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire("Đã xảy ra lỗi khi thêm vào danh sách so sánh!");
+                    }
+                });
+            });
+        });
     </script>
 }

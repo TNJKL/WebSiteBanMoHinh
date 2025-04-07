@@ -1,356 +1,236 @@
-﻿@using WebSiteBanMoHinh.Models.ViewModels
+﻿﻿@using WebSiteBanMoHinh.Models.ViewModels
 @using WebSiteBanMoHinh.Resources;
 @inject LanguageService ShareLocallizer
 @model CartItemViewModel
 
-<section id="cart_items">
-	<div class="container">
-		<div class="breadcrumbs">
-			<ol class="breadcrumb">
-				<li><a href="#">Home</a></li>
-				<li class="active">Shopping Cart</li>
-			</ol>
-		</div>
-		<div class="table-responsive cart_info">
-			<table class="table table-condensed">
-				<thead>
-					<tr class="cart_menu">
-						<td class="image">@ShareLocallizer.GetLocalizedHTML("Image")</td>
-						<td class="description">@ShareLocallizer.GetLocalizedHTML("Product Name")</td>
-						<td class="price">@ShareLocallizer.GetLocalizedHTML("Price")</td>
-						<td class="quantity">@ShareLocallizer.GetLocalizedHTML("Quantity")</td>
-						<td class="total">@ShareLocallizer.GetLocalizedHTML("Total")</td>
-						<td></td>
-					</tr>
-				</thead>
-				<tbody>
+<section id="cart_items" style="background-color: var(--background-color); padding: 40px 0;">
+    <div class="container">
+        <div class="cart_info" style="background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); overflow: hidden; padding: 20px;">
+            <table class="table table-condensed" style="margin-bottom: 0; border-collapse: separate; border-spacing: 0;">
+                <thead>
+                    <tr class="cart_menu" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border-radius: 8px 8px 0 0;">
+                        <th class="image" style="padding: 15px; font-weight: 600; text-transform: uppercase; font-size: 0.9em;">@ShareLocallizer.GetLocalizedHTML("Image")</th>
+                        <th class="description" style="padding: 15px; font-weight: 600; text-transform: uppercase; font-size: 0.9em;">@ShareLocallizer.GetLocalizedHTML("Product Name")</th>
+                        <th class="price" style="padding: 15px; font-weight: 600; text-transform: uppercase; font-size: 0.9em;">@ShareLocallizer.GetLocalizedHTML("Price")</th>
+                        <th class="quantity" style="padding: 15px; font-weight: 600; text-transform: uppercase; font-size: 0.9em;">@ShareLocallizer.GetLocalizedHTML("Quantity")</th>
+                        <th class="total" style="padding: 15px; font-weight: 600; text-transform: uppercase; font-size: 0.9em;">@ShareLocallizer.GetLocalizedHTML("Total")</th>
+                        <th style="padding: 15px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.CartItems.Count > 0)
+                    {
+                        foreach (var item in Model.CartItems)
+                        {
+                            <tr style="border-bottom: 1px solid #f0f0f0; transition: background 0.3s ease;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background='white'">
+                                <td class="cart_product" style="padding: 20px; vertical-align: middle;">
+                                    <a href=""><img src="~/media/products/@item.Image" alt="@item.ProductName" style="width: 70px; height: 100px; object-fit: cover; border-radius: 8px; border: 2px solid var(--secondary-color); transition: transform 0.3s ease, border-color 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'; this.style.borderColor=var(--hover-color)" onmouseout="this.style.transform='scale(1)'; this.style.borderColor=var(--secondary-color)"></a>
+                                </td>
+                                <td class="cart_description" style="padding: 20px; vertical-align: middle;">
+                                    <h4 style="margin: 0; font-size: 1.1em;"><a href="" style="color: var(--primary-color); font-weight: 500; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color=var(--hover-color)" onmouseout="this.style.color=var(--primary-color)">@item.ProductName</a></h4>
+                                </td>
+                                <td class="cart_price" style="padding: 20px; vertical-align: middle;">
+                                    <p style="color: var(--text-color); font-weight: 500; margin: 0; font-size: 1em;">@item.Price.ToString("#,##0 VNĐ")</p>
+                                </td>
+                                <td class="cart_quantity" style="padding: 20px; vertical-align: middle;">
+                                    <div style="display: flex; align-items: center; gap: 8px; justify-content: center; background: #f9f9f9; padding: 8px; border-radius: 8px;">
+                                        <a class="btn" asp-action="Increase" asp-controller="Cart" asp-route-id="@item.ProductId" style="background: var(--primary-color); color: white; padding: 6px 12px; border-radius: 5px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.background=var(--hover-color)" onmouseout="this.style.background=var(--primary-color)">+</a>
+                                        <input class="btn" type="text" name="quantity" value="@item.Quantity" autocomplete="off" style="width: 45px; text-align: center; border: 2px solid var(--secondary-color); border-radius: 5px; padding: 6px; background: white; color: var(--text-color); font-weight: 500;" readonly>
+                                        <a class="btn" asp-action="Decrease" asp-controller="Cart" asp-route-id="@item.ProductId" style="background: var(--primary-color); color: white; padding: 6px 12px; border-radius: 5px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.background=var(--hover-color)" onmouseout="this.style.background=var(--primary-color)">-</a>
+                                    </div>
+                                </td>
+                                <td class="cart_total" style="padding: 20px; vertical-align: middle;">
+                                    <p class="cart_total_price" style="color: var(--primary-color); font-weight: 600; margin: 0; font-size: 1.1em;">@Model.CartItems.Where(x => x.ProductId == @item.ProductId).Sum(x => x.Quantity * x.Price).ToString("#,##0 VNĐ")</p>
+                                </td>
+                                <td class="cart_delete" style="padding: 20px; vertical-align: middle;">
+                                    <a class="cart_quantity_delete" asp-action="Remove" asp-controller="Cart" asp-route-id="@item.ProductId" style="color: #ff4d4d; font-size: 1.3em; transition: all 0.3s ease;" onmouseover="this.style.color='#cc0000'; this.style.transform='scale(1.1)'" onmouseout="this.style.color='#ff4d4d'; this.style.transform='scale(1)'"><i class="fa fa-times"></i></a>
+                                </td>
+                            </tr>
+                        }
+                        <tr style="background: linear-gradient(135deg, #fff9e6, #fff5cc); border-top: 2px solid var(--secondary-color);">
+                            <td colspan="3" style="padding: 25px; vertical-align: top;">
+                                <div style="display: flex; flex-direction: column; gap: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        <strong style="color: var(--text-color); font-size: 1.2em; font-weight: 600;">@ShareLocallizer.GetLocalizedHTML("Grand Total:")</strong>
+                                        <p class="cart_total_price" style="margin: 0; color: var(--primary-color); font-size: 1.5em; font-weight: 700;">@Model.GrandTotal.ToString("#,##0 VNĐ")</p>
+                                    </div>
+                                    <form style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                        <label style="color: var(--text-color); font-weight: 500; font-size: 1em;">Coupon Code:</label>
+                                        <input type="text" class="form-control coupon-value" style="border: 2px solid var(--secondary-color); border-radius: 25px; padding: 8px 15px; width: 180px; transition: border-color 0.3s ease;" onfocus="this.style.borderColor=var(--hover-color)" onblur="this.style.borderColor=var(--secondary-color)" />
+                                        <span class="text text-success" style="color: #28a745; font-size: 0.9em;">@Model.CouponCode</span>
+                                        <input type="button" value="Apply" class="btn btn-apply-coupon" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border: none; padding: 8px 20px; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background=var(--hover-color)" onmouseout="this.style.background='linear-gradient(135deg, var(--primary-color), var(--secondary-color))'" />
+                                    </form>
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        <strong style="color: var(--text-color); font-size: 1.1em; font-weight: 600;">@ShareLocallizer.GetLocalizedHTML("Shipping Cost:")</strong>
+                                        <p class="cart_total_price" style="margin: 0; color: var(--primary-color); font-size: 1.2em; font-weight: 600;">@Model.ShippingCost.ToString("#,##0 VNĐ")</p>
+                                        <a asp-action="DeleteShipping" asp-controller="Cart" style="color: #ff4d4d; text-decoration: none; font-size: 0.9em; font-weight: 500; margin-left: 10px; transition: all 0.3s ease;" onmouseover="this.style.color='#cc0000'; this.style.transform='scale(1.05)'" onmouseout="this.style.color='#ff4d4d'; this.style.transform='scale(1)'">Xóa phí ship</a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td colspan="2" style="padding: 25px; vertical-align: top;">
+                                <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label style="color: var(--text-color); font-weight: 500; font-size: 1em;">Tỉnh thành phố</label>
+                                        <select class="css_select" id="tinh" name="tinh" title="Chọn Tỉnh Thành" style="width: 100%; padding: 10px; border: 2px solid var(--secondary-color); border-radius: 5px; background: white; color: var(--text-color); font-size: 0.9em; transition: border-color 0.3s ease;" onfocus="this.style.borderColor=var(--hover-color)" onblur="this.style.borderColor=var(--secondary-color)">
+                                            <option value="0">Tỉnh Thành</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label style="color: var(--text-color); font-weight: 500; font-size: 1em;">Quận huyện</label>
+                                        <select class="css_select" id="quan" name="quan" title="Chọn Quận Huyện" style="width: 100%; padding: 10px; border: 2px solid var(--secondary-color); border-radius: 5px; background: white; color: var(--text-color); font-size: 0.9em; transition: border-color 0.3s ease;" onfocus="this.style.borderColor=var(--hover-color)" onblur="this.style.borderColor=var(--secondary-color)">
+                                            <option value="0">Quận Huyện</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label style="color: var(--text-color); font-weight: 500; font-size: 1em;">Phường xã</label>
+                                        <select class="css_select" id="phuong" name="phuong" title="Chọn Phường Xã" style="width: 100%; padding: 10px; border: 2px solid var(--secondary-color); border-radius: 5px; background: white; color: var(--text-color); font-size: 0.9em; transition: border-color 0.3s ease;" onfocus="this.style.borderColor=var(--hover-color)" onblur="this.style.borderColor=var(--secondary-color)">
+                                            <option value="0">Phường Xã</option>
+                                        </select>
+                                    </div>
+                                    <button type="button" class="btn btn-primary btn-add-shipping" style="width: 100%; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border: none; padding: 12px; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background=var(--hover-color)" onmouseout="this.style.background='linear-gradient(135deg, var(--primary-color), var(--secondary-color))'">Tính phí ship</button>
+                                </div>
+                            </td>
+                            <td style="padding: 25px; vertical-align: top;">
+                                <div style="display: flex; flex-direction: column; gap: 15px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+                                    <a class="btn" asp-controller="Cart" asp-action="Clear" style="background: #ff4d4d; color: white; padding: 12px 20px; border-radius: 25px; text-decoration: none; text-align: center; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background='#cc0000'" onmouseout="this.style.background='#ff4d4d'">@ShareLocallizer.GetLocalizedHTML("Clear")</a>
+                                    @if (User.Identity?.IsAuthenticated ?? false)
+                                    {
+                                        if (@Model.ShippingCost <= 0)
+                                        {
+                                            <p style="color: #ff4d4d; font-size: 0.9em; text-align: center; margin: 10px 0;">Vui lòng nhập thông tin nơi ở để tính phí vận chuyển.</p>
+                                            <a disabled="disabled" class="btn" asp-controller="Checkout" asp-action="Checkout" style="background: #ccc; color: white; padding: 12px 20px; border-radius: 25px; text-decoration: none; text-align: center; font-weight: 600; cursor: not-allowed;">@ShareLocallizer.GetLocalizedHTML("Checkout")</a>
+                                        }
+                                        else
+                                        {
+                                            <a onclick="return confirm('Xác nhận đặt hàng ?')" class="btn" asp-controller="Checkout" asp-action="Checkout" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; padding: 12px 20px; border-radius: 25px; text-decoration: none; text-align: center; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background=var(--hover-color)" onmouseout="this.style.background='linear-gradient(135deg, var(--primary-color), var(--secondary-color))'">@ShareLocallizer.GetLocalizedHTML("Checkout")</a>
+                                        }
+                                        <form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment" style="margin-top: 10px;">
+                                            <input type="hidden" name="Amount" value="@Model.GrandTotal" />
+                                            <input type="hidden" name="OrderId" value="@Guid.NewGuid().ToString()" />
+                                            <input type="hidden" name="OrderInfo" value="Thanh toán Momo cho đơn hàng tại Hutech Figure Store" />
+                                            <input type="hidden" name="FullName" value="@User.Identity.Name" />
+                                            <button class="btn" name="PayUrl" type="submit" style="background: #ea4c89; color: white; padding: 12px 20px; border-radius: 25px; border: none; width: 100%; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background='#d43f78'" onmouseout="this.style.background='#ea4c89'">
+                                                <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-MoMo-Circle.png" alt="Momo" style="height: 20px; width: auto;" />
+                                                Pay with MoMo
+                                            </button>
+                                        </form>
+                                        <form method="POST" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment">
+                                            <input type="hidden" name="Name" value="@User.Identity.Name" />
+                                            <input type="hidden" name="Amount" value="@Model.GrandTotal" />
+                                            <input type="hidden" name="OrderDescription" value="Thanh toán qua Vnpay tại Hutech FigureStore" />
+                                            <input type="hidden" name="OrderType" value="other" />
+                                            <button class="btn" type="submit" style="background: #0066b2; color: white; padding: 12px 20px; border-radius: 25px; border: none; width: 100%; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background='#005599'" onmouseout="this.style.background='#0066b2'">
+                                                <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Icon-VNPAY-QR.png" alt="VNPay" style="height: 20px; width: auto;" />
+                                                Pay with VNPay
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" style="padding: 60px; text-align: center;">
+                                <h4 style="color: var(--text-color); margin: 0; font-weight: 500; font-size: 1.5em;">@ShareLocallizer.GetLocalizedHTML("Your Cart is Empty")</h4>
+                                <p style="color: var(--text-color); opacity: 0.7; margin-top: 10px;">Hãy khám phá bộ sưu tập figure anime của chúng tôi!</p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 
-					@if(Model.CartItems.Count > 0){
-						foreach(var item in Model.CartItems){
-							<tr>
-								<td class="cart_product">
-									<a href=""><img src="~/media/products/@item.Image" alt="" width="70px" height="100px"></a>
-								</td>
-								<td class="cart_description">
-									<h4><a href="">@item.ProductName</a></h4>
-
-								</td>
-								<td class="cart_price">
-									<p>@item.Price.ToString("#,##0 VNĐ")</p>
-								</td>
-								@* <td > *@
-
-								@* 	<a class="btn btn-default btn-sm" asp-controller="Cart" asp-action="Increase" asp-route-id="@item.ProductId"> + </a> *@
-								@* 	<input class="cart_quantity_input" type="text" name="quantity" value="@item.Quantity" autocomplete="off" size="2"> *@
-								@* 	<a class="btn btn-success btn-sm" asp-controller="Cart" asp-action="Decrease" asp-route-id="@item.ProductId"> - </a> *@
-								@* 	<a class="btn btn-danger btn-sm" asp-controller="Cart" asp-action="Remove" asp-route-id="@item.ProductId"> Remove </a> *@
-
-								@* </td> *@
-								<td class="">
-
-									<a class="btn btn-default btn-sm" asp-action="Increase" asp-controller="Cart" asp-route-id="@item.ProductId"> + </a>
-									<input class="btn btn-default btn-sm" type="text" name="quantity" value="@item.Quantity" autocomplete="off" size="2">
-									<a class="btn btn-default btn-sm" asp-action="Decrease" asp-controller="Cart" asp-route-id="@item.ProductId"> - </a>
-									<a class="btn btn-danger btn-sm" asp-action="Remove" asp-controller="Cart" asp-route-id="@item.ProductId"> @ShareLocallizer.GetLocalizedHTML("Remove")</a>
-
-								</td>
-								<td class="cart_total">
-									<p class="cart_total_price"> @Model.CartItems.Where(x => x.ProductId == @item.ProductId).Sum(x => x.Quantity * x.Price).ToString() </p>
-								</td>
-								<td class="cart_delete">
-									<a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
-								</td>
-							</tr>
-						}
-						<tr rowspan="5">
-							<td rowspan="5">
-								@ShareLocallizer.GetLocalizedHTML("Grand Total:"): <p class="cart_total_price">@Model.GrandTotal.ToString()</p>
-								<form>
-									Coupon Code: <input type="text" class="form-control coupon-value" />
-									<span class="text text-success">@Model.CouponCode</span> <br />
-
-									<input type="button" value="Apply" class="btn btn-sm btn-primary btn-apply-coupon" />
-								</form>
-								@ShareLocallizer.GetLocalizedHTML("Shipping Cost"): <p class="cart_total_price">@Model.ShippingCost.ToString()</p>
-								<p><a asp-action="DeleteShipping" asp-controller ="Cart">Xóa phí ship</a></p>
-							</td>
-
-
-
-							<td>
-								<div class="form-group">
-									<label>Tỉnh thành phố</label>
-									<select class="css_select" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
-										<option value="0">Tỉnh Thành</option>
-									</select>
-								</div>
-
-								<div class="form-group">
-									<label>Quận huyện</label>
-									<select class="css_select" id="quan" name="quan" title="Chọn Quận Huyện">
-										<option value="0">Quận Huyện</option>
-									</select>
-								</div>
-
-								<div class="form-group">
-									<label>Phường xã</label>
-									<select class="css_select" id="phuong" name="phuong" title="Chọn Phường Xã">
-										<option value="0">Phường Xã</option>
-									</select>
-								</div>
-								<button type="button" class="btn btn-primary btn-add-shipping">Tính phí ship</button>
-							</td>
-
-
-
-							<td><a class="btn btn-danger btn-sm" asp-controller="Cart" asp-action="Clear"> @ShareLocallizer.GetLocalizedHTML("Clear") </a></td>
-							@if (User.Identity?.IsAuthenticated ?? false)
-							{  
-								<td>
-
-									@if (@Model.ShippingCost <= 0)
-									{
-										<p><span class="text text-danger">Vui lòng nhập thông tin nơi ở để tính phí vận chuyển.</span></p>
-									<td><a disabled="disabled"  class="btn btn-primary btn-sm" asp-controller="Checkout" asp-action="Checkout"> @ShareLocallizer.GetLocalizedHTML("Checkout")</a></td>
-
-
-									}
-									else
-									{
-									<td><a onclick ="return confirm('Xác nhận đặt hàng ?')" class="btn btn-primary btn-sm" asp-controller="Checkout" asp-action="Checkout"> @ShareLocallizer.GetLocalizedHTML("Checkout")</a></td>
-									}
-								</td>
-								<td>
-									<form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment">
-										<input type="hidden" name="Amount" value="@Model.GrandTotal"/>
-										<input type="hidden" name="OrderId" value="@Guid.NewGuid().ToString()" />
-										<input type="hidden" name="OrderInfo" value="Thanh toán Momo cho đơn hàng tại Hutech Figure Store" />
-										<input type="hidden" name="FullName" value="@User.Identity.Name" />
-										<button class="btn btn-danger" name="PayUrl" type="submit">Pay with Momo</button>
-									</form>
-
-
-									<form method="POST" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment">
-
-										<input type="hidden" name="Name" value="@User.Identity.Name" />
-										<input type="hidden" name="Amount" value="@Model.GrandTotal" />
-										<input type="hidden" name="OrderDescription" value="Thanh toán qua Vnpay tại Hutech FigureStore" />
-										<input type="hidden" name="OrderType" value="other" />
-
-										<button class="btn btn-success" type="submit">Pay with Vnpay</button>
-									</form>
-								</td>
-								
-							}
-						</tr>
-					}
-					else
-					{
-						<tr>
-							<td colspan="5">
-								<h4>@ShareLocallizer.GetLocalizedHTML("Your Cart is Empty")</h4>
-							</td>
-						</tr>
-					}
-
-				</tbody>
-			</table>
-		</div>
-	</div>
-</section> <!--/#cart_items-->
-
-@*@section Scripts {
-
-	<script>
-		$(document).ready(function () {
-			$(".btn-add-shipping").click(function () {
-				var tinh = $("#tinh").find('option:selected').text();
-				var quan = $("#quan").find('option:selected').text();
-				var phuong = $("#phuong").find('option:selected').text();
-
-				// alert(tinh);
-				// alert(quan);
-				// alert(phuong);
-				// alert(price);
-				if (tinh == '' || quan == '' || phuong == '') {
-					Swal.fire("Làm ơn ko bỏ trống.");
-				} else {
-					$.ajax({
-						type: "POST",
-						url: "@Url.Action("GetShipping", "Cart")",
-						data: { tinh: tinh, quan: quan, phuong: phuong}, // Send data to the server
-
-						success: function (result) {
-							// Handle successful update
-							if (result) {
-
-								location.reload();
-
-							}
-						}
-
-					});
-				}
-
-
-			})
-	</script>
-
-	<script>
-		$(document).ready(function() {
-			//Lấy tỉnh thành
-			$.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm',function(data_tinh){
-				if(data_tinh.error==0){
-				   $.each(data_tinh.data, function (key_tinh,val_tinh) {
-					  $("#tinh").append('<option value="'+val_tinh.id+'">'+val_tinh.full_name+'</option>');
-				   });
-				   $("#tinh").change(function(e){
-						var idtinh=$(this).val();
-						//Lấy quận huyện
-						$.getJSON('https://esgoo.net/api-tinhthanh/2/'+idtinh+'.htm',function(data_quan){
-							if(data_quan.error==0){
-							   $("#quan").html('<option value="0">Quận Huyện</option>');
-							   $("#phuong").html('<option value="0">Phường Xã</option>');
-							   $.each(data_quan.data, function (key_quan,val_quan) {
-								  $("#quan").append('<option value="'+val_quan.id+'">'+val_quan.full_name+'</option>');
-							   });
-							   //Lấy phường xã
-							   $("#quan").change(function(e){
-									var idquan=$(this).val();
-									$.getJSON('https://esgoo.net/api-tinhthanh/3/'+idquan+'.htm',function(data_phuong){
-										if(data_phuong.error==0){
-										   $("#phuong").html('<option value="0">Phường Xã</option>');
-										   $.each(data_phuong.data, function (key_phuong,val_phuong) {
-											  $("#phuong").append('<option value="'+val_phuong.id+'">'+val_phuong.full_name+'</option>');
-										   });
-										}
-									});
-							   });
-
-							}
-						});
-				   });
-
-				}
-			});
-		 });
-	</script>
-}
-*@
 @section Scripts {
-	<script>
-		
-		$(".btn-apply-coupon").click(function () {
-			var coupon_value = $(".coupon-value").val();
-			//alert(coupon_value);
-			$.ajax({
-				type: "POST",
-				url: "@Url.Action("GetCoupon", "Cart")",
-				data: { coupon_value: coupon_value },
-				success: function (result) {
-					if (result.success) {
-
-						Swal.fire(result.message);
-						location.reload();
-					} else {
-
-						Swal.fire(result.message);
-					}
-				}
-
-			});
-		});
-	</script>
-	<script>
-		$(document).ready(function () {
-			$(".btn-add-shipping").click(function () {
-				var tinh = $("#tinh").find('option:selected').text();
-				var quan = $("#quan").find('option:selected').text();
-				var phuong = $("#phuong").find('option:selected').text();
-
-				// alert(tinh);
-				// alert(quan);
-				// alert(phuong);
-				// alert(price);
-				if (tinh == '' || quan == '' || phuong == '') {
-					Swal.fire("Làm ơn ko bỏ trống.");
-				} else {
-					$.ajax({
-						type: "POST",
-						url: "@Url.Action("GetShipping", "Cart")",
-						data: { tinh: tinh, quan: quan, phuong: phuong}, // Send data to the server
-
-						success: function (result) {
-							// Handle successful update
-							if (result) {
-
-								location.reload();
-
-							}
-						}
-
-					});
-				}
-
-
-			})
-			//delete shipping cost
-			$(".btn-delete-shipping").click(function () {
-				$.ajax({
-					type: "POST",
-					url: "@Url.Action("RemoveShippingCookie", "Cart")", // Replace with your controller and action name
-					success: function (result) {
-						if (result.success) {
-							// Handle successful removal (e.g., update UI or redirect)
-							Swal.fire("Xóa thành công.");
-							location.reload();
-						} else {
-							// Handle error (optional)
-							Swal.fire("Xóa thất bại.");
-						}
-					},
-					error: function (jqXHR, textStatus, errorThrown) {
-						// Handle AJAX errors (optional)
-						console.error("Error removing cookie:", errorThrown);
-					}
-				});
-			});
-			//Lấy tỉnh thành
-			$.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
-				if (data_tinh.error == 0) {
-					$.each(data_tinh.data, function (key_tinh, val_tinh) {
-						$("#tinh").append('<option value="' + val_tinh.id + '">' + val_tinh.full_name + '</option>');
-					});
-					$("#tinh").change(function (e) {
-						var idtinh = $(this).val();
-						//Lấy quận huyện
-						$.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
-							if (data_quan.error == 0) {
-								$("#quan").html('<option value="0">Quận Huyện</option>');
-								$("#phuong").html('<option value="0">Phường Xã</option>');
-								$.each(data_quan.data, function (key_quan, val_quan) {
-									$("#quan").append('<option value="' + val_quan.id + '">' + val_quan.full_name + '</option>');
-								});
-								//Lấy phường xã
-								$("#quan").change(function (e) {
-									var idquan = $(this).val();
-									$.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
-										if (data_phuong.error == 0) {
-											$("#phuong").html('<option value="0">Phường Xã</option>');
-											$.each(data_phuong.data, function (key_phuong, val_phuong) {
-												$("#phuong").append('<option value="' + val_phuong.id + '">' + val_phuong.full_name + '</option>');
-											});
-										}
-									});
-								});
-
-							}
-						}); //end $.getJson
-
-					});
-
-				}
-			});
-		});
-	</script>
+    <script>
+        $(".btn-apply-coupon").click(function () {
+            var coupon_value = $(".coupon-value").val();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetCoupon", "Cart")",
+                data: { coupon_value: coupon_value },
+                success: function (result) {
+                    if (result.success) {
+                        Swal.fire(result.message);
+                        location.reload();
+                    } else {
+                        Swal.fire(result.message);
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".btn-add-shipping").click(function () {
+                var tinh = $("#tinh").find('option:selected').text();
+                var quan = $("#quan").find('option:selected').text();
+                var phuong = $("#phuong").find('option:selected').text();
+                if (tinh == '' || quan == '' || phuong == '') {
+                    Swal.fire("Làm ơn ko bỏ trống.");
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("GetShipping", "Cart")",
+                        data: { tinh: tinh, quan: quan, phuong: phuong},
+                        success: function (result) {
+                            if (result) {
+                                location.reload();
+                            }
+                        }
+                    });
+                }
+            });
+            $(".btn-delete-shipping").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("RemoveShippingCookie", "Cart")",
+                    success: function (result) {
+                        if (result.success) {
+                            Swal.fire("Xóa thành công.");
+                            location.reload();
+                        } else {
+                            Swal.fire("Xóa thất bại.");
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("Error removing cookie:", errorThrown);
+                    }
+                });
+            });
+            $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
+                if (data_tinh.error == 0) {
+                    $.each(data_tinh.data, function (key_tinh, val_tinh) {
+                        $("#tinh").append('<option value="' + val_tinh.id + '">' + val_tinh.full_name + '</option>');
+                    });
+                    $("#tinh").change(function (e) {
+                        var idtinh = $(this).val();
+                        $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
+                            if (data_quan.error == 0) {
+                                $("#quan").html('<option value="0">Quận Huyện</option>');
+                                $("#phuong").html('<option value="0">Phường Xã</option>');
+                                $.each(data_quan.data, function (key_quan, val_quan) {
+                                    $("#quan").append('<option value="' + val_quan.id + '">' + val_quan.full_name + '</option>');
+                                });
+                                $("#quan").change(function (e) {
+                                    var idquan = $(this).val();
+                                    $.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
+                                        if (data_phuong.error == 0) {
+                                            $("#phuong").html('<option value="0">Phường Xã</option>');
+                                            $.each(data_phuong.data, function (key_phuong, val_phuong) {
+                                                $("#phuong").append('<option value="' + val_phuong.id + '">' + val_phuong.full_name + '</option>');
+                                            });
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    });
+                }
+            });
+        });
+    </script>
 }

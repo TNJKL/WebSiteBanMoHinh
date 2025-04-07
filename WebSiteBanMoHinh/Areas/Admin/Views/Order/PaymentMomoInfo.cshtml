@@ -1,37 +1,148 @@
 ﻿@model MomoInfoModel
-
+@using WebSiteBanMoHinh.Resources;
+@inject LanguageService ShareLocallizer
 @{
-    ViewData["title"] = "Momo infor";
-} 
+    ViewData["title"] = "Momo Info";
+}
 
-<body>
+<style>
+    :root {
+        --primary-color: rgb(216,172,68);
+        --secondary-color: rgb(255,204,102);
+        --text-color: rgb(50,50,50);
+        --gold-color: #DAA520;
+    }
 
-    <h3>Payment Momo Info</h3>
+    .momo-info-container {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        padding: 30px;
+        margin: 20px auto;
+        max-width: 800px; /* Tăng chiều rộng để phù hợp với bảng */
+    }
 
-    <a class="btn btn-primary" asp-action="Index" asp-controller="Order">Back to Orders</a>
+        .momo-info-container h3 {
+            color: var(--primary-color);
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2rem;
+        }
 
-    <table class="table" id="myTable">
-        <thead>
-            <tr>
-                <th>OrderId</th>
-                <th>OrderInfo</th>
-                <th>FullName</th>
-                <th>Amount</th>
-                <th>DatePaid</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>@Model.OrderId</td>
-                <td>@Model.OrderInfo</td>
-                <td>@Model.FullName</td>
-                <td>@Model.Amount.ToString("#,##0 VND")</td>
-                <td>@Model.DatePaid.ToString()</td>
-            </tr>
-        </tbody>
+        .momo-info-container .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+        }
 
+            .momo-info-container .table thead {
+                background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+                color: #fff;
+            }
+
+            .momo-info-container .table th,
+            .momo-info-container .table td {
+                padding: 12px 15px;
+                text-align: left;
+                border-bottom: 1px solid var(--gold-color);
+            }
+
+            .momo-info-container .table tbody tr {
+                transition: all 0.3s ease;
+            }
+
+                .momo-info-container .table tbody tr:hover {
+                    background: rgba(216,172,68,0.1);
+                }
+
+        .momo-info-container .btn-primary {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+            .momo-info-container .btn-primary:hover {
+                background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+                transform: translateY(-2px);
+            }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .momo-info-container h3 {
+            font-size: 1.5rem;
+        }
+
+        .momo-info-container {
+            padding: 20px;
+            margin: 10px;
+        }
+
+            .momo-info-container .table th,
+            .momo-info-container .table td {
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+
+            .momo-info-container .btn-primary {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+    }
+</style>
+
+<div class="momo-info-container">
+    <h3>@ShareLocallizer.GetLocalizedHTML("Payment Momo Info")</h3>
+    <a class="btn btn-primary" asp-action="Index" asp-controller="Order">@ShareLocallizer.GetLocalizedHTML("Back to Orders")</a>
+    <div class="table-responsive">
+        <table class="table" id="momoTable">
+            <thead>
+                <tr>
+                    <th>@ShareLocallizer.GetLocalizedHTML("OrderId")</th>
+                    <th>@ShareLocallizer.GetLocalizedHTML("OrderInfo")</th>
+                    <th>@ShareLocallizer.GetLocalizedHTML("FullName")</th>
+                    <th>@ShareLocallizer.GetLocalizedHTML("Amount")</th>
+                    <th>@ShareLocallizer.GetLocalizedHTML("DatePaid")</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@(Model.OrderId ?? "N/A")</td>
+                    <td>@(Model.OrderInfo ?? "N/A")</td>
+                    <td>@(Model.FullName ?? "N/A")</td>
+                    <td>@Model.Amount.ToString("#,##0 VNĐ")</td>
+                    <td>@Model.DatePaid.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                </tr>
+            </tbody>
         </table>
+    </div>
+</div>
 
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Kiểm tra nếu DataTable đã được khởi tạo thì hủy trước
+            if ($.fn.DataTable.isDataTable('#momoTable')) {
+                $('#momoTable').DataTable().destroy();
+            }
 
-    </body>
-
+            // Khởi tạo DataTable
+            $('#momoTable').DataTable({
+                layout: {
+                    topStart: {
+                        buttons: ['pdf', 'print']
+                    }
+                }
+            });
+        });
+    </script>
+}

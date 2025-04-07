@@ -1,45 +1,216 @@
-﻿﻿@{
+﻿@{
     ViewData["title"] = "List Wishlist";
     var key = 0;
 }
 
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["title"] - HUTECH FIGURE</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #d4a017;
+            --secondary-color: #ffcc33;
+            --accent-color: #ffcc33;
+            --text-color: #333333;
+            --hover-color: #cc9900;
+            --background-color: #ffffff;
+            --footer-bg-color: #1C2526;
+            --slider-bg-color: #f5e6d3;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Roboto', sans-serif;
+            padding: 20px 0; /* Chỉ padding trên dưới, không padding trái phải */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 100%; /* Đặt max-width thành 100% để tràn hết chiều rộng */
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        h3 {
+            text-align: center;
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+            .table thead {
+                background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+                color: white;
+            }
+
+            .table th {
+                padding: 15px;
+                font-size: 1.1em;
+                font-weight: 600;
+                text-transform: uppercase;
+                text-align: center;
+            }
+
+            .table tbody tr {
+                border-bottom: 1px solid #e0e0e0;
+                transition: all 0.3s ease;
+            }
+
+                .table tbody tr:hover {
+                    background-color: var(--slider-bg-color);
+                    transform: scale(1.01);
+                }
+
+            .table td {
+                padding: 15px;
+                text-align: center;
+                vertical-align: middle;
+                font-size: 1em;
+                color: var(--text-color);
+            }
+
+                .table td img {
+                    width: 120px;
+                    height: 150px;
+                    object-fit: cover;
+                    border-radius: 8px;
+                    transition: transform 0.3s ease;
+                }
+
+                    .table td img:hover {
+                        transform: scale(1.05);
+                    }
+
+            .table .product-name {
+                font-weight: 600;
+                color: var(--primary-color);
+            }
+
+            .table .product-description {
+                max-width: 300px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .table .product-price {
+                font-weight: 600;
+                color: #2ecc71; /* Màu xanh lá */
+            }
+
+        .btn-custom {
+            display: inline-block;
+            padding: 8px 15px;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-transform: uppercase;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-danger-custom {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+        }
+
+            .btn-danger-custom:hover {
+                background: linear-gradient(135deg, #c0392b, #a93226);
+                transform: translateY(-2px);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            }
+
+        @@media screen and (max-width: 767px) {
+            .table th, .table td {
+                font-size: 0.9em;
+                padding: 10px;
+            }
+
+                .table td img {
+                    width: 80px;
+                    height: 100px;
+                }
+
+            .table .product-description {
+                max-width: 150px;
+            }
+
+            .btn-custom {
+                padding: 6px 10px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h3>List Wishlist</h3>
-
-
-    <table class="table" id="myTable">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Product Name</th>
-                <th>Product Description</th>
-                <th>Product Price</th>
-                <th>Product Image</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var wishlist_product in Model)
-            {
-                key++;
+    <div class="container">
+        <h3>List Wishlist</h3>
+        <table class="table" id="myTable">
+            <thead>
                 <tr>
-                    <td>@key</td>
-                    <td>@wishlist_product.Product.Name</td>
-                    <td>@Html.Raw(@wishlist_product.Product.Description)</td>
-                    <td>@wishlist_product.Product.Price.ToString("#,##0 VNĐ")</td>
-                    <td> <img src="~/media/products/@wishlist_product.Product.Image" width="120px" height="150px" /> </td>
-                    <td><a class="btn btn-danger btn-sm confirmDeletion" asp-action="DeleteWishlist" asp-controller="Home" asp-route-Id="@wishlist_product.Wishlists.Id">Delete</a></td>
+                    <th>Id</th>
+                    <th>Product Name</th>
+                    <th>Product Description</th>
+                    <th>Product Price</th>
+                    <th>Product Image</th>
+                    <th>Action</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var wishlist_product in Model)
+                {
+                    key++;
+                    <tr>
+                        <td>@key</td>
+                        <td class="product-name">@wishlist_product.Product.Name</td>
+                        <td class="product-description">@Html.Raw(@wishlist_product.Product.Description)</td>
+                        <td class="product-price">@wishlist_product.Product.Price.ToString("#,##0 VNĐ")</td>
+                        <td><img src="~/media/products/@wishlist_product.Product.Image" alt="@wishlist_product.Product.Name" /></td>
+                        <td>
+                            <a class="btn btn-danger-custom btn-sm confirmDeletion" asp-action="DeleteWishlist" asp-controller="Home" asp-route-Id="@wishlist_product.Wishlists.Id">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </body>
-
 </html>

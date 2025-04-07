@@ -143,7 +143,10 @@ public class HomeController : Controller
         return RedirectToAction("Compare", "Home");
     }
 
-
+    public IActionResult About()
+    {
+        return View();
+    }
 
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -157,6 +160,5 @@ public class HomeController : Controller
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
      
- 
     }
 }

@@ -43,26 +43,71 @@ namespace WebSiteBanMoHinh.Controllers
         {
             return View("~/Views/Checkout/Index.cshtml");
         }
-      
-        
+
+
+        //public async Task<IActionResult> Add(long Id)
+        //{
+        //    ProductModel product = await _dataContext.Products.FindAsync(Id);
+        //    List<CartItemModel> cart = HttpContext.Session.GetJSon<List<CartItemModel>>("Cart") ?? new List<CartItemModel>();
+        //    CartItemModel cartItems = cart.Where(c => c.ProductId == Id).FirstOrDefault();
+        //    if (cartItems == null)
+        //    {
+        //        cart.Add(new CartItemModel(product));
+        //    }
+        //    else
+        //    {
+        //        cartItems.Quantity += 1;
+        //    }
+        //    HttpContext.Session.SetJson("Cart", cart);
+
+        //    TempData["success"] = "Add Item to cart successfully";
+        //    return Redirect(Request.Headers["Referer"].ToString());
+        //}
+
+
+        [HttpPost]
         public async Task<IActionResult> Add(long Id)
         {
             ProductModel product = await _dataContext.Products.FindAsync(Id);
+            if (product == null)
+            {
+                return Json(new { success = false, message = "Sản phẩm không tồn tại" });
+            }
+
             List<CartItemModel> cart = HttpContext.Session.GetJSon<List<CartItemModel>>("Cart") ?? new List<CartItemModel>();
-            CartItemModel cartItems = cart.Where(c => c.ProductId == Id).FirstOrDefault();
-            if (cartItems == null)
+            CartItemModel cartItem = cart.Where(c => c.ProductId == Id).FirstOrDefault();
+
+            if (cartItem == null)
             {
                 cart.Add(new CartItemModel(product));
             }
             else
             {
-                cartItems.Quantity += 1;
+                cartItem.Quantity += 1;
             }
+
             HttpContext.Session.SetJson("Cart", cart);
-            
+            int totalCount = cart.Sum(x => x.Quantity);
+
+            // Nếu là yêu cầu AJAX, trả về JSON
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return Json(new { success = true, count = totalCount, message = "Thêm vào giỏ hàng thành công" });
+            }
+
+            // Nếu không phải AJAX, chuyển hướng như cũ
             TempData["success"] = "Add Item to cart successfully";
             return Redirect(Request.Headers["Referer"].ToString());
         }
+
+        [HttpGet]
+        public IActionResult GetCartCount()
+        {
+            List<CartItemModel> cart = HttpContext.Session.GetJSon<List<CartItemModel>>("Cart") ?? new List<CartItemModel>();
+            int count = cart.Sum(x => x.Quantity);
+            return Json(new { count = count });
+        }
+
         public async Task<IActionResult> Decrease(long Id)
         {
             List<CartItemModel> cart = HttpContext.Session.GetJSon<List<CartItemModel>>("Cart");

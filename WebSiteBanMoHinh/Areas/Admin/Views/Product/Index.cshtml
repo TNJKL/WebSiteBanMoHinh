@@ -4,50 +4,348 @@
 @{
     ViewData["title"] = "Product Listed";
 }
-<h3>List product</h3>
-<a class="btn btn-primary" asp-action="Add" asp-controller="Product">Add Product</a>
-<table class="table" id="myTable">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Name")</th>
-            <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Quantity")</th>
-            <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Sold")</th>
-            <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Description")</th>
-            <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Price")</th>
-            <th scope="col">@ShareLocallizer.GetLocalizedHTML("Capital Price")</th>
-            <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Image")</th>
-            <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Slug")</th>
-            <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Category")</th>
-            <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Brand")</th>
-            <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Manage")</th>
 
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <th scope="row">@item.Id</th>
-                <td>@item.Name</td>
-                <td>@item.Quantity</td>
-                <td><b>@item.Sold</b></td>
-                <td>@Html.Raw(@item.Description)</td>
-                <td>@item.Price.ToString("#,##0 VND")</td>
-                <td>@item.CapitalPrice.ToString("#,##0 VND")</td>
-                <td><img src="~/media/products/@item.Image" width="120px" height="150px"  /></td>
-                <td>@item.Slug</td>
-                <td>@item.Category.Name</td>
-                <td>@item.Brand.Name</td>
-                <td>
-                    <a asp-action="Edit" class="btn btn-warning btn-sm" asp-controller="Product" asp-route-Id="@item.Id">@ShareLocallizer.GetLocalizedHTML("Edit")</a>
-                    <a asp-action="Delete" class="btn btn-danger btn-sm confirmDeletion" asp-controller="Product" asp-route-Id="@item.Id">@ShareLocallizer.GetLocalizedHTML("Delete")</a>
-                <a asp-controller="Product" asp-action="AddQuantity" class=" btn btn-warning" asp-route-Id="@item.Id">Add Quantity</a>
-                </td>
+<style>
+    :root {
+        --primary-color: rgb(216,172,68);
+        --secondary-color: rgb(255,204,102);
+        --text-color: rgb(50,50,50);
+        --gold-color: #DAA520;
+    }
 
-            </tr>
+    h3 {
+        color: var(--primary-color);
+        font-weight: 900;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 2.5rem;
+    }
 
+    .btn-primary {
+        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        border: none;
+        color: #fff;
+        transition: all 0.3s ease;
+        padding: 8px 20px;
+        border-radius: 5px;
+    }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            transform: translateY(-2px);
         }
 
-    </tbody>
-</table>
+    .table-container {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 100%; /* Đảm bảo không vượt quá chiều rộng màn hình */
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        color: var(--text-color);
+        table-layout: auto; /* Cho phép bảng tự điều chỉnh */
+    }
+
+        .table thead {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: #fff;
+        }
+
+        .table th, .table td {
+            padding: 8px 10px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            vertical-align: middle;
+            width: auto; /* Cho phép cột tự điều chỉnh */
+        }
+
+            /* Sử dụng width tương đối thay vì min-width cố định */
+            .table th:nth-child(1), .table td:nth-child(1) {
+                width: 3%;
+            }
+            /* # */
+            .table th:nth-child(2), .table td:nth-child(2) {
+                width: 10%;
+            }
+            /* Product Name */
+            .table th:nth-child(3), .table td:nth-child(3) {
+                width: 8%;
+            }
+            /* Product Quantity */
+            .table th:nth-child(4), .table td:nth-child(4) {
+                width: 8%;
+            }
+            /* Product Sold */
+            .table th:nth-child(5), .table td:nth-child(5) {
+                width: 12%;
+            }
+            /* Product Description */
+            .table th:nth-child(6), .table td:nth-child(6) {
+                width: 8%;
+            }
+            /* Product Price */
+            .table th:nth-child(7), .table td:nth-child(7) {
+                width: 8%;
+            }
+            /* Capital Price */
+            .table th:nth-child(8), .table td:nth-child(8) {
+                width: 8%;
+            }
+            /* Product Image */
+            .table th:nth-child(9), .table td:nth-child(9) {
+                width: 10%;
+            }
+            /* Product Slug */
+            .table th:nth-child(10), .table td:nth-child(10) {
+                width: 8%;
+            }
+            /* Product Category */
+            .table th:nth-child(11), .table td:nth-child(11) {
+                width: 8%;
+            }
+            /* Product Brand */
+            .table th:nth-child(12), .table td:nth-child(12) {
+                width: 15%;
+            }
+        /* Product Manage */
+
+        .table th {
+            font-weight: 900;
+            font-size: 1rem;
+        }
+
+            /* In đậm và tăng kích thước các cột được yêu cầu */
+            .table th:nth-child(2), .table td:nth-child(2), /* Product Name */
+            .table th:nth-child(3), .table td:nth-child(3), /* Product Quantity */
+            .table th:nth-child(4), .table td:nth-child(4), /* Product Sold */
+            .table th:nth-child(5), .table td:nth-child(5), /* Product Description */
+            .table th:nth-child(6), .table td:nth-child(6), /* Product Price */
+            .table th:nth-child(7), .table td:nth-child(7), /* Capital Price */
+            .table th:nth-child(9), .table td:nth-child(9), /* Product Slug */
+            .table th:nth-child(10), .table td:nth-child(10), /* Product Category */
+            .table th:nth-child(11), .table td:nth-child(11) /* Product Brand */ {
+                font-weight: 900;
+                font-size: 0.9rem;
+            }
+
+        .table td {
+            font-size: 0.75rem;
+        }
+
+        .table tbody tr:hover {
+            background: rgba(216,172,68,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .table img {
+            width: 60px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 1px solid var(--gold-color);
+            transition: transform 0.3s ease;
+        }
+
+            .table img:hover {
+                transform: scale(1.05);
+            }
+
+    .btn-warning {
+        background: var(--gold-color);
+        border: none;
+        color: #fff;
+        transition: all 0.3s ease;
+        margin: 2px;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 0.75rem;
+    }
+
+        .btn-warning:hover {
+            background: #c69500;
+            transform: translateY(-2px);
+        }
+
+    .btn-danger {
+        background: #dc3545;
+        border: none;
+        color: #fff;
+        transition: all 0.3s ease;
+        margin: 2px;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 0.75rem;
+    }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+    /* Căn chỉnh thanh tìm kiếm và nút điều hướng của DataTables */
+    .dataTables_wrapper .dataTables_filter {
+        float: right;
+        margin-bottom: 15px;
+    }
+
+        .dataTables_wrapper .dataTables_filter input {
+            border: 1px solid var(--gold-color);
+            border-radius: 5px;
+            padding: 5px;
+            margin-left: 5px;
+        }
+
+    .dataTables_wrapper .dataTables_paginate {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            background: var(--primary-color);
+            color: #fff !important;
+            border: none;
+            border-radius: 5px;
+            margin: 0 2px;
+            padding: 5px 10px;
+            transition: all 0.3s ease;
+        }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+                background: var(--secondary-color);
+                transform: translateY(-2px);
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+                background: var(--gold-color);
+            }
+
+    /* Media queries để điều chỉnh trên màn hình nhỏ */
+    @@media (max-width: 1200px) {
+        .table th, .table td {
+            padding: 6px 8px; /* Giảm padding trên màn hình nhỏ */
+        }
+
+        .table img {
+            width: 50px;
+            height: 70px;
+        }
+
+        .table th {
+            font-size: 0.9rem;
+        }
+
+        .table td {
+            font-size: 0.7rem;
+        }
+
+            .table th:nth-child(2), .table td:nth-child(2),
+            .table th:nth-child(3), .table td:nth-child(3),
+            .table th:nth-child(4), .table td:nth-child(4),
+            .table th:nth-child(5), .table td:nth-child(5),
+            .table th:nth-child(6), .table td:nth-child(6),
+            .table th:nth-child(7), .table td:nth-child(7),
+            .table th:nth-child(9), .table td:nth-child(9),
+            .table th:nth-child(10), .table td:nth-child(10),
+            .table th:nth-child(11), .table td:nth-child(11) {
+                font-size: 0.8rem;
+            }
+
+        .btn-warning, .btn-danger {
+            padding: 3px 6px;
+            font-size: 0.7rem;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        h3 {
+            font-size: 2rem;
+        }
+
+        .table th, .table td {
+            padding: 4px 6px;
+        }
+
+        .table img {
+            width: 40px;
+            height: 60px;
+        }
+
+        .table th {
+            font-size: 0.8rem;
+        }
+
+        .table td {
+            font-size: 0.65rem;
+        }
+
+            .table th:nth-child(2), .table td:nth-child(2),
+            .table th:nth-child(3), .table td:nth-child(3),
+            .table th:nth-child(4), .table td:nth-child(4),
+            .table th:nth-child(5), .table td:nth-child(5),
+            .table th:nth-child(6), .table td:nth-child(6),
+            .table th:nth-child(7), .table td:nth-child(7),
+            .table th:nth-child(9), .table td:nth-child(9),
+            .table th:nth-child(10), .table td:nth-child(10),
+            .table th:nth-child(11), .table td:nth-child(11) {
+                font-size: 0.7rem;
+            }
+
+        .btn-warning, .btn-danger {
+            padding: 2px 4px;
+            font-size: 0.65rem;
+        }
+    }
+</style>
+
+<div class="table-container">
+    <h3>List Product</h3>
+    <a class="btn btn-primary mb-3" asp-action="Add" asp-controller="Product">Add Product</a>
+    <table class="table" id="myTable">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Name")</th>
+                <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Quantity")</th>
+                <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Sold")</th>
+                <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Description")</th>
+                <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Price")</th>
+                <th scope="col">@ShareLocallizer.GetLocalizedHTML("Capital Price")</th>
+                <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Image")</th>
+                <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Slug")</th>
+                <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Category")</th>
+                <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Brand")</th>
+                <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Manage")</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th scope="row">@item.Id</th>
+                    <td>@item.Name</td>
+                    <td>@item.Quantity</td>
+                    <td><b>@item.Sold</b></td>
+                    <td>@Html.Raw(@item.Description)</td>
+                    <td>@item.Price.ToString("#,##0 VND")</td>
+                    <td>@item.CapitalPrice.ToString("#,##0 VND")</td>
+                    <td><img src="~/media/products/@item.Image" alt="@item.Name" /></td>
+                    <td>@item.Slug</td>
+                    <td>@item.Category.Name</td>
+                    <td>@item.Brand.Name</td>
+                    <td>
+                        <a asp-action="Edit" class="btn btn-warning btn-sm" asp-controller="Product" asp-route-Id="@item.Id">@ShareLocallizer.GetLocalizedHTML("Edit")</a>
+                        <a asp-action="Delete" class="btn btn-danger btn-sm confirmDeletion" asp-controller="Product" asp-route-Id="@item.Id">@ShareLocallizer.GetLocalizedHTML("Delete")</a>
+                        <a asp-controller="Product" asp-action="AddQuantity" class="btn btn-warning btn-sm" asp-route-Id="@item.Id">Add Quantity</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

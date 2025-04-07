@@ -1,59 +1,235 @@
 ﻿@model ProductQuantityModel
+@using WebSiteBanMoHinh.Resources;
+@inject LanguageService ShareLocallizer
 @{
     ViewData["title"] = "Add quantity";
     var total_quantities = 0;
     var key = 1;
 }
-<h4>Add Quantity Product</h4>
-<div>
-    <form asp-action="StoreProductQuantity" asp-asp-controller="Product" enctype="multipart/form-data">
-        <input type="hidden" name="ProductId" value="@ViewBag.Id" />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label>Quantity</label>
-            <input min="1" value="1" max="1000" asp-for="Quantity" class="form-control" />
-            <span asp-validation-for="Quantity" class="text-danger"></span>
-        </div>
+<style>
+    :root {
+        --primary-color: rgb(216,172,68);
+        --secondary-color: rgb(255,204,102);
+        --text-color: rgb(50,50,50);
+        --gold-color: #DAA520;
+    }
 
-        <div class="form-group">
-            <button class="btn btn-primary">Add</button>
-        </div>
-    </form>
-    <h3>Existing Product Quantities:</h3>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Key</th>
-                <th>Quantity added</th>
+    .add-quantity-container h4 {
+        color: var(--primary-color) !important;
+        font-weight: 900 !important;
+        margin-bottom: 20px !important;
+        text-align: center !important;
+        font-size: 2rem !important;
+    }
 
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var productQuantity in ViewBag.ProductByQuantity)
+    .add-quantity-container h3 {
+        color: var(--primary-color) !important;
+        font-weight: 900 !important;
+        margin: 30px 0 20px !important;
+        text-align: center !important;
+        font-size: 1.5rem !important;
+    }
 
-            {
+    .add-quantity-container {
+        background: #fff !important;
+        border-radius: 10px !important;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+        padding: 30px !important;
+        margin: 20px auto !important;
+        max-width: 800px !important;
+    }
 
-                total_quantities += productQuantity.Quantity;
-                <tr>
-                    <td>@key</td>
-                    <td>@productQuantity.Quantity</td>
+        .add-quantity-container .form-group {
+            margin-bottom: 20px !important;
+        }
 
-                    <td>@productQuantity.DateCreate</td>
-                </tr>
-                key++;
+            .add-quantity-container .form-group label {
+                color: var(--text-color) !important;
+                font-weight: 700 !important;
+                font-size: 1.1rem !important;
+                display: block !important;
+                margin-bottom: 5px !important;
             }
-            <tr>
-                <td>Total Quantities : @total_quantities</td>
-            </tr>
-        </tbody>
-    </table>
-    <a asp-asp-controller="Product" asp-action="Index">Back to list products</a>
+
+            .add-quantity-container .form-group input {
+                width: 100% !important;
+                padding: 10px !important;
+                border: 1px solid var(--gold-color) !important;
+                border-radius: 5px !important;
+                font-size: 1rem !important;
+                color: var(--text-color) !important;
+                transition: all 0.3s ease !important;
+            }
+
+                .add-quantity-container .form-group input:focus {
+                    border-color: var(--primary-color) !important;
+                    box-shadow: 0 0 5px rgba(216,172,68,0.3) !important;
+                    outline: none !important;
+                }
+
+        .add-quantity-container .text-danger {
+            color: #dc3545 !important;
+            font-size: 0.9rem !important;
+            margin-top: 5px !important;
+            display: block !important;
+        }
+
+        .add-quantity-container .btn-primary {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color)) !important;
+            border: none !important;
+            color: #fff !important;
+            padding: 10px 20px !important;
+            border-radius: 5px !important;
+            font-size: 1rem !important;
+            font-weight: 700 !important;
+            transition: all 0.3s ease !important;
+            display: inline-block !important;
+        }
+
+            .add-quantity-container .btn-primary:hover {
+                background: linear-gradient(to right, var(--secondary-color), var(--primary-color)) !important;
+                transform: translateY(-2px) !important;
+            }
+
+        .add-quantity-container .table {
+            width: 100% !important;
+            border-collapse: separate !important;
+            border-spacing: 0 !important;
+            color: var(--text-color) !important;
+            table-layout: auto !important;
+        }
+
+            .add-quantity-container .table thead {
+                background: linear-gradient(to right, var(--primary-color), var(--secondary-color)) !important;
+                color: #fff !important;
+            }
+
+            .add-quantity-container .table th,
+            .add-quantity-container .table td {
+                padding: 8px 10px !important;
+                text-align: center !important;
+                border-bottom: 1px solid rgba(0,0,0,0.1) !important;
+                vertical-align: middle !important;
+            }
+
+            .add-quantity-container .table th {
+                font-weight: 900 !important;
+                font-size: 1rem !important;
+            }
+
+            .add-quantity-container .table td {
+                font-size: 0.9rem !important;
+            }
+
+            .add-quantity-container .table tbody tr:hover {
+                background: rgba(216,172,68,0.1) !important;
+                transition: all 0.3s ease !important;
+            }
+
+            .add-quantity-container .table tr:last-child td {
+                font-weight: 900 !important;
+                color: var(--primary-color) !important;
+            }
+
+        .add-quantity-container .back-link {
+            display: inline-block !important;
+            margin-top: 20px !important;
+            color: var(--primary-color) !important;
+            font-weight: 700 !important;
+            font-size: 1rem !important;
+            text-decoration: none !important;
+            transition: all 0.3s ease !important;
+        }
+
+            .add-quantity-container .back-link:hover {
+                color: var(--gold-color) !important;
+                text-decoration: underline !important;
+            }
+
+    /* Media queries để điều chỉnh trên màn hình nhỏ */
+    @@media (max-width: 768px) {
+        .add-quantity-container h4 {
+            font-size: 1.5rem !important;
+        }
+
+        .add-quantity-container h3 {
+            font-size: 1.2rem !important;
+        }
+
+        .add-quantity-container {
+            padding: 20px !important;
+            margin: 10px !important;
+        }
+
+            .add-quantity-container .form-group input {
+                padding: 8px !important;
+                font-size: 0.9rem !important;
+            }
+
+            .add-quantity-container .btn-primary {
+                padding: 8px 16px !important;
+                font-size: 0.9rem !important;
+            }
+
+            .add-quantity-container .table th,
+            .add-quantity-container .table td {
+                padding: 6px 8px !important;
+                font-size: 0.8rem !important;
+            }
+
+            .add-quantity-container .back-link {
+                font-size: 0.9rem !important;
+            }
+    }
+</style>
+
+<div class="add-quantity-container">
+    <h4>@ShareLocallizer.GetLocalizedHTML("Add Quantity Product")</h4>
+    <div>
+        <form asp-action="StoreProductQuantity" asp-controller="Product" enctype="multipart/form-data">
+            <input type="hidden" name="ProductId" value="@ViewBag.Id" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Quantity">@ShareLocallizer.GetLocalizedHTML("Quantity")</label>
+                <input min="1" value="1" max="1000" asp-for="Quantity" class="form-control" type="number" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary">@ShareLocallizer.GetLocalizedHTML("Add")</button>
+            </div>
+        </form>
+        <h3>@ShareLocallizer.GetLocalizedHTML("Existing Product Quantities")</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>@ShareLocallizer.GetLocalizedHTML("Key")</th>
+                    <th>@ShareLocallizer.GetLocalizedHTML("Quantity Added")</th>
+                    <th>@ShareLocallizer.GetLocalizedHTML("Date")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var productQuantity in ViewBag.ProductByQuantity)
+                {
+                    total_quantities += productQuantity.Quantity;
+                    <tr>
+                        <td>@key</td>
+                        <td>@productQuantity.Quantity</td>
+                        <td>@productQuantity.DateCreate</td>
+                    </tr>
+                    key++;
+                }
+                <tr>
+                    <td colspan="3">@ShareLocallizer.GetLocalizedHTML("Total Quantities"): @total_quantities</td>
+                </tr>
+            </tbody>
+        </table>
+        <a asp-controller="Product" asp-action="Index" class="back-link">@ShareLocallizer.GetLocalizedHTML("Back to list products")</a>
+    </div>
 </div>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
- }
+}
 
