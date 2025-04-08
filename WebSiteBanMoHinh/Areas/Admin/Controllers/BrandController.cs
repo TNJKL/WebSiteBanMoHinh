@@ -64,16 +64,32 @@ namespace WebSiteBanMoHinh.Areas.Admin.Controllers
             return View(brand);
         }
 
+        //public async Task<IActionResult> Delete(int Id)
+        //{
+        //    BrandModel brand = await _dataContext.Brands.FindAsync(Id);
+
+        //    _dataContext.Brands.Remove(brand);
+        //    await _dataContext.SaveChangesAsync();
+        //    TempData["success"] = "Brand đã bị xóa";
+        //    return RedirectToAction("Index");
+        //}
+
         public async Task<IActionResult> Delete(int Id)
         {
             BrandModel brand = await _dataContext.Brands.FindAsync(Id);
 
-            _dataContext.Brands.Remove(brand);
+            if (brand == null)
+            {
+                return NotFound();
+            }
+
+            brand.Status = 0; // Giả sử bạn có thuộc tính Status trong BrandModel
+            _dataContext.Brands.Update(brand); // Cập nhật bản ghi thay vì xóa
             await _dataContext.SaveChangesAsync();
-            TempData["success"] = "Brand đã bị xóa";
+
+            TempData["success"] = "Brand đã được ẩn";
             return RedirectToAction("Index");
         }
-
         public async Task<IActionResult> Edit(int Id)
         {
             BrandModel brand = await _dataContext.Brands.FindAsync(Id);

@@ -30,8 +30,9 @@ namespace WebSiteBanMoHinh.Models
 
         public CategoryModel Category { get; set; }
         public BrandModel Brand { get; set; }
-
-        public string Image { get; set; }
+        public string Image { get; set; } // Ảnh đại diện (giữ lại để hiển thị ảnh chính)
+        //public string Image { get; set; }
+        public List<ProductImage> Images { get; set; } = new List<ProductImage>(); // Danh sách các ảnh bổ sung
         public int Quantity { get; set; }
         public int Sold { get; set; }
 
@@ -42,8 +43,13 @@ namespace WebSiteBanMoHinh.Models
         public ICollection<RatingModel> Ratings { get; set; } = new List<RatingModel>();
         [NotMapped]
         [FileExtension]
-        public IFormFile? ImageUpload { get; set; }
-        
-       
+        //public IFormFile? ImageUpload { get; set; }
+        public IFormFile MainImageUpload { get; set; } // Ảnh đại diện
+
+        [NotMapped]
+        [FileExtension]
+        public IFormFile[] AdditionalImageUploads { get; set; } // Các ảnh bổ sung
+
+
     }
 }

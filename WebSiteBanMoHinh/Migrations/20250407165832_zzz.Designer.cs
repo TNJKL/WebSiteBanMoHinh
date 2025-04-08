@@ -12,8 +12,8 @@ using WebSiteBanMoHinh.Repository;
 namespace WebSiteBanMoHinh.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250406154932_hahaha")]
-    partial class hahaha
+    [Migration("20250407165832_zzz")]
+    partial class zzz
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

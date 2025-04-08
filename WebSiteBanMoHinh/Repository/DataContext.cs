@@ -33,5 +33,8 @@ namespace WebSiteBanMoHinh.Repository
         public DbSet<MessageModel> Messages { get; set; }
 
 
+        public DbSet<ProductImage> ProductImages { get; set; }
+
+
     }
 }

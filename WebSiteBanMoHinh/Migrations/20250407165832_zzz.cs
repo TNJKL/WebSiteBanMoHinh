@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebSiteBanMoHinh.Migrations
 {
     /// <inheritdoc />
-    public partial class Databasea : Migration
+    public partial class zzz : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -352,7 +352,8 @@ namespace WebSiteBanMoHinh.Migrations
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SenderId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ReceiverId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ReceiverId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IsRead = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -456,7 +457,8 @@ namespace WebSiteBanMoHinh.Migrations
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Star = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Star = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -561,8 +563,7 @@ namespace WebSiteBanMoHinh.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Ratings_ProductId",
                 table: "Ratings",
-                column: "ProductId",
-                unique: true);
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Wishlists_ProductId",

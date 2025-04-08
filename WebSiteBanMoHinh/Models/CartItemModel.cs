@@ -17,12 +17,18 @@
         }
         public CartItemModel(ProductModel product)
         {
+            //ProductId = product.Id;
+            //ProductName = product.Name;
+            //Price = product.Price;
+            //Quantity = 1;
+            //Image = product.Image;
             ProductId = product.Id;
             ProductName = product.Name;
             Price = product.Price;
             Quantity = 1;
-            Image = product.Image;
-           
+            Image = product.Image ?? "noname.jpg"; 
+
+
         }
     }
 }

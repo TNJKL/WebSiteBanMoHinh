@@ -34,13 +34,56 @@ public class HomeController : Controller
         });
         return Redirect(Request.Headers["Referer"].ToString());
     }
-    public IActionResult Index()
+    //public IActionResult Index()
+    //{
+
+    //    var products = _dataContext.Products.Include("Category").Include("Brand").ToList();
+    //    var sliders = _dataContext.Sliders.Where(s => s.Status == 1).ToList();
+    //    ViewBag.Sliders = sliders;
+    //    return View(products);
+    //}
+
+    public IActionResult Index(int pg = 1, int? categoryId = null, int? brandId = null)
     {
-        
-        var products = _dataContext.Products.Include("Category").Include("Brand").ToList();
-        var sliders = _dataContext.Sliders.Where(s => s.Status == 1).ToList();
+        var productsQuery = _dataContext.Products
+            .Include("Category")
+            .Include("Brand");
+
+        // Lọc theo category nếu có categoryId
+        if (categoryId.HasValue)
+        {
+            productsQuery = productsQuery.Where(p => p.Category.Id == categoryId.Value);
+        }
+
+        // Lọc theo brand nếu có brandId
+        if (brandId.HasValue)
+        {
+            productsQuery = productsQuery.Where(p => p.Brand.Id == brandId.Value);
+        }
+
+        var products = productsQuery.ToList();
+        var sliders = _dataContext.Sliders
+            .Where(s => s.Status == 1)
+            .ToList();
+
+        const int pageSize = 6;
+        if (pg < 1)
+        {
+            pg = 1;
+        }
+
+        int recsCount = products.Count();
+        var pager = new Paginate(recsCount, pg, pageSize);
+        int recSkip = (pg - 1) * pageSize;
+
+        var paginatedProducts = products.Skip(recSkip).Take(pager.PageSize).ToList();
+
+        ViewBag.Pager = pager;
         ViewBag.Sliders = sliders;
-        return View(products);
+        ViewBag.CategoryId = categoryId; // Lưu categoryId để sử dụng trong view
+        ViewBag.BrandId = brandId;       // Lưu brandId để sử dụng trong view
+
+        return View(paginatedProducts);
     }
 
     public IActionResult Privacy()

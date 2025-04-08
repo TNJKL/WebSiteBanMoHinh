@@ -155,16 +155,31 @@ namespace WebSiteBanMoHinh.Areas.Admin.Controllers
             var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
             return BadRequest(string.Join("\n", errors));
         }
+        //public async Task<IActionResult> Delete(int Id)
+        //{
+        //    CategoryModel category = await _dataContext.Categories.FindAsync(Id);
+
+        //    _dataContext.Categories.Remove(category);
+        //    await _dataContext.SaveChangesAsync();
+        //    TempData["success"] = "Danh mục đã xóa";
+        //    return RedirectToAction("Index");
+        //}
         public async Task<IActionResult> Delete(int Id)
         {
             CategoryModel category = await _dataContext.Categories.FindAsync(Id);
-          
-            _dataContext.Categories.Remove(category);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            category.Status = 0; // Giả sử bạn có thuộc tính Status trong CategoryModel
+            _dataContext.Categories.Update(category); // Cập nhật bản ghi thay vì xóa
             await _dataContext.SaveChangesAsync();
-            TempData["success"] = "Danh mục đã xóa";
+
+            TempData["success"] = "Danh mục đã được ẩn";
             return RedirectToAction("Index");
         }
-
 
     }
 }

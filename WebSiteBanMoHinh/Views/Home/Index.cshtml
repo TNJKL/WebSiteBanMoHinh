@@ -2,6 +2,16 @@
 @model IEnumerable<ProductModel>
 @using WebSiteBanMoHinh.Resources;
 @inject LanguageService ShareLocallizer
+@{
+    ViewData["title"] = "Product Listing";
+    Paginate pager = new Paginate();
+    int pageNo = 0;
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
+}
 <partial name="_SliderPartial" />
 <style>
     .product-image-wrapper {
@@ -492,6 +502,8 @@
     </div>
 </div>
 
+<partial name="_paging" model="@pager" />
+
 <section id="video-reviews" style="padding: 40px 0; background-color: #ffffff;">
     <div class="container">
         <h3 class="section-title">@ShareLocallizer.GetLocalizedHTML("Video Reviews")</h3>
@@ -755,6 +767,7 @@
             </div>
         </div>
     </section>
+
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

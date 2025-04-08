@@ -155,6 +155,7 @@
     <h4>@ShareLocallizer.GetLocalizedHTML("Edit Product")</h4>
     <div>
         <form asp-action="Edit" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Id" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name">@ShareLocallizer.GetLocalizedHTML("Product Name")</label>
@@ -193,16 +194,49 @@
                 <span asp-validation-for="BrandId" class="text-danger" />
             </div>
             <div class="form-group">
-                <label asp-for="ImageUpload">@ShareLocallizer.GetLocalizedHTML("Product Image")</label>
-                <input asp-for="ImageUpload" class="form-control" type="file" accept="image/*" />
-                <span asp-validation-for="ImageUpload" class="text-danger" />
-                <img id="imgpreview" src="~/media/products/@Model.Image" class="pt-2" alt="Product Image" />
+                <label>@ShareLocallizer.GetLocalizedHTML("Current Main Image")</label>
+                @if (!string.IsNullOrEmpty(Model.Image))
+                {
+                    <div>
+                        <img src="~/media/products/@Model.Image" alt="Main Image" class="img-fluid rounded shadow mb-2" id="main-imgpreview" style="max-width: 200px; height: auto;" />
+                    </div>
+                }
+                <label asp-for="MainImageUpload">@ShareLocallizer.GetLocalizedHTML("Upload New Main Image (Optional)")</label>
+                <input asp-for="MainImageUpload" class="form-control" type="file" accept="image/*" />
+                <span asp-validation-for="MainImageUpload" class="text-danger" />
+            </div>
+            <div class="form-group">
+                <label>@ShareLocallizer.GetLocalizedHTML("Current Additional Images")</label>
+                @if (Model.Images != null && Model.Images.Any())
+                {
+                    <div class="row">
+                        @foreach (var image in Model.Images)
+                        {
+                            <div class="col-md-4 mb-3">
+                                <img src="~/media/products/@image.Url" alt="Product Image" class="img-fluid rounded shadow" style="max-height: 150px; object-fit: cover;" />
+                                <div class="mt-2">
+                                    <input type="checkbox" name="deleteImageIds" value="@image.Id" /> @ShareLocallizer.GetLocalizedHTML("Delete this image")
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p>@ShareLocallizer.GetLocalizedHTML("No additional images available.")</p>
+                }
+            </div>
+            <div class="form-group">
+                <label asp-for="AdditionalImageUploads">@ShareLocallizer.GetLocalizedHTML("Upload New Additional Images (Optional)")</label>
+                <input asp-for="AdditionalImageUploads" class="form-control" type="file" accept="image/*" multiple />
+                <span asp-validation-for="AdditionalImageUploads" class="text-danger" />
+                <div id="additional-imgpreview-container" class="pt-2"></div>
             </div>
             <div class="form-group">
                 <button class="btn btn-primary">@ShareLocallizer.GetLocalizedHTML("Update")</button>
+                <a asp-action="Index" asp-controller="Product" class="btn btn-secondary">@ShareLocallizer.GetLocalizedHTML("Cancel")</a>
             </div>
         </form>
-        <a asp-action="Index" asp-controller="Product" class="back-link">@ShareLocallizer.GetLocalizedHTML("Back to list products")</a>
     </div>
 </div>
 
@@ -212,18 +246,29 @@
     }
     <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
     <script>
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#imgpreview').attr('src', e.target.result);
-                }
-                reader.readAsDataURL(input.files[0]);
+        $("#MainImageUpload").change(function(){
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    $("#main-imgpreview").attr("src", e.target.result);
+                };
+                reader.readAsDataURL(file);
             }
-        }
+        });
 
-        $("#ImageUpload").change(function(){
-            readURL(this);
+        $("#AdditionalImageUploads").change(function(){
+            $("#additional-imgpreview-container").empty();
+            const files = this.files;
+            for (let i = 0; i < files.length; i++) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = $("<img>").attr("src", e.target.result)
+                        .css({ "max-width": "100px", "max-height": "100px", "margin": "5px" });
+                    $("#additional-imgpreview-container").append(img);
+                };
+                reader.readAsDataURL(files[i]);
+            }
         });
     </script>
     <script>

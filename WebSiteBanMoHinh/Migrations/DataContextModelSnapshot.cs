@@ -491,6 +491,27 @@ namespace WebSiteBanMoHinh.Migrations
                     b.ToTable("Orders");
                 });
 
+            modelBuilder.Entity("WebSiteBanMoHinh.Models.ProductImage", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
+                });
+
             modelBuilder.Entity("WebSiteBanMoHinh.Models.ProductModel", b =>
                 {
                     b.Property<long>("Id")
@@ -818,6 +839,17 @@ namespace WebSiteBanMoHinh.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("WebSiteBanMoHinh.Models.ProductImage", b =>
+                {
+                    b.HasOne("WebSiteBanMoHinh.Models.ProductModel", "Product")
+                        .WithMany("Images")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("WebSiteBanMoHinh.Models.ProductModel", b =>
                 {
                     b.HasOne("WebSiteBanMoHinh.Models.BrandModel", "Brand")
@@ -868,6 +900,8 @@ namespace WebSiteBanMoHinh.Migrations
 
             modelBuilder.Entity("WebSiteBanMoHinh.Models.ProductModel", b =>
                 {
+                    b.Navigation("Images");
+
                     b.Navigation("Ratings");
                 });
 #pragma warning restore 612, 618

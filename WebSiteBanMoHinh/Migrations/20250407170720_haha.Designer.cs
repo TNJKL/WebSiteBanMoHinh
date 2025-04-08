@@ -12,8 +12,8 @@ using WebSiteBanMoHinh.Repository;
 namespace WebSiteBanMoHinh.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250329064657_Databasea")]
-    partial class Databasea
+    [Migration("20250407170720_haha")]
+    partial class haha
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -380,6 +380,9 @@ namespace WebSiteBanMoHinh.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ReceiverId")
                         .HasColumnType("nvarchar(450)");
 
@@ -491,6 +494,27 @@ namespace WebSiteBanMoHinh.Migrations
                     b.ToTable("Orders");
                 });
 
+            modelBuilder.Entity("WebSiteBanMoHinh.Models.ProductImage", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
+                });
+
             modelBuilder.Entity("WebSiteBanMoHinh.Models.ProductModel", b =>
                 {
                     b.Property<long>("Id")
@@ -574,6 +598,9 @@ namespace WebSiteBanMoHinh.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -590,8 +617,7 @@ namespace WebSiteBanMoHinh.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId")
-                        .IsUnique();
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Ratings");
                 });
@@ -793,11 +819,11 @@ namespace WebSiteBanMoHinh.Migrations
             modelBuilder.Entity("WebSiteBanMoHinh.Models.MessageModel", b =>
                 {
                     b.HasOne("WebSiteBanMoHinh.Models.AppUserModel", "Receiver")
-                        .WithMany()
+                        .WithMany("ReceivedMessages")
                         .HasForeignKey("ReceiverId");
 
                     b.HasOne("WebSiteBanMoHinh.Models.AppUserModel", "Sender")
-                        .WithMany()
+                        .WithMany("SentMessages")
                         .HasForeignKey("SenderId");
 
                     b.Navigation("Receiver");
@@ -809,6 +835,17 @@ namespace WebSiteBanMoHinh.Migrations
                 {
                     b.HasOne("WebSiteBanMoHinh.Models.ProductModel", "Product")
                         .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("WebSiteBanMoHinh.Models.ProductImage", b =>
+                {
+                    b.HasOne("WebSiteBanMoHinh.Models.ProductModel", "Product")
+                        .WithMany("Images")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -838,8 +875,8 @@ namespace WebSiteBanMoHinh.Migrations
             modelBuilder.Entity("WebSiteBanMoHinh.Models.RatingModel", b =>
                 {
                     b.HasOne("WebSiteBanMoHinh.Models.ProductModel", "Product")
-                        .WithOne("Ratings")
-                        .HasForeignKey("WebSiteBanMoHinh.Models.RatingModel", "ProductId")
+                        .WithMany("Ratings")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -857,8 +894,17 @@ namespace WebSiteBanMoHinh.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("WebSiteBanMoHinh.Models.AppUserModel", b =>
+                {
+                    b.Navigation("ReceivedMessages");
+
+                    b.Navigation("SentMessages");
+                });
+
             modelBuilder.Entity("WebSiteBanMoHinh.Models.ProductModel", b =>
                 {
+                    b.Navigation("Images");
+
                     b.Navigation("Ratings");
                 });
 #pragma warning restore 612, 618

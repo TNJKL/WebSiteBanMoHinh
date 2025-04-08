@@ -191,10 +191,16 @@
                 <span asp-validation-for="BrandId" class="text-danger" />
             </div>
             <div class="form-group">
-                <label asp-for="ImageUpload">@ShareLocallizer.GetLocalizedHTML("Product Image")</label>
-                <input asp-for="ImageUpload" class="form-control" type="file" accept="image/*" />
-                <span asp-validation-for="ImageUpload" class="text-danger" />
-                <img id="imgpreview" class="pt-2" />
+                <label asp-for="MainImageUpload">@ShareLocallizer.GetLocalizedHTML("Main Product Image")</label>
+                <input asp-for="MainImageUpload" class="form-control" type="file" accept="image/*" />
+                <span asp-validation-for="MainImageUpload" class="text-danger" />
+                <img id="main-imgpreview" class="pt-2" />
+            </div>
+            <div class="form-group">
+                <label asp-for="AdditionalImageUploads">@ShareLocallizer.GetLocalizedHTML("Additional Product Images")</label>
+                <input asp-for="AdditionalImageUploads" class="form-control" type="file" accept="image/*" multiple />
+                <span asp-validation-for="AdditionalImageUploads" class="text-danger" />
+                <div id="additional-imgpreview-container" class="pt-2"></div>
             </div>
             <div class="form-group">
                 <button class="btn btn-primary">@ShareLocallizer.GetLocalizedHTML("Add")</button>
@@ -210,8 +216,29 @@
     }
     <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
     <script>
-        $("#ImageUpload").change(function(){
-            readURL(this);
+        $("#MainImageUpload").change(function(){
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    $("#main-imgpreview").attr("src", e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        $("#AdditionalImageUploads").change(function(){
+            $("#additional-imgpreview-container").empty();
+            const files = this.files;
+            for (let i = 0; i < files.length; i++) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = $("<img>").attr("src", e.target.result)
+                        .css({ "max-width": "100px", "max-height": "100px", "margin": "5px" });
+                    $("#additional-imgpreview-container").append(img);
+                };
+                reader.readAsDataURL(files[i]);
+            }
         });
     </script>
     <script>
@@ -226,4 +253,5 @@
         });
     </script>
 }
+Sửa view Edit
 
