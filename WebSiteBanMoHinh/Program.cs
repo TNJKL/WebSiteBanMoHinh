@@ -107,6 +107,11 @@ builder.Services.AddAuthentication(options =>
 {
     options.ClientId = builder.Configuration.GetSection("GoogleKeys:ClientId").Value;
     options.ClientSecret = builder.Configuration.GetSection("GoogleKeys:ClientSecret").Value;
+}).AddFacebook("Facebook", options => // Thêm Facebook Authentication
+{
+    options.AppId = builder.Configuration.GetSection("FacebookKeys:AppId").Value;
+    options.AppSecret = builder.Configuration.GetSection("FacebookKeys:AppSecret").Value;
+    options.CallbackPath = "/signin-facebook"; // Đường dẫn callback
 });
 
 

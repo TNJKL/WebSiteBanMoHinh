@@ -368,6 +368,72 @@ namespace WebSiteBanMoHinh.Controllers
             TempData["success"] = "Đăng nhập thành công.";
             return RedirectToAction("Index", "Home");
         }
+
+        public async Task LoginByFacebook()
+        {
+            // Use Facebook authentication scheme for challenge
+            await HttpContext.ChallengeAsync("Facebook",
+                new AuthenticationProperties
+                {
+                    RedirectUri = Url.Action("FacebookResponse")
+                });
+        }
+
+        public async Task<IActionResult> FacebookResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync("Facebook");
+            if (!result.Succeeded)
+            {
+                // Nếu xác thực thất bại, quay về trang Login
+                TempData["error"] = "Đăng nhập bằng Facebook thất bại.";
+                return RedirectToAction("Login");
+            }
+
+            var claims = result.Principal.Identities.FirstOrDefault()?.Claims.ToList();
+            if (claims == null || !claims.Any())
+            {
+                TempData["error"] = "Không lấy được thông tin từ Facebook.";
+                return RedirectToAction("Login");
+            }
+
+            var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            if (string.IsNullOrEmpty(email))
+            {
+                TempData["error"] = "Facebook không cung cấp email. Vui lòng thử tài khoản khác.";
+                return RedirectToAction("Login");
+            }
+
+            string emailName = email.Split('@')[0];
+
+            // Kiểm tra xem user đã tồn tại chưa
+            var existingUser = await _userManager.FindByEmailAsync(email);
+            if (existingUser == null) // Nếu user chưa tồn tại, tạo mới
+            {
+                var passwordHasher = new PasswordHasher<AppUserModel>();
+                var hashedPassword = passwordHasher.HashPassword(null, "Facebook@123456"); // Mật khẩu mặc định
+
+                var newUser = new AppUserModel
+                {
+                    UserName = emailName,
+                    Email = email,
+                    PasswordHash = hashedPassword
+                };
+
+                var createUserResult = await _userManager.CreateAsync(newUser);
+                if (!createUserResult.Succeeded)
+                {
+                    TempData["error"] = "Đăng ký tài khoản thất bại. Vui lòng thử lại sau.";
+                    return RedirectToAction("Login", "Account");
+                }
+                await _userManager.AddToRoleAsync(newUser, "CUSTOMER");
+                existingUser = newUser; // Gán user mới vào existingUser để dùng sau này
+            }
+
+            // Đăng nhập user (cả user mới và user đã tồn tại)
+            await _signInManager.SignInAsync(existingUser, isPersistent: false);
+            TempData["success"] = "Đăng nhập bằng Facebook thành công.";
+            return RedirectToAction("Index", "Home");
+        }
     }
     }
 
