@@ -153,6 +153,7 @@
                 <th scope="col">@ShareLocallizer.GetLocalizedHTML("Payment Method")</th>
                 <th scope="col">@ShareLocallizer.GetLocalizedHTML("Order Date")</th>
                 <th scope="col">@ShareLocallizer.GetLocalizedHTML("Order Status")</th>
+                <th scope="col">@ShareLocallizer.GetLocalizedHTML("Shipping Address")</th> <!-- Thêm cột địa chỉ -->
                 <th scope="col">@ShareLocallizer.GetLocalizedHTML("Action")</th>
             </tr>
         </thead>
@@ -206,6 +207,9 @@
                             <span class="text text-danger">@ShareLocallizer.GetLocalizedHTML("Cancelled Order")</span>
                         }
                     </td>
+                    <td>
+                        @string.Join(", ", new[] { item.HouseNumber, item.Ward, item.District, item.City }.Where(s => !string.IsNullOrEmpty(s)))
+                    </td> <!-- Nối các trường địa chỉ thành một dòng -->
                     <td>
                         <a asp-action="ViewOrder" class="btn btn-warning btn-sm" asp-controller="Order" asp-route-ordercode="@item.OrderCode">@ShareLocallizer.GetLocalizedHTML("View Order")</a>
                         <a asp-action="Delete" class="btn btn-danger btn-sm confirmDeletion" asp-controller="Order" asp-route-ordercode="@item.OrderCode">@ShareLocallizer.GetLocalizedHTML("Delete")</a>

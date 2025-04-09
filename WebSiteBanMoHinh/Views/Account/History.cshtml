@@ -139,6 +139,7 @@
                 <th scope="col">Ngày đặt hàng</th>
                 <th scope="col">Trạng thái</th>
                 <th scope="col">Phương thức thanh toán</th>
+                <th scope="col">Địa chỉ giao hàng</th>
                 <th scope="col">Hành động</th>
             </tr>
         </thead>
@@ -184,6 +185,9 @@
                                 <span class="text text-success">@item.PaymentMethod</span>
                             }
                         </td>
+                        <td>
+                            @string.Join(", ", new[] { item.HouseNumber, item.Ward, item.District, item.City }.Where(s => !string.IsNullOrEmpty(s)))
+                        </td> <!-- Nối các trường địa chỉ thành một dòng -->
                         <td>
                             @if (item.Status != 3)
                             {

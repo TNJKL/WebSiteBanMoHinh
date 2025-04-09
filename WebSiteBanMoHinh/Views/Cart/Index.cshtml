@@ -1,4 +1,4 @@
-﻿﻿@using WebSiteBanMoHinh.Models.ViewModels
+﻿@using WebSiteBanMoHinh.Models.ViewModels
 @using WebSiteBanMoHinh.Resources;
 @inject LanguageService ShareLocallizer
 @model CartItemViewModel
@@ -87,6 +87,10 @@
                                             <option value="0">Phường Xã</option>
                                         </select>
                                     </div>
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label style="color: var(--text-color); font-weight: 500; font-size: 1em;">Số nhà, đường</label>
+                                        <input type="text" id="houseNumber" name="houseNumber" class="form-control" style="width: 100%; padding: 10px; border: 2px solid var(--secondary-color); border-radius: 5px; background: white; color: var(--text-color); font-size: 0.9em;" placeholder="Ví dụ: 123 Đường Lê Lợi" />
+                                    </div>
                                     <button type="button" class="btn btn-primary btn-add-shipping" style="width: 100%; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border: none; padding: 12px; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background=var(--hover-color)" onmouseout="this.style.background='linear-gradient(135deg, var(--primary-color), var(--secondary-color))'">Tính phí ship</button>
                                 </div>
                             </td>
@@ -146,36 +150,26 @@
 
 @section Scripts {
     <script>
-        $(".btn-apply-coupon").click(function () {
-            var coupon_value = $(".coupon-value").val();
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("GetCoupon", "Cart")",
-                data: { coupon_value: coupon_value },
-                success: function (result) {
-                    if (result.success) {
-                        Swal.fire(result.message);
-                        location.reload();
-                    } else {
-                        Swal.fire(result.message);
-                    }
-                }
-            });
-        });
-    </script>
-    <script>
         $(document).ready(function () {
+            // Khôi phục giá trị từ Session nếu có
+            var savedAddress = @Html.Raw(Json.Serialize(new { City = TempData["City"], District = TempData["District"], Ward = TempData["Ward"], HouseNumber = TempData["HouseNumber"] }));
+            if (savedAddress.City) $("#tinh").val(savedAddress.City);
+            if (savedAddress.District) $("#quan").val(savedAddress.District);
+            if (savedAddress.Ward) $("#phuong").val(savedAddress.Ward);
+            if (savedAddress.HouseNumber) $("#houseNumber").val(savedAddress.HouseNumber);
+
             $(".btn-add-shipping").click(function () {
                 var tinh = $("#tinh").find('option:selected').text();
                 var quan = $("#quan").find('option:selected').text();
                 var phuong = $("#phuong").find('option:selected').text();
-                if (tinh == '' || quan == '' || phuong == '') {
-                    Swal.fire("Làm ơn ko bỏ trống.");
+                var houseNumber = $("#houseNumber").val();
+                if (tinh == 'Tỉnh Thành' || quan == 'Quận Huyện' || phuong == 'Phường Xã' || !houseNumber) {
+                    Swal.fire("Vui lòng nhập đầy đủ thông tin địa chỉ.");
                 } else {
                     $.ajax({
                         type: "POST",
                         url: "@Url.Action("GetShipping", "Cart")",
-                        data: { tinh: tinh, quan: quan, phuong: phuong},
+                        data: { tinh: tinh, quan: quan, phuong: phuong, houseNumber: houseNumber },
                         success: function (result) {
                             if (result) {
                                 location.reload();
@@ -184,23 +178,7 @@
                     });
                 }
             });
-            $(".btn-delete-shipping").click(function () {
-                $.ajax({
-                    type: "POST",
-                    url: "@Url.Action("RemoveShippingCookie", "Cart")",
-                    success: function (result) {
-                        if (result.success) {
-                            Swal.fire("Xóa thành công.");
-                            location.reload();
-                        } else {
-                            Swal.fire("Xóa thất bại.");
-                        }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.error("Error removing cookie:", errorThrown);
-                    }
-                });
-            });
+
             $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
                 if (data_tinh.error == 0) {
                     $.each(data_tinh.data, function (key_tinh, val_tinh) {
@@ -230,6 +208,23 @@
                         });
                     });
                 }
+            });
+
+            $(".btn-apply-coupon").click(function () {
+                var coupon_value = $(".coupon-value").val();
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GetCoupon", "Cart")",
+                    data: { coupon_value: coupon_value },
+                    success: function (result) {
+                        if (result.success) {
+                            Swal.fire(result.message);
+                            location.reload();
+                        } else {
+                            Swal.fire(result.message);
+                        }
+                    }
+                });
             });
         });
     </script>
