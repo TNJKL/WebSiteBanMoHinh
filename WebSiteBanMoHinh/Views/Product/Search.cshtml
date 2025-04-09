@@ -178,12 +178,15 @@
                                     <i class="fa fa-shopping-cart"></i> @ShareLocallizer.GetLocalizedHTML("Sold out")
                                 </button>
                             }
+                            @if (User.Identity.IsAuthenticated)
+                            {
                             <button class="btn btn-default add-to-wishlist add-btn-wishlist" data-product_id="@item.Id">
                                 <i class="fas fa-heart"></i> @ShareLocallizer.GetLocalizedHTML("Add to Wishlist")
                             </button>
                             <button class="btn btn-default add-to-compare add-btn-compare" data-product_id="@item.Id">
                                 <i class="fas fa-balance-scale"></i> @ShareLocallizer.GetLocalizedHTML("Add to Compare")
                             </button>
+                            }
                         </div>
                     </div>
                 </div>

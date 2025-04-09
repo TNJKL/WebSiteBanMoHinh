@@ -8,7 +8,7 @@ using WebSiteBanMoHinh.Repository;
 namespace WebSiteBanMoHinh.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles = "ADMIN ,EMPLOYEE")]
     public class OrderController : Controller
     {
         private readonly DataContext _dataContext;

@@ -99,35 +99,68 @@
                                     <a class="btn" asp-controller="Cart" asp-action="Clear" style="background: #ff4d4d; color: white; padding: 12px 20px; border-radius: 25px; text-decoration: none; text-align: center; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background='#cc0000'" onmouseout="this.style.background='#ff4d4d'">@ShareLocallizer.GetLocalizedHTML("Clear")</a>
                                     @if (User.Identity?.IsAuthenticated ?? false)
                                     {
-                                        if (@Model.ShippingCost <= 0)
+                                        if (User.IsInRole("CUSTOMER")) // Chỉ hiển thị nếu người dùng có role "customer"
                                         {
-                                            <p style="color: #ff4d4d; font-size: 0.9em; text-align: center; margin: 10px 0;">Vui lòng nhập thông tin nơi ở để tính phí vận chuyển.</p>
-                                            <a disabled="disabled" class="btn" asp-controller="Checkout" asp-action="Checkout" style="background: #ccc; color: white; padding: 12px 20px; border-radius: 25px; text-decoration: none; text-align: center; font-weight: 600; cursor: not-allowed;">@ShareLocallizer.GetLocalizedHTML("Checkout")</a>
+                                            if (@Model.ShippingCost <= 0)
+                                            {
+                                                <p style="color: #ff4d4d; font-size: 0.9em; text-align: center; margin: 10px 0;">Vui lòng nhập thông tin nơi ở để tính phí vận chuyển.</p>
+                                                <a disabled="disabled" class="btn" asp-controller="Checkout" asp-action="Checkout" style="background: #ccc; color: white; padding: 12px 20px; border-radius: 25px; text-decoration: none; text-align: center; font-weight: 600; cursor: not-allowed;">@ShareLocallizer.GetLocalizedHTML("Checkout")</a>
+
+                                                <form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment" style="margin-top: 10px;">
+                                                    <input type="hidden" name="Amount" value="@Model.GrandTotal" />
+                                                    <input type="hidden" name="OrderId" value="@Guid.NewGuid().ToString()" />
+                                                    <input type="hidden" name="OrderInfo" value="Thanh toán Momo cho đơn hàng tại Hutech Figure Store" />
+                                                    <input type="hidden" name="FullName" value="@User.Identity.Name" />
+                                                    <button class="btn" name="PayUrl" type="submit" disabled style="background: #ea4c89; color: white; padding: 12px 20px; border-radius: 25px; border: none; width: 100%; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background='#d43f78'" onmouseout="this.style.background='#ea4c89'">
+                                                        <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-MoMo-Circle.png" alt="Momo" style="height: 20px; width: auto;" />
+                                                        Pay with MoMo
+                                                    </button>
+                                                </form>
+                                                <form method="POST" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment">
+                                                    <input type="hidden" name="Name" value="@User.Identity.Name" />
+                                                    <input type="hidden" name="Amount" value="@Model.GrandTotal" />
+                                                    <input type="hidden" name="OrderDescription" value="Thanh toán qua Vnpay tại Hutech FigureStore" />
+                                                    <input type="hidden" name="OrderType" value="other" />
+                                                    <button class="btn" type="submit" disabled style="background: #0066b2; color: white; padding: 12px 20px; border-radius: 25px; border: none; width: 100%; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background='#005599'" onmouseout="this.style.background='#0066b2'">
+                                                        <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Icon-VNPAY-QR.png" alt="VNPay" style="height: 20px; width: auto;" />
+                                                        Pay with VNPay
+                                                    </button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <a onclick="return confirm('Xác nhận đặt hàng ?')" class="btn" asp-controller="Checkout" asp-action="Checkout" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; padding: 12px 20px; border-radius: 25px; text-decoration: none; text-align: center; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background=var(--hover-color)" onmouseout="this.style.background='linear-gradient(135deg, var(--primary-color), var(--secondary-color))'">@ShareLocallizer.GetLocalizedHTML("Checkout")</a>
+
+
+                                                <form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment" style="margin-top: 10px;">
+                                                    <input type="hidden" name="Amount" value="@Model.GrandTotal" />
+                                                    <input type="hidden" name="OrderId" value="@Guid.NewGuid().ToString()" />
+                                                    <input type="hidden" name="OrderInfo" value="Thanh toán Momo cho đơn hàng tại Hutech Figure Store" />
+                                                    <input type="hidden" name="FullName" value="@User.Identity.Name" />
+                                                    <button class="btn" name="PayUrl" type="submit"  style="background: #ea4c89; color: white; padding: 12px 20px; border-radius: 25px; border: none; width: 100%; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background='#d43f78'" onmouseout="this.style.background='#ea4c89'">
+                                                        <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-MoMo-Circle.png" alt="Momo" style="height: 20px; width: auto;" />
+                                                        Pay with MoMo
+                                                    </button>
+                                                </form>
+                                                <form method="POST" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment">
+                                                    <input type="hidden" name="Name" value="@User.Identity.Name" />
+                                                    <input type="hidden" name="Amount" value="@Model.GrandTotal" />
+                                                    <input type="hidden" name="OrderDescription" value="Thanh toán qua Vnpay tại Hutech FigureStore" />
+                                                    <input type="hidden" name="OrderType" value="other" />
+                                                    <button class="btn" type="submit" style="background: #0066b2; color: white; padding: 12px 20px; border-radius: 25px; border: none; width: 100%; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background='#005599'" onmouseout="this.style.background='#0066b2'">
+                                                        <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Icon-VNPAY-QR.png" alt="VNPay" style="height: 20px; width: auto;" />
+                                                        Pay with VNPay
+                                                    </button>
+                                                </form>
+                                            }
+                                           
+
                                         }
-                                        else
-                                        {
-                                            <a onclick="return confirm('Xác nhận đặt hàng ?')" class="btn" asp-controller="Checkout" asp-action="Checkout" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; padding: 12px 20px; border-radius: 25px; text-decoration: none; text-align: center; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background=var(--hover-color)" onmouseout="this.style.background='linear-gradient(135deg, var(--primary-color), var(--secondary-color))'">@ShareLocallizer.GetLocalizedHTML("Checkout")</a>
-                                        }
-                                        <form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment" style="margin-top: 10px;">
-                                            <input type="hidden" name="Amount" value="@Model.GrandTotal" />
-                                            <input type="hidden" name="OrderId" value="@Guid.NewGuid().ToString()" />
-                                            <input type="hidden" name="OrderInfo" value="Thanh toán Momo cho đơn hàng tại Hutech Figure Store" />
-                                            <input type="hidden" name="FullName" value="@User.Identity.Name" />
-                                            <button class="btn" name="PayUrl" type="submit" style="background: #ea4c89; color: white; padding: 12px 20px; border-radius: 25px; border: none; width: 100%; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background='#d43f78'" onmouseout="this.style.background='#ea4c89'">
-                                                <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-MoMo-Circle.png" alt="Momo" style="height: 20px; width: auto;" />
-                                                Pay with MoMo
-                                            </button>
-                                        </form>
-                                        <form method="POST" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment">
-                                            <input type="hidden" name="Name" value="@User.Identity.Name" />
-                                            <input type="hidden" name="Amount" value="@Model.GrandTotal" />
-                                            <input type="hidden" name="OrderDescription" value="Thanh toán qua Vnpay tại Hutech FigureStore" />
-                                            <input type="hidden" name="OrderType" value="other" />
-                                            <button class="btn" type="submit" style="background: #0066b2; color: white; padding: 12px 20px; border-radius: 25px; border: none; width: 100%; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background='#005599'" onmouseout="this.style.background='#0066b2'">
-                                                <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Icon-VNPAY-QR.png" alt="VNPay" style="height: 20px; width: auto;" />
-                                                Pay with VNPay
-                                            </button>
-                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <p style="color: #ff4d4d; font-size: 0.9em; text-align: center; margin: 10px 0;">Vui lòng đăng nhập để thanh toán.</p>
+                                        <a a asp-controller="Account" asp-action="Login" class="btn" style="background: #007bff; color: white; padding: 12px 20px; border-radius: 25px; text-decoration: none; text-align: center; font-weight: 600;">Đăng nhập</a>
                                     }
                                 </div>
                             </td>

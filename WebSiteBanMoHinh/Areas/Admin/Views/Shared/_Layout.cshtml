@@ -198,8 +198,11 @@
                                 <li><a asp-controller="Category">@ShareLocallizer.GetLocalizedHTML("Categories")</a></li>
                                 <li><a asp-controller="Brand">@ShareLocallizer.GetLocalizedHTML("Brands")</a></li>
                                 <li><a asp-controller="Order">@ShareLocallizer.GetLocalizedHTML("Orders")</a></li>
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("ADMIN"))
+                                {
                                 <li><a asp-controller="User">@ShareLocallizer.GetLocalizedHTML("Users")</a></li>
                                 <li><a asp-controller="Role">@ShareLocallizer.GetLocalizedHTML("Roles")</a></li>
+                                }
                                 <li><a asp-controller="Slider">Manage Slider</a></li>
                                 <li><a asp-controller="Contact">Contact</a></li>
                                 <li><a asp-controller="Coupon">Coupon</a></li>

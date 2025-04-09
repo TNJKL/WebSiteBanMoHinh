@@ -28,7 +28,7 @@ namespace WebSiteBanMoHinh.Controllers
 
 
         [HttpGet]
-        public IActionResult PaymentCallBack()
+        public IActionResult PaymentCallBack() //PaymentCallBackMomo
         {
             var response = _momoService.PaymentExecuteAsync(HttpContext.Request.Query);
             return View(response);

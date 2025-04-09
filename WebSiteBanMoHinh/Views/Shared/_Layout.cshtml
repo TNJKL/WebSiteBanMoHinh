@@ -595,9 +595,9 @@
                                 <li><a asp-controller="Home" asp-action="Privacy">@ShareLocallizer.GetLocalizedHTML("Privacy")</a></li>
                                 <li><a asp-controller="Home" asp-action="About">@ShareLocallizer.GetLocalizedHTML("About")</a></li>
                                 <li><a asp-controller="Home" asp-action="Contact">@ShareLocallizer.GetLocalizedHTML("Contact")</a></li>
-                                @if (User.Identity.IsAuthenticated && User.IsInRole("ADMIN"))
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("ADMIN") || User.IsInRole("EMPLOYEE"))
                                 {
-                                    <li><a asp-area="Admin" asp-controller="Product" asp-action="Index"><i class="fa fa-crosshairs"></i> Admin</a></li>
+                                    <li><a asp-area="Admin" asp-controller="Product" asp-action="Index"><i class="fa fa-crosshairs"></i> Manage</a></li>
                                 }
                                 @if (User.Identity.IsAuthenticated && User.IsInRole("CSKH"))
                                 {

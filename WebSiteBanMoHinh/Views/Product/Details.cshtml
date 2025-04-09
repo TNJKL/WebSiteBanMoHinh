@@ -624,12 +624,15 @@
                             <button type="button" class="btn btn-fefault cart add-to-cart" data-product_id="@Model.ProductDetails.Id">
                                 <i class="fa fa-shopping-cart"></i> @ShareLocallizer.GetLocalizedHTML("Add to Cart")
                             </button>
+                            @if (User.Identity.IsAuthenticated)
+                            {
                             <button type="button" class="btn btn-wishlist add-to-wishlist" data-product_id="@Model.ProductDetails.Id">
                                 <i class="far fa-heart"></i>
                             </button>
                             <button type="button" class="btn btn-compare add-to-compare" data-product_id="@Model.ProductDetails.Id">
                                 <i class="fas fa-balance-scale"></i> @ShareLocallizer.GetLocalizedHTML("Add to Compare")
                             </button>
+                            }
                         </div>
                     }
                     else

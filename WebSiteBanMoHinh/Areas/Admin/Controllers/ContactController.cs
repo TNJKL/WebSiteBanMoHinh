@@ -9,7 +9,7 @@ using WebSiteBanMoHinh.Repository;
 namespace WebSiteBanMoHinh.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "ADMIN ,AUTHOR")]
+    [Authorize(Roles = "ADMIN ,EMPLOYEE")]
     public class ContactController : Controller
     {
         private readonly DataContext _dataContext;
