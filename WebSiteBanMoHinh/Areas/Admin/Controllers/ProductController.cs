@@ -157,6 +157,7 @@ namespace WebSiteBanMoHinh.Areas.Admin.Controllers
                 existingProduct.Price = product.Price;
                 existingProduct.CategoryId = product.CategoryId;
                 existingProduct.BrandId = product.BrandId;
+                existingProduct.Status = product.Status;
 
                 // Xử lý ảnh đại diện mới (nếu có)
                 if (product.MainImageUpload != null)
@@ -275,10 +276,11 @@ namespace WebSiteBanMoHinh.Areas.Admin.Controllers
                     }
                 }
             }
-
-            _dataContext.Products.Remove(product);
+            product.Status = 0; // Giả sử bạn có thuộc tính Status trong CategoryModel
+            _dataContext.Products.Update(product);
+            //_dataContext.Products.Remove(product);
             await _dataContext.SaveChangesAsync();
-            TempData["success"] = "Đã xóa sản phẩm thành công";
+            TempData["success"] = "Đã ẩn sản phẩm thành công";
             return RedirectToAction("Index");
         }
         public async Task<IActionResult> AddQuantity(int Id)

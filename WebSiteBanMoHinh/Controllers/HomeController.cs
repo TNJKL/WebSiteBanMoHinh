@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
@@ -47,7 +48,8 @@ public class HomeController : Controller
     {
         var productsQuery = _dataContext.Products
             .Include("Category")
-            .Include("Brand");
+            .Include("Brand")
+            .Where(p => p.Status == 1);
 
         // Lọc theo category nếu có categoryId
         if (categoryId.HasValue)
@@ -98,8 +100,14 @@ public class HomeController : Controller
         return View(contact);
     }
 
+    [Authorize]
     public async Task<IActionResult> Wishlist()
     {
+        var user = await _userManager.GetUserAsync(User);
+        if (user != null && await _userManager.IsInRoleAsync(user, "NOROLE"))
+        {
+            return Forbid(); // Từ chối truy cập nếu người dùng có vai trò NOROLE
+        }
         var wishlist_product = await (from w in _dataContext.Wishlists
                                       join p in _dataContext.Products on w.ProductId equals p.Id
                                       select new { Product = p, Wishlists = w })
@@ -141,9 +149,15 @@ public class HomeController : Controller
         TempData["success"] = "Yêu thích đã được xóa thành công";
         return RedirectToAction("Wishlist", "Home");
     }
-
+    [Authorize]
     public async Task<IActionResult> Compare()
     {
+        var user = await _userManager.GetUserAsync(User);
+        if (user != null && await _userManager.IsInRoleAsync(user, "NOROLE"))
+        {
+            return Forbid(); // Từ chối truy cập nếu người dùng có vai trò NOROLE
+        }
+
         var compare_product = await (from c in _dataContext.Compares
                                      join p in _dataContext.Products on c.ProductId equals p.Id
                                      join u in _dataContext.Users on c.UserId equals u.Id

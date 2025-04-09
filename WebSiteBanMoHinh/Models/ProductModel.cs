@@ -50,6 +50,8 @@ namespace WebSiteBanMoHinh.Models
         [FileExtension]
         public IFormFile[] AdditionalImageUploads { get; set; } // Các ảnh bổ sung
 
+        //them vao
+        public int Status { get; set; }
 
     }
 }

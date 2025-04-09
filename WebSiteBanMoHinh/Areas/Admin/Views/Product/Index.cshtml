@@ -318,7 +318,8 @@
                 <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Price")</th>
                 <th scope="col">@ShareLocallizer.GetLocalizedHTML("Capital Price")</th>
                 <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Image")</th>
-                <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Slug")</th>
+                @* <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Slug")</th> *@
+                <th scope="col">@ShareLocallizer.GetLocalizedHTML("Status")</th>
                 <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Category")</th>
                 <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Brand")</th>
                 <th scope="col">@ShareLocallizer.GetLocalizedHTML("Product Manage")</th>
@@ -336,7 +337,17 @@
                     <td>@item.Price.ToString("#,##0 VND")</td>
                     <td>@item.CapitalPrice.ToString("#,##0 VND")</td>
                     <td><img src="~/media/products/@item.Image" alt="@item.Name" /></td>
-                    <td>@item.Slug</td>
+                    @* <td>@item.Slug</td> *@
+                    <td>
+                        @if (item.Status == 1)
+                        {
+                            <span class="text text-success">Hiển thị</span>
+                        }
+                        else
+                        {
+                            <span class="text text-danger">Ẩn</span>
+                        }
+                    </td>
                     <td>@item.Category.Name</td>
                     <td>@item.Brand.Name</td>
                     <td>

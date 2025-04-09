@@ -42,6 +42,7 @@ namespace WebSiteBanMoHinh.Controllers
         public async Task<IActionResult> UpdateAccount()
         {
 
+
             if ((bool)!User.Identity?.IsAuthenticated)
             {
                 // User is not logged in, redirect to login

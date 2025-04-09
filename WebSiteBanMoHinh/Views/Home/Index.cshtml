@@ -488,7 +488,7 @@
                                     <i class="fa fa-shopping-cart"></i> @ShareLocallizer.GetLocalizedHTML("Sold out")
                                 </button>
                             }
-                            @if (User.Identity.IsAuthenticated)
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("NOROLE") == false)
                             {
                             <button class="btn btn-default add-to-wishlist add-btn-wishlist" data-product_id="@item.Id">
                                 <i class="fas fa-heart"></i> @ShareLocallizer.GetLocalizedHTML("Add to Wishlist")

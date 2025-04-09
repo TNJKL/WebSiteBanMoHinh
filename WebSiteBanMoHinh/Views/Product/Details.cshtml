@@ -4,556 +4,556 @@
 
 <style>
     .product-details {
-        background-color: white;
-        border: 2px solid #e6b800;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
+    background-color: white;
+    border: 2px solid #e6b800;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
     }
 
     .view-product {
-        position: relative;
-        text-align: center;
+    position: relative;
+    text-align: center;
     }
 
     .image-gallery {
-        display: flex;
-        flex-direction: column; /* Ảnh chính ở trên, thumbnail ở dưới */
-        gap: 15px;
+    display: flex;
+    flex-direction: column; /* Ảnh chính ở trên, thumbnail ở dưới */
+    gap: 15px;
     }
 
     .main-image {
-        position: relative;
-        overflow: hidden;
-        display: inline-block;
-        cursor: pointer;
-        border: 2px solid #e6b800;
-        border-radius: 8px;
-        background: linear-gradient(135deg, #fff5e6, #ffe6f0);
-        box-shadow: inset 0 0 5px rgba(230, 184, 0, 0.3);
-        width: 100%; /* Chiếm toàn bộ chiều rộng */
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    cursor: pointer;
+    border: 2px solid #e6b800;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #fff5e6, #ffe6f0);
+    box-shadow: inset 0 0 5px rgba(230, 184, 0, 0.3);
+    width: 100%; /* Chiếm toàn bộ chiều rộng */
     }
 
-        .main-image img {
-            max-height: 400px;
-            object-fit: contain;
-            border-radius: 5px;
-            width: 100%;
-            transition: opacity 0.3s ease;
-        }
-
-    .thumbnail-gallery {
-        display: flex;
-        flex-direction: row; /* Hiển thị thumbnail theo chiều ngang */
-        gap: 10px;
-        justify-content: flex-start; /* Căn trái để cuộn ngang */
-        overflow-x: auto; /* Tạo thanh cuộn ngang nếu cần */
-        scroll-behavior: smooth; /* Hiệu ứng cuộn mượt */
-        position: relative; /* Để định vị nút điều khiển */
-        max-width: 100%; /* Giới hạn chiều rộng */
-        padding: 10px 0; /* Khoảng cách trên dưới */
+    .main-image img {
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: 5px;
+    width: 100%;
+    transition: opacity 0.3s ease;
     }
 
-        /* Ẩn thanh cuộn mặc định nhưng vẫn cho phép cuộn */
-        .thumbnail-gallery::-webkit-scrollbar {
-            display: none; /* Ẩn thanh cuộn trên Chrome, Safari */
-        }
+    .thumbnail-gallery {
+    display: flex;
+    flex-direction: row; /* Hiển thị thumbnail theo chiều ngang */
+    gap: 10px;
+    justify-content: flex-start; /* Căn trái để cuộn ngang */
+    overflow-x: auto; /* Tạo thanh cuộn ngang nếu cần */
+    scroll-behavior: smooth; /* Hiệu ứng cuộn mượt */
+    position: relative; /* Để định vị nút điều khiển */
+    max-width: 100%; /* Giới hạn chiều rộng */
+    padding: 10px 0; /* Khoảng cách trên dưới */
+    }
+
+    /* Ẩn thanh cuộn mặc định nhưng vẫn cho phép cuộn */
+    .thumbnail-gallery::-webkit-scrollbar {
+    display: none; /* Ẩn thanh cuộn trên Chrome, Safari */
+    }
 
     .thumbnail-gallery {
-        -ms-overflow-style: none; /* Ẩn thanh cuộn trên IE, Edge */
-        scrollbar-width: none; /* Ẩn thanh cuộn trên Firefox */
+    -ms-overflow-style: none; /* Ẩn thanh cuộn trên IE, Edge */
+    scrollbar-width: none; /* Ẩn thanh cuộn trên Firefox */
     }
 
     .thumbnail {
-        cursor: pointer;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        overflow: hidden;
-        transition: border-color 0.3s ease;
-        flex: 0 0 80px; /* Kích thước cố định, không co giãn */
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: border-color 0.3s ease;
+    flex: 0 0 80px; /* Kích thước cố định, không co giãn */
     }
 
-        .thumbnail.active {
-            border-color: #e6b800; /* Đánh dấu thumbnail đang được chọn */
-        }
+    .thumbnail.active {
+    border-color: #e6b800; /* Đánh dấu thumbnail đang được chọn */
+    }
 
-        .thumbnail img {
-            width: 80px; /* Kích thước cố định */
-            height: 80px;
-            object-fit: cover;
-        }
+    .thumbnail img {
+    width: 80px; /* Kích thước cố định */
+    height: 80px;
+    object-fit: cover;
+    }
 
-        .thumbnail:hover {
-            border-color: #e6b800;
-        }
+    .thumbnail:hover {
+    border-color: #e6b800;
+    }
 
     .gallery-control {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: rgba(230, 184, 0, 0.8);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 30px;
-        height: 30px;
-        font-size: 1.2em;
-        cursor: pointer;
-        z-index: 10;
-        transition: background-color 0.3s ease;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(230, 184, 0, 0.8);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 1.2em;
+    cursor: pointer;
+    z-index: 10;
+    transition: background-color 0.3s ease;
     }
 
-        .gallery-control:hover {
-            background-color: #cc9900;
-        }
+    .gallery-control:hover {
+    background-color: #cc9900;
+    }
 
-        .gallery-control.left {
-            left: 0;
-        }
+    .gallery-control.left {
+    left: 0;
+    }
 
-        .gallery-control.right {
-            right: 0;
-        }
+    .gallery-control.right {
+    right: 0;
+    }
 
     .quick-view {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #e6b800;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 20px;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        font-size: 0.9em;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        z-index: 10;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #e6b800;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 0.9em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 10;
     }
 
     .image-container:hover .zoomable-image {
-        opacity: 0.7;
+    opacity: 0.7;
     }
 
     .image-container:hover .quick-view {
-        opacity: 1;
+    opacity: 1;
     }
 
     .zoom-modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.9);
-        align-items: center;
-        justify-content: center;
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.9);
+    align-items: center;
+    justify-content: center;
     }
 
     .zoom-modal-content {
-        position: relative;
-        max-width: 90%;
-        max-height: 90vh;
-        margin: auto;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    position: relative;
+    max-width: 90%;
+    max-height: 90vh;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     }
 
     .modal-image {
-        width: auto;
-        max-width: 100%;
-        max-height: 90vh;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    width: auto;
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(255,255,255,0.2);
     }
 
     .close-modal {
-        position: absolute;
-        top: 15px;
-        right: 25px;
-        color: #fff;
-        font-size: 40px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.3s;
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
     }
 
-        .close-modal:hover {
-            color: #e6b800;
-        }
+    .close-modal:hover {
+    color: #e6b800;
+    }
 
     .product-information {
-        padding: 20px;
+    padding: 20px;
     }
 
-        .product-information h2 {
-            font-size: 1.8em;
-            font-weight: 700;
-            font-family: 'Roboto', sans-serif;
-            color: #2c3e50;
-            margin-bottom: 15px;
-        }
+    .product-information h2 {
+    font-size: 1.8em;
+    font-weight: 700;
+    font-family: 'Roboto', sans-serif;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    }
 
-        .product-information span {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
+    .product-information span {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    }
 
-            .product-information span .price {
-                font-size: 2em;
-                font-weight: 700;
-                color: #789c6c;
-            }
+    .product-information span .price {
+    font-size: 2em;
+    font-weight: 700;
+    color: #789c6c;
+    }
 
-            .product-information span input.quantity-input {
-                width: 60px;
-                padding: 5px;
-                border: 1px solid #e6b800;
-                border-radius: 5px;
-                text-align: center;
-                background-color: #fff5e6;
-            }
+    .product-information span input.quantity-input {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #e6b800;
+    border-radius: 5px;
+    text-align: center;
+    background-color: #fff5e6;
+    }
 
-        .product-information .button-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            width: 100%;
-        }
+    .product-information .button-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+    }
 
-        .product-information .btn-fefault {
-            background-color: #e6b800;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            transition: background-color 0.3s ease;
-            flex: 1;
-            font-size: 0.9em;
-            min-width: 120px;
-        }
+    .product-information .btn-fefault {
+    background-color: #e6b800;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+    flex: 1;
+    font-size: 0.9em;
+    min-width: 120px;
+    }
 
-            .product-information .btn-fefault:hover {
-                background-color: #cc9900;
-            }
+    .product-information .btn-fefault:hover {
+    background-color: #cc9900;
+    }
 
-        .product-information .btn-wishlist {
-            background-color: white;
-            color: #ff4d4d;
-            border: 2px solid #ff4d4d;
-            padding: 10px;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            flex: 0 0 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2em;
-            min-width: 40px;
-            height: 40px;
-        }
+    .product-information .btn-wishlist {
+    background-color: white;
+    color: #ff4d4d;
+    border: 2px solid #ff4d4d;
+    padding: 10px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    flex: 0 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    min-width: 40px;
+    height: 40px;
+    }
 
-            .product-information .btn-wishlist:hover {
-                background-color: #ff4d4d;
-                color: white;
-            }
+    .product-information .btn-wishlist:hover {
+    background-color: #ff4d4d;
+    color: white;
+    }
 
-            .product-information .btn-wishlist.active {
-                background-color: #ff4d4d;
-                color: white;
-            }
+    .product-information .btn-wishlist.active {
+    background-color: #ff4d4d;
+    color: white;
+    }
 
-        .product-information .btn-compare {
-            background-color: #0084ff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            transition: background-color 0.3s ease;
-            flex: 1;
-            font-size: 0.9em;
-            min-width: 120px;
-        }
+    .product-information .btn-compare {
+    background-color: #0084ff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+    flex: 1;
+    font-size: 0.9em;
+    min-width: 120px;
+    }
 
-            .product-information .btn-compare:hover {
-                background-color: #006cd1;
-            }
+    .product-information .btn-compare:hover {
+    background-color: #006cd1;
+    }
 
-        .product-information p {
-            font-size: 1em;
-            color: #333333;
-            margin: 5px 0;
-        }
+    .product-information p {
+    font-size: 1em;
+    color: #333333;
+    margin: 5px 0;
+    }
 
-            .product-information p b {
-                color: #2c3e50;
-            }
+    .product-information p b {
+    color: #2c3e50;
+    }
 
-        .product-information .share {
-            margin-top: 10px;
-        }
+    .product-information .share {
+    margin-top: 10px;
+    }
 
     .category-tab {
-        margin-top: 20px;
+    margin-top: 20px;
     }
 
-        .category-tab .nav-tabs {
-            border-bottom: 2px solid #e6b800;
-            display: flex;
-            justify-content: center;
-            background-color: #2c3e50;
-            border-radius: 5px 5px 0 0;
-        }
+    .category-tab .nav-tabs {
+    border-bottom: 2px solid #e6b800;
+    display: flex;
+    justify-content: center;
+    background-color: #2c3e50;
+    border-radius: 5px 5px 0 0;
+    }
 
-            .category-tab .nav-tabs li {
-                margin: 0;
-            }
+    .category-tab .nav-tabs li {
+    margin: 0;
+    }
 
-                .category-tab .nav-tabs li a {
-                    font-size: 1em;
-                    font-weight: 600;
-                    color: white;
-                    padding: 12px 25px;
-                    border: none;
-                    border-radius: 5px 5px 0 0;
-                    transition: background-color 0.3s ease;
-                }
+    .category-tab .nav-tabs li a {
+    font-size: 1em;
+    font-weight: 600;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s ease;
+    }
 
-                    .category-tab .nav-tabs li.active a,
-                    .category-tab .nav-tabs li a:hover {
-                        background-color: #e6b800;
-                        color: white;
-                    }
+    .category-tab .nav-tabs li.active a,
+    .category-tab .nav-tabs li a:hover {
+    background-color: #e6b800;
+    color: white;
+    }
 
     .tab-content {
-        padding: 20px;
-        background-color: white;
-        border: 2px solid #e6b800;
-        border-top: none;
-        border-radius: 0 0 10px 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: white;
+    border: 2px solid #e6b800;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .tab-pane {
-        font-size: 1em;
-        color: #2c3e50;
-        line-height: 1.6;
+    font-size: 1em;
+    color: #2c3e50;
+    line-height: 1.6;
     }
 
     .reviews form {
-        margin-top: 20px;
+    margin-top: 20px;
     }
 
-        .reviews form span {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
+    .reviews form span {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    }
 
-        .reviews form input[type="text"],
-        .reviews form input[type="email"],
-        .reviews form textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
+    .reviews form input[type="text"],
+    .reviews form input[type="email"],
+    .reviews form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    }
 
-        .reviews form textarea {
-            min-height: 100px;
-        }
+    .reviews form textarea {
+    min-height: 100px;
+    }
 
-        .reviews form .btn-default {
-            background-color: #e6b800;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            transition: background-color 0.3s ease;
-        }
+    .reviews form .btn-default {
+    background-color: #e6b800;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+    }
 
-            .reviews form .btn-default:hover {
-                background-color: #cc9900;
-            }
+    .reviews form .btn-default:hover {
+    background-color: #cc9900;
+    }
 
     .recommended_items {
-        margin-top: 40px;
-        position: relative;
+    margin-top: 40px;
+    position: relative;
     }
 
-        .recommended_items h2 {
-            font-size: 1.5em;
-            font-weight: 700;
-            color: #e6b800;
-            margin-bottom: 20px;
-            text-align: center;
-            text-transform: uppercase;
-        }
+    .recommended_items h2 {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #e6b800;
+    margin-bottom: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    }
 
     #recommended-item-carousel .carousel-inner .item .product-image-wrapper {
-        background-color: white;
-        border: 2px solid #e6b800;
-        border-radius: 10px;
-        padding: 15px;
-        transition: transform 0.3s ease;
-        height: 400px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    border: 2px solid #e6b800;
+    border-radius: 10px;
+    padding: 15px;
+    transition: transform 0.3s ease;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-        #recommended-item-carousel .carousel-inner .item .product-image-wrapper:hover {
-            transform: translateY(-5px);
-        }
+    #recommended-item-carousel .carousel-inner .item .product-image-wrapper:hover {
+    transform: translateY(-5px);
+    }
 
     #recommended-item-carousel .carousel-inner .item .productinfo {
-        text-align: center;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     }
 
-        #recommended-item-carousel .carousel-inner .item .productinfo img {
-            max-height: 200px;
-            max-width: 100%;
-            object-fit: contain;
-            border-radius: 5px;
-            transition: opacity 0.3s ease;
-        }
+    #recommended-item-carousel .carousel-inner .item .productinfo img {
+    max-height: 200px;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 5px;
+    transition: opacity 0.3s ease;
+    }
 
-        #recommended-item-carousel .carousel-inner .item .productinfo .quick-view {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #e6b800;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            font-size: 0.9em;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+    #recommended-item-carousel .carousel-inner .item .productinfo .quick-view {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #e6b800;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 0.9em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    }
 
     #recommended-item-carousel .carousel-inner .item .image-container:hover img {
-        opacity: 0.7;
+    opacity: 0.7;
     }
 
     #recommended-item-carousel .carousel-inner .item .image-container:hover .quick-view {
-        opacity: 1;
+    opacity: 1;
     }
 
     #recommended-item-carousel .carousel-inner .item .productinfo h2 {
-        color: #789c6c;
-        font-weight: 700;
-        font-size: 1.1em;
-        margin: 10px 0;
+    color: #789c6c;
+    font-weight: 700;
+    font-size: 1.1em;
+    margin: 10px 0;
     }
 
     #recommended-item-carousel .carousel-inner .item .productinfo p {
-        font-size: 0.9em;
-        color: #2c3e50;
-        margin: 5px 0;
+    font-size: 0.9em;
+    color: #2c3e50;
+    margin: 5px 0;
     }
 
     #recommended-item-carousel .carousel-inner .item .productinfo .add-to-cart {
-        background-color: #e6b800;
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 20px;
-        transition: background-color 0.3s ease;
-        width: 100%;
-        margin-top: 5px;
-        font-size: 0.9em;
+    background-color: #e6b800;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 5px;
+    font-size: 0.9em;
     }
 
-        #recommended-item-carousel .carousel-inner .item .productinfo .add-to-cart:hover {
-            background-color: #cc9900;
-        }
+    #recommended-item-carousel .carousel-inner .item .productinfo .add-to-cart:hover {
+    background-color: #cc9900;
+    }
 
     #recommended-item-carousel .recommended-item-control {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #e6b800;
-        font-size: 2em;
-        opacity: 0.7;
-        background: none;
-        border: none;
-        cursor: pointer;
-        z-index: 10;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #e6b800;
+    font-size: 2em;
+    opacity: 0.7;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
     }
 
-        #recommended-item-carousel .recommended-item-control:hover {
-            opacity: 1;
-        }
+    #recommended-item-carousel .recommended-item-control:hover {
+    opacity: 1;
+    }
 
     #recommended-item-carousel .left {
-        left: -40px;
+    left: -40px;
     }
 
     #recommended-item-carousel .right {
-        right: -40px;
+    right: -40px;
     }
 
     #recommended-item-carousel .carousel-inner .item {
-        display: none;
+    display: none;
     }
 
-        #recommended-item-carousel .carousel-inner .item.active {
-            display: block;
-        }
+    #recommended-item-carousel .carousel-inner .item.active {
+    display: block;
+    }
 
     .pagination {
-        display: flex;
-        align-items: center;
-        justify-content: center; /* Căn giữa các nút */
-        margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Căn giữa các nút */
+    margin-top: 20px;
     }
 
-        .pagination a, .pagination span {
-            display: inline-block;
-            min-width: 40px; /* Đảm bảo các nút có chiều rộng tối thiểu */
-            height: 40px; /* Chiều cao cố định */
-            line-height: 40px; /* Căn giữa văn bản theo chiều dọc */
-            text-align: center; /* Căn giữa văn bản theo chiều ngang */
-            margin: 0 5px; /* Khoảng cách giữa các nút */
-            padding: 0 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            text-decoration: none;
-            color: #333;
-            background-color: #fff;
-            transition: background-color 0.3s;
-        }
+    .pagination a, .pagination span {
+    display: inline-block;
+    min-width: 40px; /* Đảm bảo các nút có chiều rộng tối thiểu */
+    height: 40px; /* Chiều cao cố định */
+    line-height: 40px; /* Căn giữa văn bản theo chiều dọc */
+    text-align: center; /* Căn giữa văn bản theo chiều ngang */
+    margin: 0 5px; /* Khoảng cách giữa các nút */
+    padding: 0 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+    background-color: #fff;
+    transition: background-color 0.3s;
+    }
 
-            .pagination a:hover {
-                background-color: #f5f5f5;
-            }
+    .pagination a:hover {
+    background-color: #f5f5f5;
+    }
 
-        .pagination span {
-            background-color: #ff6200; /* Màu cam cho trang hiện tại */
-            color: #fff;
-            border-color: #ff6200;
-        }
+    .pagination span {
+    background-color: #ff6200; /* Màu cam cho trang hiện tại */
+    color: #fff;
+    border-color: #ff6200;
+    }
 </style>
 
 <div class="row">
@@ -624,14 +624,14 @@
                             <button type="button" class="btn btn-fefault cart add-to-cart" data-product_id="@Model.ProductDetails.Id">
                                 <i class="fa fa-shopping-cart"></i> @ShareLocallizer.GetLocalizedHTML("Add to Cart")
                             </button>
-                            @if (User.Identity.IsAuthenticated)
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("NOROLE") == false)
                             {
-                            <button type="button" class="btn btn-wishlist add-to-wishlist" data-product_id="@Model.ProductDetails.Id">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <button type="button" class="btn btn-compare add-to-compare" data-product_id="@Model.ProductDetails.Id">
-                                <i class="fas fa-balance-scale"></i> @ShareLocallizer.GetLocalizedHTML("Add to Compare")
-                            </button>
+                                <button type="button" class="btn btn-wishlist add-to-wishlist" data-product_id="@Model.ProductDetails.Id">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                                <button type="button" class="btn btn-compare add-to-compare" data-product_id="@Model.ProductDetails.Id">
+                                    <i class="fas fa-balance-scale"></i> @ShareLocallizer.GetLocalizedHTML("Add to Compare")
+                                </button>
                             }
                         </div>
                     }
@@ -727,7 +727,14 @@
                             <textarea asp-for="@Model.Comment"></textarea>
                             <span asp-validation-for="@Model.Comment" class="text-danger"></span>
                             <b>Rating: </b> <img src="images/product-details/rating.png" alt="" />
-                            <button type="submit" class="btn btn-default pull-right">Submit</button>
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("NOROLE") == false)
+                            {
+                                <button type="submit" class="btn btn-default pull-right">Submit</button>
+                            }
+                            else
+                            {
+                                <button type="submit" disabled class="btn btn-default pull-right">Submit</button>
+                            }
                         </form>
                     </div>
                 </div>
