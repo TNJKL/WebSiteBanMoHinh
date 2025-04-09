@@ -198,7 +198,11 @@
                         {
                             <span class="text text-success">@ShareLocallizer.GetLocalizedHTML("New Order")</span>
                         }
-                        else if (item.Status == 2)
+                        else if (item.Status == 4)
+                        {
+                            <span class="text text-warning">@ShareLocallizer.GetLocalizedHTML("Under Review")</span>
+                        }
+                        else if (item.Status == 0)
                         {
                             <span class="text text-primary">@ShareLocallizer.GetLocalizedHTML("Processed Order")</span>
                         }

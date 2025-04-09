@@ -147,7 +147,7 @@
             @if (Model == null || !Model.Any())
             {
                 <tr>
-                    <td colspan="9" class="no-order-message">Bạn chưa có đơn hàng nào</td>
+                    <td colspan="10" class="no-order-message">Bạn chưa có đơn hàng nào</td>
                 </tr>
             }
             else
@@ -162,23 +162,29 @@
                         <td>@item.CouponCode</td>
                         <td>@item.CreatedDate</td>
                         <td>
-                            @if (item.Status == 1)
+                            @switch (item.Status)
                             {
-                                <span class="text text-success">Đơn hàng mới</span>
-                            }
-                            else if (item.Status == 2)
-                            {
-                                <span class="text text-primary">Đơn hàng đã xử lý</span>
-                            }
-                            else
-                            {
-                                <span class="text text-danger">Đã hủy đơn</span>
+                                case 0:
+                                    <span class="text text-primary">Đã xử lý</span>
+                                    break;
+                                case 1:
+                                    <span class="text text-success">Đơn hàng mới</span>
+                                    break;
+                                case 3:
+                                    <span class="text text-danger">Đã hủy đơn</span>
+                                    break;
+                                case 4:
+                                    <span class="text text-warning">Đang kiểm duyệt</span>
+                                    break;
+                                default:
+                                    <span class="text">Không xác định (@item.Status)</span>
+                                    break;
                             }
                         </td>
                         <td>
-                            @if (item.PaymentMethod == "COD")
+                            @if (string.IsNullOrEmpty(item.PaymentMethod) || item.PaymentMethod == "COD")
                             {
-                                <span class="text text-success">@item.PaymentMethod</span>
+                                <span class="text text-success">COD</span>
                             }
                             else
                             {
@@ -187,9 +193,9 @@
                         </td>
                         <td>
                             @string.Join(", ", new[] { item.HouseNumber, item.Ward, item.District, item.City }.Where(s => !string.IsNullOrEmpty(s)))
-                        </td> <!-- Nối các trường địa chỉ thành một dòng -->
+                        </td>
                         <td>
-                            @if (item.Status != 3)
+                            @if (item.Status == 1 || item.Status == 4) // Chỉ hiển thị nút hủy khi là "Đơn hàng mới"
                             {
                                 <a asp-action="CancelOrder" class="btn btn-danger btn-sm" onclick="return confirm('Xác nhận hủy đơn hàng?')" asp-controller="Account" asp-route-ordercode="@item.OrderCode">Hủy đơn</a>
                             }

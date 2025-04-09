@@ -208,24 +208,32 @@ namespace WebSiteBanMoHinh.Controllers
 
         public async Task<IActionResult> CancelOrder(string ordercode)
         {
-            if ((bool)!User.Identity?.IsAuthenticated)
+            if (!User.Identity?.IsAuthenticated ?? false)
             {
-                // User is not logged in, redirect to login
                 return RedirectToAction("Login", "Account");
             }
-            try
+
+            var order = await _dataContext.Orders
+                .FirstOrDefaultAsync(o => o.OrderCode == ordercode);
+
+            if (order == null)
             {
-                var order = await _dataContext.Orders.Where(o => o.OrderCode == ordercode).FirstAsync();
+                return NotFound();
+            }
+
+            // Không cho phép hủy nếu đã xử lý (0) hoặc đang kiểm duyệt (4)
+            if (order.Status == 0 )
+            {
+                return BadRequest("Không thể hủy vì đơn hàng đã được xử lý hoặc đang kiểm duyệt.");
+            }
+
+            // Chỉ cho phép hủy khi trạng thái là "Đơn hàng mới" (1)
+            if (order.Status == 1 || order.Status == 4)
+            {
                 order.Status = 3;
                 _dataContext.Update(order);
                 await _dataContext.SaveChangesAsync();
             }
-            catch (Exception ex)
-            {
-
-                return BadRequest("An error occurred while canceling the order.");
-            }
-
 
             return RedirectToAction("History", "Account");
         }

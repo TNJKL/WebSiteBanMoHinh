@@ -21,147 +21,146 @@ namespace WebSiteBanMoHinh.Areas.Admin.Controllers
         {
             return View(await _dataContext.Orders.OrderByDescending(p => p.Id).ToListAsync());
         }
+        //public async Task<IActionResult> ViewOrder(string orderCode)
+        //{
+        //    //var DetailsOrder = await _dataContext.OrderDetails.Include(o => o.Product).Where(o => o.OrderCode == orderCode).ToListAsync();
+        //    //return View(DetailsOrder);
+        //    var DetailsOrder = await _dataContext.OrderDetails.Include(od => od.Product)
+        //       .Where(od => od.OrderCode == orderCode).ToListAsync();
+        //    var ShippingCost = _dataContext.Orders.Where(o => o.OrderCode == orderCode).First();
+        //    ViewBag.ShippingCost = ShippingCost.ShippingCost;
+
+        //    var Order = _dataContext.Orders.Where(o => o.OrderCode == orderCode).First();
+
+        //    // ViewBag.ShippingCost = Order.ShippingCost;
+        //    ViewBag.Status = Order.Status;
+        //    return View(DetailsOrder);
+        //}
         public async Task<IActionResult> ViewOrder(string orderCode)
         {
-            //var DetailsOrder = await _dataContext.OrderDetails.Include(o => o.Product).Where(o => o.OrderCode == orderCode).ToListAsync();
-            //return View(DetailsOrder);
-            var DetailsOrder = await _dataContext.OrderDetails.Include(od => od.Product)
-               .Where(od => od.OrderCode == orderCode).ToListAsync();
-            var ShippingCost = _dataContext.Orders.Where(o => o.OrderCode == orderCode).First();
-            ViewBag.ShippingCost = ShippingCost.ShippingCost;
+            var detailsOrder = await _dataContext.OrderDetails
+                .Include(od => od.Product)
+                .Where(od => od.OrderCode == orderCode)
+                .ToListAsync();
 
-            var Order = _dataContext.Orders.Where(o => o.OrderCode == orderCode).First();
-
-            // ViewBag.ShippingCost = Order.ShippingCost;
-            ViewBag.Status = Order.Status;
-            return View(DetailsOrder);
-        }
-
-
-
-        //[HttpPost]
-        //public async Task<IActionResult> UpdateOrder(string ordercode, int status)
-        //{
-        //    var order = await _dataContext.Orders.FirstOrDefaultAsync(o => o.OrderCode == ordercode);
-
-        //    if (order == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    order.Status = status;
-
-        //    try
-        //    {
-        //        await _dataContext.SaveChangesAsync();
-
-        //        return Ok(new { success = true, message = "Order status updated successfully" });
-        //    }
-        //    catch (Exception)
-        //    {
-
-
-        //        return StatusCode(500, "An error occurred while updating the order status.");
-        //    }
-        //}
-
-
-        //    [HttpPost]
-        //    public async Task<IActionResult> UpdateOrder(string ordercode, int status)
-        //    {
-        //        var order = await _dataContext.Orders.FirstOrDefaultAsync(o => o.OrderCode == ordercode);
-
-        //        if (order == null)
-        //        {
-        //            return NotFound();
-        //        }
-
-        //        order.Status = status;
-        //        _dataContext.Update(order);
-
-        //        if (status == 0)
-        //        {
-        //            // Lấy dữ liệu order detail dựa vào order.OrderCode
-        //            var DetailsOrder = await _dataContext.OrderDetails
-        //                .Include(od => od.Product)
-        //                .Where(od => od.OrderCode == order.OrderCode)
-        //                .Select(od => new
-        //                {
-        //                    od.Quantity,
-        //                    od.Product.Price,
-        //                    od.Product.CapitalPrice
-        //                }).ToListAsync();
-
-        //            var statisticalModel = await _dataContext.Statisticals
-        //.FirstOrDefaultAsync(s => s.CreatedDate.Date == order.CreatedDate.Date);
-
-        //            if (statisticalModel != null)
-        //            {
-        //                foreach (var orderDetail in DetailsOrder)
-        //                {
-        //                    // Tồn tại ngày thì cộng dồn
-        //                    statisticalModel.Quantity += 1;
-        //                    statisticalModel.Sold += orderDetail.Quantity;
-        //                    statisticalModel.Revenue += orderDetail.Quantity * orderDetail.Price;
-
-        //                    statisticalModel.Profit += orderDetail.Price - orderDetail.CapitalPrice;
-        //                }
-        //                _dataContext.Update(statisticalModel);
-        //            }
-        //            else
-        //            {
-        //                int new_quantity = 0;
-        //                int new_sold = 0;
-        //                decimal new_profit = 0;
-
-        //                foreach (var orderDetail in DetailsOrder)
-        //                {
-        //                    new_quantity += 1;
-        //                    new_sold += orderDetail.Quantity;
-        //                    new_profit += orderDetail.Price - orderDetail.CapitalPrice;
-
-        //                    statisticalModel = new StatisticalModel
-        //                    {
-        //                        CreatedDate = order.CreatedDate,
-        //                        Quantity = new_quantity,
-        //                        Sold = new_sold,
-        //                        Revenue = orderDetail.Quantity * orderDetail.Price,
-        //                        Profit = new_profit
-        //                    };
-        //                }
-
-        //                _dataContext.Add(statisticalModel);
-        //            }
-        //        }
-        //        try
-        //        {
-        //            await _dataContext.SaveChangesAsync();
-        //            return Ok(new { success = true, message = "Order status updated successfully" });
-        //        }
-        //        catch (Exception)
-        //        {
-        //            return StatusCode(500, "An error occured while updating the order status");
-        //        }
-
-        //    }
-
-        [HttpPost]
-        public async Task<IActionResult> UpdateOrder(string ordercode, int status)
-        {
-            var order = await _dataContext.Orders.FirstOrDefaultAsync(o => o.OrderCode == ordercode);
+            var order = await _dataContext.Orders
+                .FirstOrDefaultAsync(o => o.OrderCode == orderCode);
 
             if (order == null)
             {
                 return NotFound();
             }
 
+            // Gán giá trị cho ViewBag
+            ViewBag.ShippingCost = order.ShippingCost;
+            ViewBag.Status = order.Status; // Đảm bảo gán Status từ order
+
+            return View(detailsOrder);
+        }
+
+
+
+
+
+
+        //[HttpPost]
+        //public async Task<IActionResult> UpdateOrder(string ordercode, int status)
+        //{
+        //    var order = await _dataContext.Orders
+        //        .FirstOrDefaultAsync(o => o.OrderCode == ordercode);
+
+        //    if (order == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    // Không cho phép thay đổi nếu đã hủy (3)
+        //    if (order.Status == 3)
+        //    {
+        //        return BadRequest(new { success = false, message = "Không thể thay đổi trạng thái vì đơn hàng đã bị hủy." });
+        //    }
+
+        //    // Cập nhật trạng thái
+        //    order.Status = status;
+        //    _dataContext.Update(order);
+
+        //    // Cập nhật dashboard khi chuyển sang "Đã xử lý" (0) và chưa xử lý trước đó
+        //    if (status == 0 && order.Status != 0)
+        //    {
+        //        var detailsOrder = await _dataContext.OrderDetails
+        //            .Include(od => od.Product)
+        //            .Where(od => od.OrderCode == order.OrderCode)
+        //            .Select(od => new
+        //            {
+        //                od.Quantity,
+        //                od.Product.Price,
+        //                od.Product.CapitalPrice
+        //            }).ToListAsync();
+
+        //        var statisticalModel = await _dataContext.Statisticals
+        //            .FirstOrDefaultAsync(s => s.CreatedDate.Date == order.CreatedDate.Date);
+
+        //        if (statisticalModel != null)
+        //        {
+        //            statisticalModel.Quantity += 1;
+        //            statisticalModel.Sold += detailsOrder.Sum(od => od.Quantity);
+        //            statisticalModel.Revenue += detailsOrder.Sum(od => od.Quantity * od.Price);
+        //            statisticalModel.Profit += detailsOrder.Sum(od => od.Quantity * (od.Price - od.CapitalPrice));
+        //            _dataContext.Update(statisticalModel);
+        //        }
+        //        else
+        //        {
+        //            statisticalModel = new StatisticalModel
+        //            {
+        //                CreatedDate = order.CreatedDate,
+        //                Quantity = 1,
+        //                Sold = detailsOrder.Sum(od => od.Quantity),
+        //                Revenue = detailsOrder.Sum(od => od.Quantity * od.Price),
+        //                Profit = detailsOrder.Sum(od => od.Quantity * (od.Price - od.CapitalPrice))
+        //            };
+        //            _dataContext.Add(statisticalModel);
+        //        }
+        //    }
+
+        //    try
+        //    {
+        //        await _dataContext.SaveChangesAsync();
+        //        return Ok(new { success = true, message = "Cập nhật trạng thái thành công." });
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return StatusCode(500, "Lỗi khi cập nhật trạng thái.");
+        //    }
+        //}
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateOrder(string ordercode, int status)
+        {
+            var order = await _dataContext.Orders
+                .FirstOrDefaultAsync(o => o.OrderCode == ordercode);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            // Không cho phép thay đổi nếu đã hủy (3)
+            if (order.Status == 3)
+            {
+                return BadRequest(new { success = false, message = "Không thể thay đổi trạng thái vì đơn hàng đã bị hủy." });
+            }
+
+            // Lưu trạng thái cũ trước khi cập nhật
+            var oldStatus = order.Status;
+
+            // Cập nhật trạng thái mới
             order.Status = status;
             _dataContext.Update(order);
 
-            if (status == 0)
+            // Cập nhật dashboard khi chuyển sang "Đã xử lý" (0) và trạng thái cũ không phải là "Đã xử lý"
+            if (status == 0 && oldStatus != 0)
             {
-                // Lấy dữ liệu order detail dựa vào order.OrderCode
-                var DetailsOrder = await _dataContext.OrderDetails
+                var detailsOrder = await _dataContext.OrderDetails
                     .Include(od => od.Product)
                     .Where(od => od.OrderCode == order.OrderCode)
                     .Select(od => new
@@ -176,29 +175,22 @@ namespace WebSiteBanMoHinh.Areas.Admin.Controllers
 
                 if (statisticalModel != null)
                 {
-                    // Tồn tại ngày thì cộng dồn
-                    //statisticalModel.Quantity = DetailsOrder.Sum(od => od.Quantity);
                     statisticalModel.Quantity += 1;
-
-                    statisticalModel.Sold += DetailsOrder.Sum(od => od.Quantity);
-                    statisticalModel.Revenue += DetailsOrder.Sum(od => od.Quantity * od.Price);
-                    statisticalModel.Profit += DetailsOrder.Sum(od => od.Quantity * (od.Price - od.CapitalPrice));
-
+                    statisticalModel.Sold += detailsOrder.Sum(od => od.Quantity);
+                    statisticalModel.Revenue += detailsOrder.Sum(od => od.Quantity * od.Price);
+                    statisticalModel.Profit += detailsOrder.Sum(od => od.Quantity * (od.Price - od.CapitalPrice));
                     _dataContext.Update(statisticalModel);
                 }
                 else
                 {
-                    // Tạo bản ghi mới nếu chưa có dữ liệu cho ngày này
                     statisticalModel = new StatisticalModel
                     {
                         CreatedDate = order.CreatedDate,
-                        //Quantity = DetailsOrder.Sum(od => od.Quantity),
                         Quantity = 1,
-                        Sold = DetailsOrder.Sum(od => od.Quantity),
-                        Revenue = DetailsOrder.Sum(od => od.Quantity * od.Price),
-                        Profit = DetailsOrder.Sum(od => od.Quantity * (od.Price - od.CapitalPrice))
+                        Sold = detailsOrder.Sum(od => od.Quantity),
+                        Revenue = detailsOrder.Sum(od => od.Quantity * od.Price),
+                        Profit = detailsOrder.Sum(od => od.Quantity * (od.Price - od.CapitalPrice))
                     };
-
                     _dataContext.Add(statisticalModel);
                 }
             }
@@ -206,15 +198,13 @@ namespace WebSiteBanMoHinh.Areas.Admin.Controllers
             try
             {
                 await _dataContext.SaveChangesAsync();
-                return Ok(new { success = true, message = "Order status updated successfully" });
+                return Ok(new { success = true, message = "Cập nhật trạng thái thành công." });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(500, "An error occurred while updating the order status");
+                return StatusCode(500, $"Lỗi khi cập nhật trạng thái: {ex.Message}");
             }
         }
-
-
 
         [HttpGet]
         public async Task<IActionResult> Delete(string ordercode)

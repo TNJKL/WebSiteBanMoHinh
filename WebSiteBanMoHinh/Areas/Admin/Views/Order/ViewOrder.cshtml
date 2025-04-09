@@ -149,6 +149,12 @@
                 font-size: 0.9rem;
             }
     }
+
+    .order-details-container .status-disabled {
+        color: #dc3545;
+        font-weight: 700;
+        padding: 6px;
+    }
 </style>
 
 <div class="order-details-container">
@@ -188,22 +194,21 @@
 
     <div class="summary-section">
         <div>
-            @if (@ViewBag.Status != 3)
+            @if (ViewBag.Status == 3)
+            {
+                <span class="status-disabled">@ShareLocallizer.GetLocalizedHTML("Cancelled Order")</span>
+            }
+            else
             {
                 <select class="form-control select-update-order">
-                    @if (@ViewBag.Status == 0)
-                    {
-                        <option disabled value="1">@ShareLocallizer.GetLocalizedHTML("New Order")</option>
-                        <option value="0">@ShareLocallizer.GetLocalizedHTML("Processed Order")</option>
-                    }
-                    else
-                    {
-                        <option value="1">@ShareLocallizer.GetLocalizedHTML("New Order")</option>
-                        <option value="0">@ShareLocallizer.GetLocalizedHTML("Processed Order")</option>
-                    }
+                    <option value="1" selected="@(ViewBag.Status == 1 ? "selected" : null)">@ShareLocallizer.GetLocalizedHTML("New Order")</option>
+                    <option value="4" selected="@(ViewBag.Status == 4 ? "selected" : null)">@ShareLocallizer.GetLocalizedHTML("Under Review")</option>
+                    <option value="0" selected="@(ViewBag.Status == 0 ? "selected" : null)">@ShareLocallizer.GetLocalizedHTML("Processed Order")</option>
                 </select>
             }
         </div>
+    <!-- Giữ nguyên phần còn lại -->
+</div>
         <div class="summary-right">
             <div>
                 <span class="total-label">@ShareLocallizer.GetLocalizedHTML("Total"):</span> @total.ToString("#,##0 VNĐ")
@@ -243,6 +248,8 @@
                                 title: "@ShareLocallizer.GetLocalizedHTML("Order updated successfully")",
                                 icon: "success",
                                 confirmButtonColor: 'var(--primary-color)'
+                            }).then(() => {
+                                location.reload(); // Reload trang để cập nhật trạng thái
                             });
                         } else {
                             Swal.fire({
